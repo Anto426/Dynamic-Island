@@ -94,12 +94,16 @@ class IslandOverlayService : AccessibilityService() {
 		settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
 
 		// Register broadcast receiver
-		registerReceiver(mBroadcastReceiver, IntentFilter().apply {
-			addAction(SETTINGS_CHANGED)
-			addAction(SETTINGS_THEME_INVERTED)
-			addAction(ACTION_SCREEN_ON)
-			addAction(ACTION_SCREEN_OFF)
-		})
+		registerReceiver(
+			mBroadcastReceiver,
+			IntentFilter().apply {
+				addAction(SETTINGS_CHANGED)
+				addAction(SETTINGS_THEME_INVERTED)
+				addAction(ACTION_SCREEN_ON)
+				addAction(ACTION_SCREEN_OFF)
+			},
+			Context.RECEIVER_EXPORTED
+		)
 
 		// Setup plugins (check if they are enabled)
 		ExportedPlugins.setupPlugins(context = this)

@@ -65,10 +65,14 @@ class NotificationService : NotificationListenerService() {
 		Log.d("NotificationService", "onCreate: ")
 
 		// Register broadcast receiver
-		registerReceiver(mBroadcastReceiver, IntentFilter().apply {
-			addAction(ACTION_OPEN_CLOSE)
-			addAction(ACTION_CLOSE)
-		})
+		registerReceiver(
+			mBroadcastReceiver,
+			IntentFilter().apply {
+				addAction(ACTION_OPEN_CLOSE)
+				addAction(ACTION_CLOSE)
+			},
+			Context.RECEIVER_NOT_EXPORTED
+		)
 	}
 
 	override fun onNotificationPosted(statusBarNotification: StatusBarNotification) {

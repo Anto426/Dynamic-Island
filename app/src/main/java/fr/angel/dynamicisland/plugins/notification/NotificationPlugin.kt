@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.skydoves.landscapist.rememberDrawablePainter
 import fr.angel.dynamicisland.island.IslandSettings
 import fr.angel.dynamicisland.model.ACTION_CLOSE
@@ -158,7 +159,12 @@ class NotificationPlugin(
 		val filter = IntentFilter()
 		filter.addAction(NOTIFICATION_POSTED)
 		filter.addAction(NOTIFICATION_REMOVED)
-		context.registerReceiver(mBroadcastReceiver, filter)
+        ContextCompat.registerReceiver(
+            context,
+            mBroadcastReceiver,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
 	}
 
 	@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -352,12 +358,7 @@ class NotificationPlugin(
 										.displayCutoutPadding(),
 									shape = CircleShape,
 									singleLine = true,
-									colors = TextFieldDefaults.textFieldColors(
-										focusedIndicatorColor = Color.Transparent,
-										unfocusedIndicatorColor = Color.Transparent,
-										disabledIndicatorColor = Color.Transparent,
-										errorIndicatorColor = Color.Transparent,
-									),
+
 								)
 								IconButton(onClick = {
 									// Send reply action
