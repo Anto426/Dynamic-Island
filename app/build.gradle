@@ -28,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_24
+        targetCompatibility JavaVersion.VERSION_24
     }
     buildFeatures {
         compose true
@@ -45,7 +45,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(21) // Specify the Java version here
+    jvmToolchain(24) // Specify the Java version here
 }
 dependencies {
 
@@ -65,13 +65,7 @@ dependencies {
     implementation 'androidx.compose.material:material:1.9.0'
     implementation 'androidx.navigation:navigation-compose:2.9.3'
 
-    // Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.1.0')
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-firestore-ktx'
-
     // Accompanist
-    var accompanist_version = '0.30.1'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.36.0"
     implementation "com.google.accompanist:accompanist-placeholder-material:0.36.0"
     implementation "com.google.accompanist:accompanist-flowlayout:0.36.0"

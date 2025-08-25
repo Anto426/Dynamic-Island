@@ -10,42 +10,40 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
 fun WavesLoadingIndicator(modifier: Modifier, color: Color, progress: Float) {
-	BoxWithConstraints(modifier = modifier.offset(y = 16.dp), contentAlignment = Alignment.Center) {
-		val constraintsWidth = maxWidth
-		val constraintsHeight = maxHeight
+	BoxWithConstraints(
+		modifier = modifier.offset(y = 16.dp),
+		contentAlignment = Alignment.Center
+	) {
 		val density = LocalDensity.current
+		val widthPx = with(density) { maxWidth.roundToPx() }
+		val heightPx = with(density) { maxHeight.roundToPx() }
 
-		val wavesShader by produceState<Shader?>(
-			initialValue = null,
-			constraintsHeight,
-			constraintsWidth,
-			color,
-			density
-		) {
-			value = withContext(Dispatchers.Default) {
-				createWavesShader(
-					width = with(density) { constraintsWidth.roundToPx() },
-					height = with(density) { constraintsHeight.roundToPx() },
-					color = color
-				)
-			}
+		// Shader: generato una sola volta per tile piccola, poi ripetuto
+		val wavesShader = remember(widthPx, heightPx, color) {
+			createWavesShader(
+				width = 200, // tile piccola
+				height = 200,
+				color = color
+			)
 		}
 
-		if (progress > 0f && wavesShader != null) {
-			WavesOnCanvas(shader = wavesShader!!, progress = progress.coerceAtMost(0.99f))
+		if (progress > 0f) {
+			WavesOnCanvas(
+				shader = wavesShader,
+				progress = progress.coerceAtMost(0.99f)
+			)
 		}
 	}
 }
@@ -53,7 +51,6 @@ fun WavesLoadingIndicator(modifier: Modifier, color: Color, progress: Float) {
 @Composable
 private fun WavesOnCanvas(shader: Shader, progress: Float) {
 	val matrix = remember { Matrix() }
-
 	val paint = remember(shader) {
 		Paint().apply {
 			isAntiAlias = true
@@ -61,56 +58,47 @@ private fun WavesOnCanvas(shader: Shader, progress: Float) {
 		}
 	}
 
-	val wavesTransition = rememberWavesTransition()
-	val amplitudeRatio by wavesTransition.amplitudeRatio
-	val waveShiftRatio by wavesTransition.waveShiftRatio
+	// Animazioni fluide con Animatable
+	val scope = rememberCoroutineScope()
+	val waveShift = remember { Animatable(0f) }
+	val amplitude = remember { Animatable(0.01f) }
 
-	Canvas(modifier = Modifier.fillMaxSize()) {
-		drawIntoCanvas {
-			val height = size.height
-			val width = size.width
-			matrix.setScale(1f, amplitudeRatio / AmplitudeRatio, 0f, WaterLevelRatio * height)
-			matrix.postTranslate(waveShiftRatio * width, (WaterLevelRatio - progress) * height)
-			shader.setLocalMatrix(matrix)
-			it.drawRect(0f, 0f, width, height, paint)
+	LaunchedEffect(Unit) {
+		scope.launch {
+			waveShift.animateTo(
+				targetValue = 1f,
+				animationSpec = infiniteRepeatable(
+					tween(WavesShiftAnimationDurationInMillis, easing = LinearEasing),
+					repeatMode = RepeatMode.Restart
+				)
+			)
+		}
+		scope.launch {
+			amplitude.animateTo(
+				targetValue = 0.015f,
+				animationSpec = infiniteRepeatable(
+					tween(WavesAmplitudeAnimationDurationInMillis, easing = FastOutLinearInEasing),
+					repeatMode = RepeatMode.Reverse
+				)
+			)
 		}
 	}
-}
 
-private class WavesTransition(
-	val waveShiftRatio: State<Float>,
-	val amplitudeRatio: State<Float>
-)
-
-@Composable
-private fun rememberWavesTransition(): WavesTransition {
-	val transition = rememberInfiniteTransition()
-
-	val waveShiftRatio = transition.animateFloat(
-		initialValue = 0f,
-		targetValue = 1f,
-		animationSpec = infiniteRepeatable(
-			tween(
-				durationMillis = WavesShiftAnimationDurationInMillis,
-				easing = LinearEasing
-			)
+	Canvas(modifier = Modifier.fillMaxSize()) {
+		val h = size.height
+		val w = size.width
+		matrix.setScale(
+			1f,
+			amplitude.value / AmplitudeRatio,
+			0f,
+			WaterLevelRatio * h
 		)
-	)
-
-	val amplitudeRatio = transition.animateFloat(
-		initialValue = 0.005f,
-		targetValue = 0.015f,
-		animationSpec = infiniteRepeatable(
-			animation = tween(
-				durationMillis = WavesAmplitudeAnimationDurationInMillis,
-				easing = FastOutLinearInEasing
-			),
-			repeatMode = RepeatMode.Reverse
+		matrix.postTranslate(
+			waveShift.value * w,
+			(WaterLevelRatio - progress) * h
 		)
-	)
-
-	return remember(transition) {
-		WavesTransition(waveShiftRatio = waveShiftRatio, amplitudeRatio = amplitudeRatio)
+		shader.setLocalMatrix(matrix)
+		drawIntoCanvas { it.drawRect(0f, 0f, w, h, paint) }
 	}
 }
 
@@ -120,39 +108,45 @@ private fun createWavesShader(width: Int, height: Int, color: Color): Shader {
 	val amplitude = height * AmplitudeRatio
 	val waterLevel = height * WaterLevelRatio
 
-	val bitmap = ImageBitmap(width = width, height = height, ImageBitmapConfig.Argb8888)
+	val bitmap = ImageBitmap(width, height, ImageBitmapConfig.Argb8888)
 	val canvas = Canvas(bitmap)
-
 	val wavePaint = Paint().apply {
 		strokeWidth = 2f
 		isAntiAlias = true
 	}
 
-	val waveY = FloatArray(size = width + 1)
+	val waveY = FloatArray(width + 1)
 
+	// Prima onda trasparente
 	wavePaint.color = color.copy(alpha = 0.3f)
-	for (beginX in 0..width) {
-		val wx = beginX * angularFrequency
-		val beginY = waterLevel + amplitude * sin(wx).toFloat()
+	for (x in 0..width) {
+		val wx = x * angularFrequency
+		val y = waterLevel + amplitude * sin(wx).toFloat()
 		canvas.drawLine(
-			p1 = Offset(x = beginX.toFloat(), y = beginY),
-			p2 = Offset(x = beginX.toFloat(), y = (height + 1).toFloat()),
-			paint = wavePaint
+			Offset(x.toFloat(), y),
+			Offset(x.toFloat(), (height + 1).toFloat()),
+			wavePaint
 		)
-		waveY[beginX] = beginY
+		waveY[x] = y
 	}
 
+	// Seconda onda piena
 	wavePaint.color = color
 	val endX = width + 1
 	val waveToShift = width / 4
-	for (beginX in 0..width) {
+	for (x in 0..width) {
 		canvas.drawLine(
-			p1 = Offset(x = beginX.toFloat(), y = waveY[(beginX + waveToShift).rem(endX)]),
-			p2 = Offset(x = beginX.toFloat(), y = (height + 1).toFloat()),
-			paint = wavePaint
+			Offset(x.toFloat(), waveY[(x + waveToShift).rem(endX)]),
+			Offset(x.toFloat(), (height + 1).toFloat()),
+			wavePaint
 		)
 	}
-	return ImageShader(image = bitmap, tileModeX = TileMode.Repeated, tileModeY = TileMode.Clamp)
+
+	return ImageShader(
+		image = bitmap,
+		tileModeX = TileMode.Repeated,
+		tileModeY = TileMode.Clamp
+	)
 }
 
 private const val AmplitudeRatio = 0.05f

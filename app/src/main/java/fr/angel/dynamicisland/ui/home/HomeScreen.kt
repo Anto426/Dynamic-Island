@@ -277,6 +277,7 @@ fun NoPluginsActivatedCard(
 	}
 }
 
+@SuppressLint("UnusedContentLambdaTargetStateParameter")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ServiceStatusCard(
