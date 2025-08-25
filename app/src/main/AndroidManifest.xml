@@ -52,7 +52,7 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
         <service
-            android:name="fr.angel.dynamicisland.model.service.NotificationService"
+            android:name="com.anto426.dynamicisland.model.service.NotificationService"
             android:enabled="true"
             android:exported="true"
             android:label="@string/notification_service_label"

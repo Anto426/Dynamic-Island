@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace 'fr.angel.dynamicisland'
+    namespace 'com.anto426.dynamicisland'
     compileSdk 36
 
     defaultConfig {
