@@ -26,6 +26,7 @@ import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.ui.island.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import com.anto426.dynamicisland.R
 
 
 class IslandOverlayService : AccessibilityService() {

@@ -26,6 +26,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.anto426.dynamicisland.ui.animation.WavesLoadingIndicator
+import com.anto426.dynamicisland.R
 
 @Composable
 fun DisclosureScreen(

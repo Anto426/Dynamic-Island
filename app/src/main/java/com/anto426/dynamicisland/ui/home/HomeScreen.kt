@@ -40,6 +40,7 @@ import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.packageName
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.ExportedPlugins
+import com.anto426.dynamicisland.R
 
 
 @Composable

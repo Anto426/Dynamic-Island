@@ -29,6 +29,7 @@ import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
 import com.anto426.dynamicisland.ui.theme.BatteryEmpty
 import com.anto426.dynamicisland.ui.theme.BatteryFull
+import com.anto426.dynamicisland.R
 
 class BatteryPlugin(
 	override val id: String = "BatteryPlugin",

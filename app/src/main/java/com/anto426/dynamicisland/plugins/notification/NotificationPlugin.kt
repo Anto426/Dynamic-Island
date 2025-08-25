@@ -92,7 +92,7 @@ class NotificationPlugin(
 					body = notification.notification.extras.getString("android.text") ?: "",
 					id = extras.getInt("id"),
 					iconDrawable = notification.notification.smallIcon.loadDrawable(context) ?: return,
-					packageName = extras.getString("package_name") ?: "fr.angel.dynamicisland",
+					packageName = extras.getString("package_name") ?: "com.anto426.dynamicisland",
 					actions = (notification.notification.actions ?: arrayOf()).toList(),
 					all = extras,
 					statusBarNotification = notification

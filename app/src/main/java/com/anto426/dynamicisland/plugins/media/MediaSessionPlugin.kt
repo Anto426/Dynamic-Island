@@ -262,7 +262,7 @@ class MediaSessionPlugin(
 			songPosition = (elapsed / duration.toFloat()) * 100
 		}
 
-		val icon = context.packageManager.getApplicationIcon(mediaCallback.mediaController.packageName ?: "fr.angel.dynamicisland")
+		val icon = context.packageManager.getApplicationIcon(mediaCallback.mediaController.packageName ?: "com.anto426.dynamicisland")
 
 		WaveLoading(
 			progress = animateFloatAsState(targetValue = songPosition / 100).value,

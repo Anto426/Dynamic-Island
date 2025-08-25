@@ -1,6 +1,6 @@
 package com.anto426.dynamicisland.model
 
-const val packageName = "fr.angel.dynamicisland"
+const val packageName = "com.anto426.dynamicisland"
 
 // Broadcasts
 const val NOTIFICATION_POSTED = "$packageName.NOTIFICATION_POSTED"

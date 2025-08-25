@@ -9,7 +9,7 @@ android {
     compileSdk 36
 
     defaultConfig {
-        applicationId "fr.angel.dynamicisland"
+        applicationId "com.anto426.dynamicisland"
         minSdk 34
         targetSdk 36
         versionCode 5
