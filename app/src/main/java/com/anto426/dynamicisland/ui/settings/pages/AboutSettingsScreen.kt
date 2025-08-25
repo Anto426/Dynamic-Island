@@ -54,27 +54,16 @@ fun AboutSettingsScreen() {
 		item {
 			TextSettingsItem(
 				title = "Developer",
-				description = "Jules P",
+				description = "Anto426",
 				icon = Icons.Filled.Code,
-			)
-			TextSettingsItem(
-				icon = Icons.Default.Mail,
-				title = "Mail me",
-				description = "studioangel.fr.customerservice@gmail.com",
-				onClick = {
-					val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-					val clip = ClipData.newPlainText("Dynamic Island Contact", "studioangel.fr.customerservice@gmail.com")
-					clipboard.setPrimaryClip(clip)
-					Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-				}
 			)
 			TextSettingsItem(
 				icon = Icons.Default.BugReport,
 				title = "GitHub",
-				description = "https://github.com/angel-studio",
+				description = "https://github.com/Anto426/MaterialYou-Dynamic-Island",
 				onClick = {
 					val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-					val clip = ClipData.newPlainText("Dynamic Island GitHub", "https://github.com/angel-studio")
+					val clip = ClipData.newPlainText("Dynamic Island GitHub", "https://github.com/Anto426/MaterialYou-Dynamic-Island")
 					clipboard.setPrimaryClip(clip)
 					Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
 				}
@@ -89,28 +78,6 @@ fun AboutSettingsScreen() {
 				icon = Icons.Default.VerifiedUser,
 				title = "Disclosure",
 				description = context.getString(R.string.disclosure),
-			)
-			TextSettingsItem(
-				icon = Icons.Default.Policy,
-				title = "Privacy Policy",
-				description = "https://sites.google.com/view/angel-studio-fr/material-you-dynamic-island/privacy-policy",
-				onClick = {
-					val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-					val clip = ClipData.newPlainText("Dynamic Island Privacy Policy", "https://sites.google.com/view/angel-studio-fr/material-you-dynamic-island/privacy-policy")
-					clipboard.setPrimaryClip(clip)
-					Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-				}
-			)
-			TextSettingsItem(
-				icon = Icons.Default.Shield,
-				title = "Terms & Conditions",
-				description = "https://sites.google.com/view/angel-studio-fr/material-you-dynamic-island/terms-conditions",
-				onClick = {
-					val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-					val clip = ClipData.newPlainText("Dynamic Island Terms & Conditions", "https://sites.google.com/view/angel-studio-fr/material-you-dynamic-island/terms-conditions")
-					clipboard.setPrimaryClip(clip)
-					Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
-				}
 			)
 		}
 	}
