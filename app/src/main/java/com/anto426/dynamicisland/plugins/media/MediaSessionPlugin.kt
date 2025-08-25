@@ -19,12 +19,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -34,6 +36,7 @@ import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
+import com.skydoves.landscapist.rememberDrawablePainter
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -119,12 +122,10 @@ class MediaSessionPlugin(
 			Column(
 				modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp),
 				horizontalAlignment = Alignment.CenterHorizontally,
-				verticalArrangement = Arrangement.SpaceAround // Layout stabile
+				verticalArrangement = Arrangement.SpaceAround
 			) {
 				PlayerArtwork(
-					modifier = Modifier
-						.fillMaxWidth(0.9f) // Usa il 90% della larghezza
-						.aspectRatio(1f),
+					modifier = Modifier.fillMaxWidth(0.9f).aspectRatio(1f),
 					cover = mediaStruct.cover.value
 				)
 				TrackDetails(title = mediaStruct.title.value, artist = mediaStruct.artist.value)
@@ -236,9 +237,67 @@ class MediaSessionPlugin(
 	}
 
 	@Composable
-	override fun LeftOpenedComposable() { /* ... Implementa la tua UI ... */ }
+	private fun rememberAppIcon(packageName: String) = remember(packageName) {
+		try {
+			context.packageManager.getApplicationIcon(packageName)
+		} catch (e: PackageManager.NameNotFoundException) {
+			Log.e(MediaPluginDefaults.TAG, "Icon not found for $packageName", e)
+			null
+		}
+	}
+
+	// MODIFICATO: Ora mostra l'icona dell'app musicale in uso a sinistra.
 	@Composable
-	override fun RightOpenedComposable() { /* ... Implementa la tua UI ... */ }
+	override fun LeftOpenedComposable() {
+		val mediaCallback = callbackMap.values.firstOrNull() ?: return
+		val icon = rememberAppIcon(mediaCallback.mediaController.packageName)
+
+		if (icon != null) {
+			Box(
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(6.dp) // Leggero padding
+					.clip(CircleShape),
+				contentAlignment = Alignment.Center
+			) {
+				Image(
+					painter = rememberDrawablePainter(drawable = icon),
+					contentDescription = "App Icon",
+					modifier = Modifier.size(28.dp) // Aumentata la dimensione dell'icona
+				)
+			}
+		}
+	}
+
+	// MODIFICATO: Ora mostra una nota musicale che pulsa a destra quando la musica è in riproduzione.
+	@Composable
+	override fun RightOpenedComposable() {
+		val mediaCallback = callbackMap.values.firstOrNull() ?: return
+		val isPlaying by remember { derivedStateOf { mediaCallback.mediaStruct.isPlaying() } }
+
+		val infiniteTransition = rememberInfiniteTransition(label = "PulseTransition")
+		val scale by infiniteTransition.animateFloat(
+			initialValue = if (isPlaying) 1f else 1.2f,
+			targetValue = if (isPlaying) 1.2f else 1f,
+			animationSpec = infiniteRepeatable(
+				animation = tween(800, easing = FastOutSlowInEasing),
+				repeatMode = RepeatMode.Reverse
+			),
+			label = "PulseScale"
+		)
+
+		Box(
+			contentAlignment = Alignment.Center,
+			modifier = Modifier.fillMaxSize()
+		) {
+			Icon(
+				imageVector = Icons.Rounded.MusicNote,
+				contentDescription = "Playing music",
+				tint = MaterialTheme.colorScheme.primary,
+				modifier = Modifier.size(28.dp).scale(scale) // Dimensione uguale all'icona dell'app
+			)
+		}
+	}
 
 	@Composable
 	override fun PermissionsRequired() {}
