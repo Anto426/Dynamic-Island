@@ -32,12 +32,17 @@ sealed class IslandViewState : IslandState {
 		override val state: IslandStates = IslandStates.Opened
 	}
 
-	class Expanded(configuration: Configuration) : IslandViewState() {
+	// 'configuration' exists ONLY inside this class
+	class Expanded(private val configuration: Configuration) : IslandViewState() {
 		override val height: Dp
-			get() = IslandSettings.instance.height.dp
-		override val width: Dp = configuration.screenWidthDp.dp - yPosition * 2
+			get() = (configuration.screenHeightDp.dp * 0.5f)
+
+		override val width: Dp
+			get() = configuration.screenWidthDp.dp - xPosition * 2
+
 		override val cornerPercentage: Float
 			get() = IslandSettings.instance.cornerRadius.toFloat()
+
 		override val state: IslandStates = IslandStates.Expanded
 	}
 }
