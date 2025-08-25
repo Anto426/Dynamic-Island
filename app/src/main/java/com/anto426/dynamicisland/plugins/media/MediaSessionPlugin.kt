@@ -53,7 +53,7 @@ class MediaSessionPlugin(
 	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
 ) : BasePlugin() {
 
-	private lateinit var context: IslandOverlayService
+	lateinit var context: IslandOverlayService
 	private lateinit var mediaSessionManager: MediaSessionManager
 	private val callbackMap = mutableStateMapOf<String, MediaCallback>()
 
