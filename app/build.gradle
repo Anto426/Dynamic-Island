@@ -83,7 +83,10 @@ dependencies {
     implementation 'io.coil-kt:coil-compose:2.7.0' // Image loading
     implementation 'com.google.code.gson:gson:2.13.1' // Serialization / Deserialization
     implementation "com.airbnb.android:lottie-compose:6.6.7" // Animations
-    implementation 'com.github.vitaviva:ComposeWaveLoading:0.1.4' // Wave animation: https://github.com/vitaviva/ComposeWaveLoading
+    implementation 'com.github.vitaviva:ComposeWaveLoading:0.1.4'
+    implementation 'androidx.media3:media3-common-ktx:1.8.0'
+    implementation 'androidx.compose.runtime:runtime:1.9.0'
+// Wave animation: https://github.com/vitaviva/ComposeWaveLoading
 
     // Compose Tests
     androidTestImplementation platform('androidx.compose:compose-bom:2025.08.00')

@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.anto426.dynamicisland.model.*
+import androidx.core.content.edit
 
 class IslandSettings {
 
@@ -32,19 +33,19 @@ class IslandSettings {
 
 	fun applySettings(context: Context) {
 		val settings = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
-		settings.edit()
-			.putInt(POSITION_X, positionX)
-			.putInt(POSITION_Y, positionY)
-			.putInt(SIZE_X, width)
-			.putInt(SIZE_Y, height)
-			.putInt(CORNER_RADIUS, cornerRadius)
-			.putStringSet(ENABLED_APPS, enabledApps.toSet())
-			.putBoolean(SHOW_ON_LOCK_SCREEN, showOnLockScreen)
-			.putBoolean(SHOW_IN_LANDSCAPE, showInLandscape)
-			.putFloat(AUTO_HIDE_OPENED_AFTER, autoHideOpenedAfter)
-			.putBoolean(SHOW_BORDER, showBorders)
-			.putString(GRAVITY, gravity.name)
-			.apply()
+		settings.edit {
+            putInt(POSITION_X, positionX)
+                .putInt(POSITION_Y, positionY)
+                .putInt(SIZE_X, width)
+                .putInt(SIZE_Y, height)
+                .putInt(CORNER_RADIUS, cornerRadius)
+                .putStringSet(ENABLED_APPS, enabledApps.toSet())
+                .putBoolean(SHOW_ON_LOCK_SCREEN, showOnLockScreen)
+                .putBoolean(SHOW_IN_LANDSCAPE, showInLandscape)
+                .putFloat(AUTO_HIDE_OPENED_AFTER, autoHideOpenedAfter)
+                .putBoolean(SHOW_BORDER, showBorders)
+                .putString(GRAVITY, gravity.name)
+        }
 	}
 
 	fun loadSettings(context: Context) {
