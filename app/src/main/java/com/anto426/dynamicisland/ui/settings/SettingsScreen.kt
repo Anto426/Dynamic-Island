@@ -7,9 +7,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -20,9 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-/**
- * Main settings screen that displays a list of setting items.
- */
+
 @Composable
 fun SettingsScreen(
 	onSettingClicked: (SettingItem) -> Unit,
@@ -53,9 +51,7 @@ fun SettingsScreen(
 	}
 }
 
-/**
- * A single item in the settings list.
- */
+
 @Composable
 fun SettingsItem(
 	title: String,
@@ -119,9 +115,7 @@ fun SettingsItem(
 	}
 }
 
-/**
- * Reusable card to group settings.
- */
+
 @Composable
 fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
 	Card(
@@ -137,13 +131,11 @@ fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
 	}
 }
 
-/**
- * Reusable divider for separating settings items.
- */
+
 @Composable
 fun SettingsDivider() {
-	Divider(
+	HorizontalDivider(
 		modifier = Modifier.padding(horizontal = 8.dp),
-		color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+		thickness = DividerDefaults.Thickness, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
 	)
 }

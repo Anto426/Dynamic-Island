@@ -1,10 +1,10 @@
 package com.anto426.dynamicisland.ui.home
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.POWER_SERVICE
 import android.content.Intent
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -41,6 +41,8 @@ import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
+import androidx.core.net.toUri
+import androidx.core.content.edit
 
 @Composable
 fun HomeScreen(
@@ -119,7 +121,7 @@ fun HomeScreen(
 							startForPermissionResult.launch(
 								Intent(
 									Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-									Uri.parse("package:$packageName")
+                                    "package:$packageName".toUri()
 								)
 							)
 						}
@@ -146,7 +148,7 @@ fun HomeScreen(
 				DisclosureCard(
 					onAcceptClick = {
 						disclosureAccepted = true
-						settingsPreferences.edit().putBoolean(DISCLOSURE_ACCEPTED, true).apply()
+						settingsPreferences.edit { putBoolean(DISCLOSURE_ACCEPTED, true) }
 					},
 					onShowClick = onShowDisclosureClick
 				)
@@ -175,7 +177,12 @@ fun HomeScreen(
 					startForResult = startForBatteryOptimizationResult,
 					onDismiss = {
 						optimizationDismissed = true
-						settingsPreferences.edit().putBoolean(BATTERY_OPTIMIZATION_DISMISSED, true).apply()
+						settingsPreferences.edit {
+                            putBoolean(
+                                BATTERY_OPTIMIZATION_DISMISSED,
+                                true
+                            )
+                        }
 					}
 				)
 			}
@@ -317,6 +324,7 @@ fun ServiceStatusCard(
 	}
 }
 
+@SuppressLint("UseKtx", "BatteryLife")
 @Composable
 fun OptimizationCard(
 	startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
@@ -354,7 +362,7 @@ fun OptimizationCard(
 				Button(onClick = {
 					startForResult.launch(
 						Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-							data = Uri.parse("package:${context.packageName}")
+							data = "package:${context.packageName}".toUri()
 						}
 					)
 				}) {

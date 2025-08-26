@@ -3,7 +3,6 @@ package com.anto426.dynamicisland.ui.settings.pages
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Build
 import android.widget.Toast
@@ -39,12 +38,8 @@ fun AboutSettingsScreen() {
 	val appName = context.applicationInfo.loadLabel(packageManager).toString()
 	val packageName = context.packageName
 	val versionName = packageInfo.versionName
-	val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+	val versionCode =
 		packageInfo.longVersionCode
-	} else {
-		@Suppress("DEPRECATION")
-		packageInfo.versionCode.toLong()
-	}
 	val targetSdk = context.applicationInfo.targetSdkVersion
 	val minSdk = context.applicationInfo.minSdkVersion
 
@@ -170,20 +165,20 @@ fun AboutSettingsScreen() {
 							title = "Sviluppatore",
 							value = "Anto426",
 							onClick = {
-								val url = R.string.developer.toString()
+								val url = context.getString(R.string.developer)
 								uriHandler.openUri(url)
-							}
-						)
+							},
+							context = context						)
 						SettingsDivider()
 						InfoItem(
 							icon = Icons.Default.BugReport,
 							title = "GitHub",
 							value = "Apri nel browser",
 							onClick = {
-								val url = R.string.repositories.toString()
+								val url = context.getString(R.string.repositories)
 								uriHandler.openUri(url)
-							}
-						)
+							},
+							context = context						)
 					}
 				}
 			}

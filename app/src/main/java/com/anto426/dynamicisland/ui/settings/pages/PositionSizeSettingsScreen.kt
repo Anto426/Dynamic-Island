@@ -1,23 +1,19 @@
 package com.anto426.dynamicisland.ui.settings.pages
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.animation.*
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,11 +25,13 @@ import com.anto426.dynamicisland.island.IslandViewState
 import java.math.RoundingMode
 import kotlin.math.roundToInt
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.core.content.edit
 
 /**
  * Schermata per la configurazione della posizione e delle dimensioni dell'isola.
  * Utilizza un design pulito e organizzato in schede.
  */
+@SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PositionSizeSettingsScreen() {
@@ -75,13 +73,18 @@ fun PositionSizeSettingsScreen() {
 						expanded = expanded,
 						onDismissRequest = { expanded = false }
 					) {
-						IslandGravity.values().forEach { islandGravity ->
+						IslandGravity.entries.forEach { islandGravity ->
 							DropdownMenuItem(
 								text = { Text(text = islandGravity.name) },
 								onClick = {
 									selectedGravity = islandGravity
 									expanded = false
-									settingsPreferences.edit().putString(GRAVITY, islandGravity.name).apply()
+									settingsPreferences.edit {
+                                        putString(
+                                            GRAVITY,
+                                            islandGravity.name
+                                        )
+                                    }
 									IslandSettings.instance.gravity = islandGravity
 								}
 							)
@@ -253,7 +256,7 @@ fun SettingsSliderItem(
 				onClick = { onValueChange(sliderValue + preciseValue) },
 				enabled = sliderValue < range.endInclusive
 			) {
-				Icon(Icons.Default.ArrowRight, contentDescription = "Increase")
+				Icon(Icons.AutoMirrored.Filled.ArrowRight, contentDescription = "Increase")
 			}
 		}
 	}

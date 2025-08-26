@@ -90,9 +90,9 @@ fun ThemeSettingsScreen() {
 								) {
 									onThemeOptionSelected(text)
 									settingsPreferences
-										.edit()
-										.putString(THEME, text)
-										.apply()
+										.edit {
+                                            putString(THEME, text)
+                                        }
 									Theme.instance.isDarkTheme = when (text) {
 										"System" -> isSystemInDarkTheme
 										"Dark" -> true
@@ -106,7 +106,6 @@ fun ThemeSettingsScreen() {
 
 					SettingsDivider()
 
-					// Sottosezione: Preferenza dello Stile
 					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
 						Text(
 							text = "Preferenza dello Stile",
@@ -115,7 +114,7 @@ fun ThemeSettingsScreen() {
 							modifier = Modifier.fillMaxWidth()
 						)
 						Column(Modifier.selectableGroup()) {
-							Theme.ThemeStyle.values().forEach { themeStyle ->
+							Theme.ThemeStyle.entries.forEach { themeStyle ->
 								StyleRadioButton(
 									themeStyle = themeStyle,
 									selected = (themeStyle == styleSelectedOption)

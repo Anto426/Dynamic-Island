@@ -3,7 +3,6 @@ package com.anto426.dynamicisland.ui.settings.pages
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -25,13 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.anto426.dynamicisland.ui.settings.pages.InfoItemStyled
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,6 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import com.anto426.dynamicisland.R
+import androidx.core.net.toUri
 
 // --- DATA CLASSES ---
 data class GitHubUser(
@@ -246,7 +244,7 @@ fun RepositoryCard(repo: GitHubRepo, context: Context) {
             }
             Button(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(repo.html_url))
+                    val intent = Intent(Intent.ACTION_VIEW, repo.html_url.toUri())
                     context.startActivity(intent)
                 },
                 modifier = Modifier.fillMaxWidth()
