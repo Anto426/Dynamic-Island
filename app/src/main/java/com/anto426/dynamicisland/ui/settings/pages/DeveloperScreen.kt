@@ -1,41 +1,52 @@
-package com.anto426.dynamicisland.ui.settings.pages.dev
+package com.anto426.dynamicisland.ui.settings.pages
 
-import android.util.Log
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Intent
+import android.net.Uri
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.anto426.dynamicisland.R
+import com.anto426.dynamicisland.ui.settings.pages.InfoItemStyled
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import com.anto426.dynamicisland.R
 
-// ====================================================================================================
-// --- 1. DATA & NETWORK LAYER ---
-// ====================================================================================================
-
+// --- DATA CLASSES ---
 data class GitHubUser(
     val login: String,
     val name: String?,
@@ -50,8 +61,10 @@ data class GitHubRepo(
     val description: String?,
     val stargazers_count: Int,
     val language: String?,
+    val html_url: String
 )
 
+// --- API INTERFACE ---
 interface GitHubApi {
     @GET("users/{username}")
     suspend fun getUser(@Path("username") username: String): GitHubUser
@@ -60,48 +73,44 @@ interface GitHubApi {
     suspend fun getRepos(@Path("username") username: String): List<GitHubRepo>
 }
 
+// --- RETROFIT INSTANCE ---
 object RetrofitInstance {
     private const val BASE_URL = "https://api.github.com/"
+
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
 
     val api: GitHubApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
             .create(GitHubApi::class.java)
     }
 }
 
-// ====================================================================================================
-// --- 2. REPOSITORY LAYER ---
-// ====================================================================================================
-
+// --- REPOSITORY ---
 class DeveloperRepository(private val gitHubApi: GitHubApi = RetrofitInstance.api) {
     suspend fun getDeveloperInfo(username: String): Pair<GitHubUser, List<GitHubRepo>> {
         return coroutineScope {
             val profileDeferred = async { gitHubApi.getUser(username) }
             val reposDeferred = async { gitHubApi.getRepos(username) }
 
-            try {
-                val profile = profileDeferred.await()
-                val repos = reposDeferred.await()
-                Pair(profile, repos)
-            } catch (e: Exception) {
-                Log.e("DeveloperRepository", "Eccezione catturata nel Repository:", e)
-                throw e
-            }
+            val profile = profileDeferred.await()
+            val repos = reposDeferred.await()
+            Pair(profile, repos)
         }
     }
 }
 
-// ====================================================================================================
-// --- 3. VIEWMODEL LAYER ---
-// ====================================================================================================
-
-data class DeveloperInfo(
-    val profile: GitHubUser,
-    val repositories: List<GitHubRepo>
-)
+// --- VIEWMODEL ---
+data class DeveloperInfo(val profile: GitHubUser, val repositories: List<GitHubRepo>)
 
 sealed class DeveloperUiState {
     object Loading : DeveloperUiState()
@@ -109,10 +118,7 @@ sealed class DeveloperUiState {
     data class Error(val message: String) : DeveloperUiState()
 }
 
-class DeveloperViewModel(
-    private val repository: DeveloperRepository = DeveloperRepository()
-) : ViewModel() {
-
+class DeveloperViewModel(private val repository: DeveloperRepository = DeveloperRepository()) : ViewModel() {
     private val _uiState = MutableStateFlow<DeveloperUiState>(DeveloperUiState.Loading)
     val uiState: StateFlow<DeveloperUiState> = _uiState.asStateFlow()
 
@@ -123,145 +129,189 @@ class DeveloperViewModel(
                 val (profile, repos) = repository.getDeveloperInfo(username)
                 _uiState.value = DeveloperUiState.Success(DeveloperInfo(profile, repos))
             } catch (e: Exception) {
-                Log.e("DeveloperViewModel", "Errore durante il fetch dei dati:", e)
                 _uiState.value = DeveloperUiState.Error(e.message ?: "Errore di rete sconosciuto")
             }
         }
     }
 }
 
-// ====================================================================================================
-// --- 4. UI (COMPOSE) LAYER ---
-// ====================================================================================================
-
-@OptIn(ExperimentalMaterial3Api::class)
+// --- COMPOSABLES ---
 @Composable
-fun DeveloperScreen(
-    username: String = "Anto426",
-    viewModel: DeveloperViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+fun DeveloperScreen(username: String = "Anto426", viewModel: DeveloperViewModel = viewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(username) {
         viewModel.fetchDeveloperInfo(username)
     }
 
-    Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.developer_info_title)) }) }
-    ) { padding ->
-        DeveloperScreenContent(
-            state = state,
-            padding = padding,
-            onRetry = { viewModel.fetchDeveloperInfo(username) }
-        )
-    }
-}
-
-@Composable
-private fun DeveloperScreenContent(
-    state: DeveloperUiState,
-    padding: PaddingValues,
-    onRetry: () -> Unit
-) {
-    Box(modifier = Modifier.fillMaxSize().padding(padding)) {
-        when (state) {
-            is DeveloperUiState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            is DeveloperUiState.Success -> {
-                DeveloperSuccessContent(state.data.profile, state.data.repositories)
-            }
-            is DeveloperUiState.Error -> {
-                ErrorState(
-                    message = state.message,
-                    onRetry = onRetry,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DeveloperSuccessContent(profile: GitHubUser, repos: List<GitHubRepo>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        item { DeveloperProfileCard(profile) }
         item {
-            Text(
-                text = stringResource(R.string.recent_repositories),
-                style = MaterialTheme.typography.titleLarge
-            )
+            when (state) {
+                is DeveloperUiState.Loading -> Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator() }
+
+                is DeveloperUiState.Error -> {
+                    val message = (state as DeveloperUiState.Error).message
+                    ErrorCard(message) { viewModel.fetchDeveloperInfo(username) }
+                }
+
+                is DeveloperUiState.Success -> {
+                    val data = (state as DeveloperUiState.Success).data
+                    DeveloperProfileCard(data.profile, context)
+                    Spacer(Modifier.height(16.dp))
+                    RepositoriesSection(data.repositories, context)
+                }
+            }
         }
-        items(repos) { repo -> RepositoryCard(repo) }
     }
 }
 
 @Composable
-private fun DeveloperProfileCard(profile: GitHubUser) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+fun DeveloperProfileCard(profile: GitHubUser, context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(all = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             AsyncImage(
                 model = profile.avatar_url,
-                contentDescription = stringResource(R.string.developer_avatar_desc),
-                modifier = Modifier.size(96.dp).clip(CircleShape),
+                contentDescription = "Avatar sviluppatore",
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = profile.name ?: profile.login, style = MaterialTheme.typography.headlineSmall)
-            Text(
-                text = profile.bio ?: stringResource(R.string.no_bio),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                Text(stringResource(R.string.followers_count, profile.followers))
-                Text(stringResource(R.string.following_count, profile.following))
-            }
+            Spacer(Modifier.height(16.dp))
+            Text(profile.name ?: profile.login, style = MaterialTheme.typography.headlineSmall)
+            Text(profile.login, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(16.dp))
+
+            InfoItemStyled(Icons.Default.Person, "Nome", profile.name ?: profile.login, context)
+            InfoItemStyled(Icons.Default.Info, "Bio", profile.bio ?: R.string.no_description.toString(), context)
+            InfoItemStyled(Icons.Default.Group, "Followers", profile.followers.toString(), context)
+            InfoItemStyled(Icons.Default.PeopleOutline, "Following", profile.following.toString(), context)
         }
     }
 }
 
 @Composable
-private fun RepositoryCard(repo: GitHubRepo) {
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = repo.name, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = repo.description ?: stringResource(R.string.no_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(stringResource(R.string.stars_count, repo.stargazers_count), style = MaterialTheme.typography.bodySmall)
-                Text(stringResource(R.string.language, repo.language ?: "N/D"), style = MaterialTheme.typography.bodySmall)
-            }
+fun RepositoriesSection(repos: List<GitHubRepo>, context: Context) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("Repository recenti", style = MaterialTheme.typography.titleMedium)
+        repos.forEach { repo ->
+            RepositoryCard(repo, context)
         }
     }
 }
 
 @Composable
-private fun ErrorState(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+fun RepositoryCard(repo: GitHubRepo, context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Icon(Icons.Default.Error, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(48.dp))
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(R.string.error_message, message), color = MaterialTheme.colorScheme.error)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onRetry) {
-            Text(stringResource(R.string.retry_button))
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(repo.name, style = MaterialTheme.typography.titleMedium)
+            Text(repo.description ?: "Nessuna descrizione", style = MaterialTheme.typography.bodyMedium)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Default.Star, contentDescription = "Stelle", tint = MaterialTheme.colorScheme.primary)
+                Text(
+                    "${repo.stargazers_count}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Icon(Icons.Default.LaptopChromebook, contentDescription = "Linguaggio", tint = MaterialTheme.colorScheme.secondary)
+                Text(repo.language ?: "N/D", style = MaterialTheme.typography.bodySmall,  color = MaterialTheme.colorScheme.secondary)
+            }
+            Button(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(repo.html_url))
+                    context.startActivity(intent)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Visualizza su GitHub")
+            }
         }
     }
 }
+
+@Composable
+fun ErrorCard(message: String, onRetry: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(Icons.Default.Error, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(48.dp))
+            Text(message, color = MaterialTheme.colorScheme.error)
+            Button(onClick = onRetry) { Text("Riprova") }
+        }
+    }
+}
+
+// --- InfoItem Styled ---
+@Composable
+fun InfoItemStyled(
+    icon: ImageVector,
+    title: String,
+    value: String,
+    context: Context? = null,
+    onClick: (() -> Unit)? = null
+) {
+    val clipboardManager = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                clipboardManager?.setPrimaryClip(ClipData.newPlainText(title, value))
+                Toast.makeText(context, "$title copiato!", Toast.LENGTH_SHORT).show()
+                onClick?.invoke()
+            }
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(20.dp))
+        }
+        Spacer(Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium)
+            Text(value, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+

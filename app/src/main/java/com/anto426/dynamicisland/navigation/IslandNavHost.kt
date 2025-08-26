@@ -18,7 +18,6 @@ import com.anto426.dynamicisland.ui.home.HomeScreen
 import com.anto426.dynamicisland.ui.plugins.PluginScreen
 import com.anto426.dynamicisland.ui.settings.*
 import com.anto426.dynamicisland.ui.settings.pages.*
-import com.anto426.dynamicisland.ui.settings.pages.dev.DeveloperScreen
 
 
 @Composable

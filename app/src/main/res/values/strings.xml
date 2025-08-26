@@ -16,16 +16,15 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="recent_repositories">https://github.com/Anto426/MaterialYou-Dynamic-Island</string>
+    <string name="repositories">https://github.com/Anto426/MaterialYou-Dynamic-Island</string>
     <string name="developer_avatar_desc">nessuna descrizone</string>
-    <string name="followers_count">0</string>
-    <string name="no_bio">.</string>
-    <string name="following_count">.</string>
-    <string name="no_description">.</string>
-    <string name="stars_count">.</string>
-    <string name="language">.</string>
-    <string name="error_message">.</string>
-    <string name="retry_button">.</string>
-    <string name="developer_info_title" />
+    <string name="no_bio">Nessuna biografia disponibile</string>
+    <string name="no_description">Nessuna descrizione disponibile</string>
+    <string name="stars_count">Numero di stelle</string>
+    <string name="language">Lingua</string>
+    <string name="error_message">Si è verificato un errore</string>
+    <string name="retry_button">Riprova</string>
+    <string name="developer_info_title">Informazioni sviluppatore</string>
+    <string name="developer">Anto426</string>
 
 </resources>
