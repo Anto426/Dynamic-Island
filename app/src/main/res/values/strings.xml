@@ -16,7 +16,7 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="repositories">https://github.com/Anto426/MaterialYou-Dynamic-Island</string>
+    <string name="repositories">https://github.com/Anto426/Dynamic-Island</string>
     <string name="developer_avatar_desc">nessuna descrizone</string>
     <string name="no_bio">Nessuna biografia disponibile</string>
     <string name="no_description">Nessuna descrizione disponibile</string>
@@ -25,6 +25,8 @@
     <string name="error_message">Si è verificato un errore</string>
     <string name="retry_button">Riprova</string>
     <string name="developer_info_title">Informazioni sviluppatore</string>
-    <string name="developer">Anto426</string>
+    <string name="developer">https://github.com/Anto426</string>
 
+
+    <!-- <string name="developer">Anto426</string> -->
 </resources>

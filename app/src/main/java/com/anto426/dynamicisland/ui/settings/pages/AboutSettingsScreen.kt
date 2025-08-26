@@ -168,7 +168,8 @@ fun AboutSettingsScreen() {
 								val url = context.getString(R.string.developer)
 								uriHandler.openUri(url)
 							},
-							context = context						)
+							context = context
+						)
 						SettingsDivider()
 						InfoItem(
 							icon = Icons.Default.BugReport,
@@ -178,7 +179,8 @@ fun AboutSettingsScreen() {
 								val url = context.getString(R.string.repositories)
 								uriHandler.openUri(url)
 							},
-							context = context						)
+							context = context
+						)
 					}
 				}
 			}

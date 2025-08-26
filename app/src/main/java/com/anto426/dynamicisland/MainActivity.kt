@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anto426.dynamicisland.island.IslandSettings
@@ -128,47 +131,66 @@ class MainActivity : ComponentActivity() {
 							)
 						},
 						bottomBar = {
-							Box(
-								modifier = Modifier
-									.fillMaxWidth()
-									.padding(bottom = 24.dp),
-								contentAlignment = Alignment.Center
-							) {
-								NavigationBar(
+							if (bottomDestinations.any { it.route == currentDestination?.route }) {
+								Box(
 									modifier = Modifier
-										.clip(RoundedCornerShape(32.dp))
-										.shadow(elevation = 12.dp, shape = RoundedCornerShape(32.dp))
-										.align(Alignment.Center),
-									containerColor = MaterialTheme.colorScheme.surface,
-									contentColor = MaterialTheme.colorScheme.onSurface
+										.fillMaxWidth()
+										.padding(bottom = 24.dp),
+									contentAlignment = Alignment.Center
 								) {
-									bottomDestinations.forEach { destination ->
-										val selected = currentScreen == destination
-												|| (destination == IslandSettings && settings.contains(currentScreen))
-												|| (destination == IslandPlugins && currentScreen == IslandPluginSettings)
-										val scale by animateFloatAsState(targetValue = if (selected) 1.2f else 1f)
+									NavigationBar(
+										modifier = Modifier
+											.windowInsetsPadding(NavigationBarDefaults.windowInsets)
+											.padding(horizontal = 16.dp, vertical = 8.dp)
+											.clip(RoundedCornerShape(24.dp)),
+										tonalElevation = 0.dp,
+										containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.9f) // Sfondo leggermente trasparente
+									) {
+										bottomDestinations.forEach { destination ->
+											val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
 
-										NavigationBarItem(
-											icon = {
-												Icon(
-													destination.icon,
-													contentDescription = null,
-													modifier = Modifier
-														.size(22.dp)
-														.graphicsLayer { scaleX = scale; scaleY = scale }
-												)
-											},
-											label = { Text(destination.title, style = MaterialTheme.typography.labelSmall) },
-											selected = selected,
-											onClick = { navController.navigateSingleTopTo(destination.route) },
-											colors = NavigationBarItemDefaults.colors(
-												indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-												selectedIconColor = MaterialTheme.colorScheme.primary,
-												selectedTextColor = MaterialTheme.colorScheme.primary,
-												unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-												unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+											val scale by animateFloatAsState(
+												targetValue = if (selected) 1.1f else 1.0f,
+												animationSpec = spring(
+													dampingRatio = 0.4f,
+													stiffness = 500f
+												),
+												label = "icon_scale_animation"
 											)
-										)
+
+											NavigationBarItem(
+												icon = {
+													Icon(
+														destination.icon,
+														contentDescription = null,
+														modifier = Modifier
+															.size(24.dp)
+															.graphicsLayer {
+																scaleX = scale
+																scaleY = scale
+															}
+													)
+												},
+												label = { Text(destination.title, style = MaterialTheme.typography.labelSmall) },
+												selected = selected,
+												onClick = {
+													navController.navigate(destination.route) {
+														popUpTo(navController.graph.findStartDestination().id) {
+															saveState = true
+														}
+														launchSingleTop = true
+														restoreState = true
+													}
+												},
+												colors = NavigationBarItemDefaults.colors(
+													indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+													selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+													selectedTextColor = MaterialTheme.colorScheme.primary,
+													unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+													unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+												)
+											)
+										}
 									}
 								}
 							}
