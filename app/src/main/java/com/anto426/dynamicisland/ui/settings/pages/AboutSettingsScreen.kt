@@ -170,7 +170,7 @@ fun AboutSettingsScreen() {
 							title = "Sviluppatore",
 							value = "Anto426",
 							onClick = {
-								val url = "https://github.com/Anto426"
+								val url = R.string.developer.toString()
 								uriHandler.openUri(url)
 							}
 						)
@@ -180,7 +180,7 @@ fun AboutSettingsScreen() {
 							title = "GitHub",
 							value = "Apri nel browser",
 							onClick = {
-								val url = "https://github.com/Anto426/MaterialYou-Dynamic-Island"
+								val url = R.string.repositories.toString()
 								uriHandler.openUri(url)
 							}
 						)
