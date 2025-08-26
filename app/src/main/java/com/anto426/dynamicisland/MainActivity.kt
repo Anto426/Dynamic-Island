@@ -1,6 +1,5 @@
 package com.anto426.dynamicisland
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,13 +11,12 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -107,7 +105,7 @@ class MainActivity : ComponentActivity() {
 											|| currentDestination?.route == IslandPluginSettings.routeWithArgs
 									if (showBack) {
 										IconButton(onClick = { navController.popBackStack() }) {
-											Icon(Icons.Default.ArrowBack, contentDescription = "Indietro")
+											Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Indietro")
 										}
 									} else {
 										Spacer(modifier = Modifier.width(48.dp)) // balance space
