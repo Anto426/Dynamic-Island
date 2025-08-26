@@ -42,7 +42,7 @@ class ExportedPlugins {
 				plugin.enabled.value = plugin.isPluginEnabled(context)
 			}
 
-			permissions.forEach { (id, permission) ->
+			permissions.forEach { (_, permission) ->
 				permission.granted.value = permission.checkPermission(context)
 			}
 		}

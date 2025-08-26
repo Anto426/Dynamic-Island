@@ -69,7 +69,7 @@ class IslandOverlayService : AccessibilityService() {
 					init()
 				}
 				SETTINGS_THEME_INVERTED -> {
-					val settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+					val settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 					invertedTheme = settingsPreferences.getBoolean(THEME_INVERTED, false)
 				}
 				ACTION_SCREEN_ON -> {
@@ -86,7 +86,7 @@ class IslandOverlayService : AccessibilityService() {
 		super.onServiceConnected()
 		setTheme(R.style.Theme_DynamicIsland)
 		instance = this
-		settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+		settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 
 		// Register broadcast receiver
 		registerReceiver(
@@ -97,7 +97,7 @@ class IslandOverlayService : AccessibilityService() {
 				addAction(ACTION_SCREEN_ON)
 				addAction(ACTION_SCREEN_OFF)
 			},
-			Context.RECEIVER_EXPORTED
+			RECEIVER_EXPORTED
 		)
 
 		// Setup plugins (check if they are enabled)
@@ -132,7 +132,7 @@ class IslandOverlayService : AccessibilityService() {
 		}
 
 		// Setup inverted theme
-		val settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+		val settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 		invertedTheme = settingsPreferences.getBoolean(THEME_INVERTED, false)
 	}
 
@@ -143,7 +143,7 @@ class IslandOverlayService : AccessibilityService() {
 	) {
 		val composeView = ComposeView(this)
 		// Add effects when notification received, swiped, etc.
-		val composeEffectView = ComposeView(this)
+        ComposeView(this)
 
 		composeView.setContent {
 			// Listen for plugin changes

@@ -2,8 +2,10 @@ package com.anto426.dynamicisland.ui.settings.pages
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
@@ -16,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.STYLE
@@ -25,7 +26,11 @@ import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.ui.settings.SettingsDivider
 import com.anto426.dynamicisland.ui.settings.radioOptions
 import com.anto426.dynamicisland.ui.theme.Theme
+import androidx.core.content.edit
 
+/**
+ * Schermata delle impostazioni del tema con un design pulito e a schede.
+ */
 @Composable
 fun ThemeSettingsScreen() {
 
@@ -39,183 +44,215 @@ fun ThemeSettingsScreen() {
 	val (themeSelectedOption, onThemeOptionSelected) = remember { mutableStateOf(settingsPreferences.getString(THEME, "System")) }
 	val (styleSelectedOption, onStyleOptionSelected) = remember { mutableStateOf(Theme.instance.themeStyle) }
 
-
-	Column(
+	LazyColumn(
 		modifier = Modifier
 			.fillMaxSize()
 			.padding(16.dp),
-		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {
-		SwitchSettingsItem(
-			title = "Show borders",
-			description = "Show borders around the island",
-			checked = IslandSettings.instance.showBorders
-		) {
-			IslandSettings.instance.showBorders = it
-			IslandSettings.instance.applySettings(context)
-		}
-		OutlinedCard(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(8.dp)
-				.height(IntrinsicSize.Min),
-		) {
-			Column(
-				modifier = Modifier
-					.fillMaxSize()
-					.padding(16.dp),
+		// Sezione per le impostazioni generali dell'isola
+		item {
+			SettingSwitch(
+				title = "Mostra bordi",
+				description = "Mostra i bordi attorno all'isola",
+				checked = IslandSettings.instance.showBorders
 			) {
-				Text(
-					text = "Theme preference",
-					style = MaterialTheme.typography.titleMedium,
-					modifier = Modifier
-						.fillMaxWidth(),
-					textAlign = TextAlign.Center,
-				)
-				SettingsDivider(modifier = Modifier
-					.padding(vertical = 8.dp)
-					.padding(horizontal = 16.dp))
-				Column(Modifier.selectableGroup()) {
-					radioOptions.forEach { text ->
-						Row(
-							Modifier
-								.fillMaxWidth()
-								.height(56.dp)
-								.clip(MaterialTheme.shapes.medium)
-								.selectable(
-									selected = (text == themeSelectedOption),
-									onClick = {
-										onThemeOptionSelected(text)
-										settingsPreferences
-											.edit()
-											.putString(THEME, text)
-											.apply()
-										Theme.instance.isDarkTheme = when (text) {
-											"System" -> {
-												isSystemInDarkTheme
-											}
-											"Dark" -> {
-												true
-											}
-											"Light" -> {
-												false
-											}
-											else -> {
-												isSystemInDarkTheme
-											}
-										}
-									},
-									role = Role.RadioButton
-								)
-								.padding(horizontal = 16.dp),
-							verticalAlignment = Alignment.CenterVertically
-						) {
-							RadioButton(
-								selected = (text == themeSelectedOption),
-								onClick = null // null recommended for accessibility with screenreaders
-							)
-							Text(
-								text = text,
-								style = MaterialTheme.typography.bodyLarge,
-								modifier = Modifier.padding(start = 16.dp)
-							)
-						}
-					}
-				}
+				IslandSettings.instance.showBorders = it
+				IslandSettings.instance.applySettings(context)
 			}
 		}
-		OutlinedCard(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(8.dp)
-				.height(IntrinsicSize.Min),
-		) {
-			Column(
-				modifier = Modifier
-					.fillMaxSize()
-					.padding(16.dp),
+
+		// Sezione principale delle impostazioni di tema e stile
+		item {
+			Card(
+				modifier = Modifier.fillMaxWidth(),
+				colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
 			) {
-				Text(
-					text = "Style preference",
-					style = MaterialTheme.typography.titleMedium,
+				Column(
 					modifier = Modifier
-						.fillMaxWidth(),
-					textAlign = TextAlign.Center,
-				)
-				SettingsDivider(modifier = Modifier
-					.padding(vertical = 8.dp)
-					.padding(horizontal = 16.dp))
-				Column(Modifier.selectableGroup()) {
-					Theme.ThemeStyle.values().forEach { themeStyle ->
-						Row(
-							Modifier
-								.fillMaxWidth()
-								.height(56.dp)
-								.clip(MaterialTheme.shapes.medium)
-								.selectable(
-									selected = (themeStyle == styleSelectedOption),
-									onClick = {
-										onStyleOptionSelected(themeStyle)
-										Theme.instance.themeStyle = themeStyle
-										settingsPreferences
-											.edit()
-											.putString(STYLE, themeStyle.name)
-											.apply()
-									},
-									role = Role.RadioButton
-								)
-								.padding(horizontal = 16.dp),
-							verticalAlignment = Alignment.CenterVertically
-						) {
-							val stylePreviewColor =
-								if (Theme.instance.themeStyle.name != Theme.ThemeStyle.MaterialYou.name) {
-									if (Theme.instance.isDarkTheme) {
-										if (Theme.instance.themeStyle.darkScheme != null) {
-											themeStyle.previewColorDark ?: dynamicDarkColorScheme(context).primary
-										} else {
-											themeStyle.previewColorLight ?: dynamicLightColorScheme(context).primary
-										}
-									} else {
-										if (Theme.instance.themeStyle.lightScheme != null) {
-											themeStyle.previewColorLight ?: dynamicLightColorScheme(context).primary
-										} else {
-											themeStyle.previewColorDark ?: dynamicDarkColorScheme(context).primary
-										}
-									}
-								} else {
-									if (Theme.instance.isDarkTheme) {
-										themeStyle.previewColorDark ?: dynamicDarkColorScheme(context).primary
-									} else {
-										themeStyle.previewColorLight ?: dynamicLightColorScheme(context).primary
+						.fillMaxSize()
+						.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(16.dp)
+				) {
+					// Sottosezione: Preferenza del Tema
+					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+						Text(
+							text = "Preferenza del Tema",
+							style = MaterialTheme.typography.titleMedium,
+							color = MaterialTheme.colorScheme.onSurface,
+							modifier = Modifier.fillMaxWidth()
+						)
+						Column(Modifier.selectableGroup()) {
+							radioOptions.forEach { text ->
+								ThemeRadioButton(
+									text = text,
+									selected = (text == themeSelectedOption)
+								) {
+									onThemeOptionSelected(text)
+									settingsPreferences
+										.edit()
+										.putString(THEME, text)
+										.apply()
+									Theme.instance.isDarkTheme = when (text) {
+										"System" -> isSystemInDarkTheme
+										"Dark" -> true
+										"Light" -> false
+										else -> isSystemInDarkTheme
 									}
 								}
+							}
+						}
+					}
 
-							RadioButton(
-								selected = (themeStyle == styleSelectedOption),
-								onClick = null, // null recommended for accessibility with screenreaders
-								colors = RadioButtonDefaults.colors(
-									selectedColor = stylePreviewColor,
-									unselectedColor = stylePreviewColor,
-								)
-							)
-							Text(
-								text = themeStyle.styleName,
-								style = MaterialTheme.typography.bodyLarge,
-								modifier = Modifier.padding(start = 16.dp).weight(1f)
-							)
-							Box(
-								modifier = Modifier
-									.size(24.dp)
-									.aspectRatio(1f)
-									.background(
-										color = stylePreviewColor,
-										shape = CircleShape
-									)
-							)
+					SettingsDivider()
+
+					// Sottosezione: Preferenza dello Stile
+					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+						Text(
+							text = "Preferenza dello Stile",
+							style = MaterialTheme.typography.titleMedium,
+							color = MaterialTheme.colorScheme.onSurface,
+							modifier = Modifier.fillMaxWidth()
+						)
+						Column(Modifier.selectableGroup()) {
+							Theme.ThemeStyle.values().forEach { themeStyle ->
+								StyleRadioButton(
+									themeStyle = themeStyle,
+									selected = (themeStyle == styleSelectedOption)
+								) {
+									onStyleOptionSelected(themeStyle)
+									Theme.instance.themeStyle = themeStyle
+									settingsPreferences
+										.edit {
+                                            putString(STYLE, themeStyle.name)
+                                        }
+								}
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+}
+
+/**
+ * Componente riutilizzabile per una singola opzione di tema.
+ */
+@Composable
+fun ThemeRadioButton(
+	text: String,
+	selected: Boolean,
+	onClick: () -> Unit
+) {
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.height(56.dp)
+			.clip(MaterialTheme.shapes.medium)
+			.selectable(
+				selected = selected,
+				onClick = onClick,
+				role = Role.RadioButton
+			)
+			.padding(horizontal = 16.dp),
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		RadioButton(selected = selected, onClick = null)
+		Text(
+			text = text,
+			style = MaterialTheme.typography.bodyLarge,
+			modifier = Modifier.padding(start = 16.dp)
+		)
+	}
+}
+
+/**
+ * Componente riutilizzabile per una singola opzione di stile.
+ */
+@Composable
+fun StyleRadioButton(
+	themeStyle: Theme.ThemeStyle,
+	selected: Boolean,
+	onClick: () -> Unit
+) {
+	val context = LocalContext.current
+	val isDarkTheme = isSystemInDarkTheme()
+
+	val stylePreviewColor = remember(themeStyle, isDarkTheme) {
+		if (themeStyle.name == Theme.ThemeStyle.MaterialYou.name) {
+			if (isDarkTheme) dynamicDarkColorScheme(context).primary else dynamicLightColorScheme(context).primary
+		} else {
+			if (isDarkTheme) themeStyle.previewColorDark else themeStyle.previewColorLight
+		}
+	}
+
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.height(56.dp)
+			.clip(MaterialTheme.shapes.medium)
+			.selectable(
+				selected = selected,
+				onClick = onClick,
+				role = Role.RadioButton
+			)
+			.padding(horizontal = 16.dp),
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		RadioButton(
+			selected = selected,
+			onClick = null,
+			colors = RadioButtonDefaults.colors(
+				selectedColor = stylePreviewColor ?: MaterialTheme.colorScheme.primary,
+				unselectedColor = stylePreviewColor ?: MaterialTheme.colorScheme.onSurfaceVariant
+			)
+		)
+		Text(
+			text = themeStyle.styleName,
+			style = MaterialTheme.typography.bodyLarge,
+			modifier = Modifier.padding(start = 16.dp).weight(1f)
+		)
+		Box(
+			modifier = Modifier
+				.size(24.dp)
+				.aspectRatio(1f)
+				.background(
+					color = stylePreviewColor ?: MaterialTheme.colorScheme.primary,
+					shape = CircleShape
+				)
+		)
+	}
+}
+
+
+/**
+ * Un elemento delle impostazioni con uno switch.
+ */
+@Composable
+fun SettingSwitch(
+	title: String,
+	description: String,
+	checked: Boolean,
+	onCheckedChange: (Boolean) -> Unit
+) {
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.clickable { onCheckedChange(!checked) }
+			.padding(16.dp),
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.SpaceBetween
+	) {
+		Column(modifier = Modifier.weight(1f)) {
+			Text(text = title, style = MaterialTheme.typography.titleMedium)
+			Text(
+				text = description,
+				style = MaterialTheme.typography.bodySmall,
+				color = MaterialTheme.colorScheme.onSurfaceVariant
+			)
+		}
+		Spacer(Modifier.width(16.dp))
+		Switch(checked = checked, onCheckedChange = onCheckedChange)
 	}
 }

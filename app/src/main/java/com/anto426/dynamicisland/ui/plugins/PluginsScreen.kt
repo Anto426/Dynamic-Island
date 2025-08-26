@@ -1,8 +1,6 @@
 package com.anto426.dynamicisland.ui.plugins
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,112 +16,97 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.ExportedPlugins
+import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
 
+/**
+ * Main screen to manage plugins, with a clean card-based design.
+ */
 @Composable
 fun PluginScreen(
 	onPluginClicked: (BasePlugin) -> Unit,
 ) {
 	LazyColumn(
-		modifier = Modifier
-			.fillMaxSize(),
-		verticalArrangement = Arrangement.spacedBy(8.dp),
-		contentPadding = PaddingValues(8.dp)
+		modifier = Modifier.fillMaxSize(),
+		verticalArrangement = Arrangement.spacedBy(16.dp),
+		contentPadding = PaddingValues(16.dp)
 	) {
-		items(ExportedPlugins.plugins) { plugin ->
-			PluginCard(
-				plugin = plugin,
-				enabled = plugin.enabled.value,
-				permissionsGranted = plugin.allPermissionsGranted,
-				onPluginClicked = onPluginClicked,
-			)
+		item {
+			Card(modifier = Modifier.fillMaxWidth()) {
+				Column(
+					modifier = Modifier.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(8.dp)
+				) {
+					Text(
+						text = "Plugin Abilitati",
+						style = MaterialTheme.typography.titleMedium,
+						color = MaterialTheme.colorScheme.onSurface
+					)
+					SettingsDivider()
+
+					ExportedPlugins.plugins.forEach { plugin ->
+						PluginItem(
+							plugin = plugin,
+							onPluginClicked = onPluginClicked
+						)
+					}
+				}
+			}
 		}
 	}
 }
 
+/**
+ * A reusable item for a single plugin in the list.
+ */
 @Composable
-fun PluginCard(
-	modifier: Modifier = Modifier,
+fun PluginItem(
 	plugin: BasePlugin,
-	expanded: Boolean = false,
-	permissionsGranted: Boolean = false,
-	enabled: Boolean,
-	onPluginClicked: (BasePlugin) -> Unit,
-	content: @Composable () -> Unit = { },
+	onPluginClicked: (BasePlugin) -> Unit
 ) {
 	val context = LocalContext.current
-	val expandedState by remember { mutableStateOf(expanded) }
 
-	Card(
-		modifier = modifier
+	Row(
+		modifier = Modifier
 			.fillMaxWidth()
 			.clip(MaterialTheme.shapes.medium)
-			.clickable { onPluginClicked(plugin) },
-		colors = CardDefaults.cardColors(
-			containerColor = animateColorAsState(targetValue = if (!plugin.active) {
-				MaterialTheme.colorScheme.surfaceVariant
-			} else {
-				MaterialTheme.colorScheme.secondaryContainer
-			}).value,
-		),
+			.clickable { onPluginClicked(plugin) }
+			.padding(vertical = 8.dp),
+		verticalAlignment = Alignment.CenterVertically
 	) {
-		Column(
-			modifier = Modifier
-				.padding(16.dp)
-				.animateContentSize()
-		) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-			) {
-				PluginHeader(
-					modifier = Modifier.weight(1f),
-					title = plugin.name,
-					description = plugin.description,
-				)
-				Spacer(modifier = Modifier.width(8.dp))
-				Switch(
-					checked = enabled && permissionsGranted,
-					onCheckedChange = {
-						plugin.switchEnabled(context, it)
-					},
-					enabled = permissionsGranted,
-				)
-				IconButton(onClick = {
-					onPluginClicked(plugin)
-				}) {
-					Icon(
-						imageVector = Icons.Rounded.NavigateNext,
-						contentDescription = null
-					)
-				}
-			}
-			AnimatedVisibility(
-				visible = expandedState
-			) {
-				Column {
-					Spacer(modifier = Modifier.height(8.dp))
-					content()
-				}
-			}
-		}
-	}
-}
-
-@Composable
-fun PluginHeader(
-	modifier: Modifier = Modifier,
-	title: String,
-	description: String
-) {
-	Column(
-		modifier = modifier
-	) {
-		Text(
-			text = title,
-			style = MaterialTheme.typography.titleMedium
+		// Plugin status indicator
+		Icon(
+			imageVector = if (plugin.enabled.value) Icons.Rounded.CheckCircle else Icons.Rounded.Cancel,
+			contentDescription = if (plugin.enabled.value) "Plugin abilitato" else "Plugin disabilitato",
+			tint = if (plugin.enabled.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant,
+			modifier = Modifier.size(32.dp)
 		)
-		Text(
-			text = description,
-			style = MaterialTheme.typography.labelMedium
+		Spacer(modifier = Modifier.width(16.dp))
+
+		// Plugin name and description
+		Column(
+			modifier = Modifier.weight(1f)
+		) {
+			Text(
+				text = plugin.name,
+				style = MaterialTheme.typography.titleMedium,
+				color = MaterialTheme.colorScheme.onSurface
+			)
+			Text(
+				text = plugin.description,
+				style = MaterialTheme.typography.bodySmall,
+				color = MaterialTheme.colorScheme.onSurfaceVariant
+			)
+		}
+
+		Spacer(modifier = Modifier.width(16.dp))
+
+		// Switch to enable/disable plugin
+		Switch(
+			checked = plugin.enabled.value && plugin.allPermissionsGranted,
+			onCheckedChange = {
+				plugin.switchEnabled(context, it)
+			},
+			enabled = plugin.allPermissionsGranted
 		)
 	}
 }

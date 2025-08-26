@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -89,27 +91,27 @@ fun IslandApp(
 					modifier = Modifier
 						.width(width)
 						.height(height)
-						.then(
-							if (islandView is IslandViewState.Opened || islandView is IslandViewState.Expanded) {
-								Modifier.combinedClickable(
-									onClick = { bindedPlugin?.onClick() },
-									onLongClick = {
-										if (bindedPlugin?.canExpand() == true) {
-											islandOverlayService.expand()
-										}
-									}
-								)
-							} else Modifier
+						.combinedClickable(
+							interactionSource = remember { MutableInteractionSource() },
+							indication = null,
+							onClick = { bindedPlugin?.onClick() },
+							onLongClick = {
+								if (bindedPlugin?.canExpand() == true) {
+									islandOverlayService.expand()
+								}
+							}
 						)
-						.then(
+						.let {
 							if (IslandSettings.instance.showBorders) {
-								Modifier.border(
+								it.border(
 									width = 1.dp,
 									color = MaterialTheme.colorScheme.primary,
 									shape = RoundedCornerShape(cornerPercentage)
 								)
-							} else Modifier
-						),
+							} else {
+								it
+							}
+						},
 					colors = CardDefaults.cardColors(
 						containerColor = MaterialTheme.colorScheme.surface,
 					)
@@ -126,12 +128,14 @@ fun IslandApp(
 									rightContent = { bindedPlugin?.RightOpenedComposable() }
 								)
 							}
+
 							IslandStates.Expanded -> {
 								IslandExpandedContent(
 									service = islandOverlayService,
 									content = { bindedPlugin?.Composable() }
 								)
 							}
+
 							else -> {}
 						}
 					}
@@ -157,17 +161,18 @@ private fun IslandOpenedContent(
 			.fillMaxHeight()
 			.weight(1f)
 
+		// Removed unnecessary nested Crossfades
 		Box(
 			modifier = contentModifier,
 			contentAlignment = Alignment.Center
 		) {
-			Crossfade(targetState = leftContent, animationSpec = tween(300), label = "LeftPluginCrossfade") { it() }
+			leftContent()
 		}
 		Box(
 			modifier = contentModifier,
 			contentAlignment = Alignment.Center
 		) {
-			Crossfade(targetState = rightContent, animationSpec = tween(300), label = "RightPluginCrossfade") { it() }
+			rightContent()
 		}
 	}
 }
@@ -181,8 +186,12 @@ private fun IslandExpandedContent(
 		modifier = Modifier.fillMaxSize(),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
-		Box(modifier = Modifier.weight(1f)) {
-			Crossfade(targetState = content, animationSpec = tween(300), label = "ExpandedPluginCrossfade") { it() }
+		Box(
+			modifier = Modifier.weight(1f).fillMaxWidth(),
+			contentAlignment = Alignment.Center
+		) {
+			// Removed unnecessary nested Crossfade
+			content()
 		}
 		CloseHandle(
 			onClick = { service.shrink() }
@@ -198,7 +207,11 @@ private fun CloseHandle(
 	Box(
 		modifier = modifier
 			.fillMaxWidth()
-			.clickable(onClick = onClick)
+			.clickable(
+				interactionSource = remember { MutableInteractionSource() },
+				indication = null,
+				onClick = onClick
+			)
 			.padding(vertical = 12.dp),
 		contentAlignment = Alignment.Center
 	) {

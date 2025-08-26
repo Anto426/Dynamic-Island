@@ -44,12 +44,22 @@ object AboutSetting : IslandDestination, SettingItem {
 	override val route: String = "about"
 }
 
+object DeveloperScreen : IslandDestination, SettingItem {
+	override val title: String = "Dev"
+	override val subtitle: String = "About the Developer"
+	override val icon: ImageVector = Icons.Default.Adb
+	override val route: String = "Developer"
+}
+
+
+
 val settings = listOf(
 	ThemeSetting,
 	BehaviorSetting,
 	PositionSizeSetting,
 	EnabledAppsSetting,
-	AboutSetting
+	AboutSetting,
+	DeveloperScreen
 )
 
 // Theme settings

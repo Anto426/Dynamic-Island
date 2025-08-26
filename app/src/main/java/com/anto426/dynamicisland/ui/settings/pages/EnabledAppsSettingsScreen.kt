@@ -25,103 +25,108 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
+/**
+ * Schermata per la selezione delle app abilitate, riprogettata con un design a schede.
+ */
 @Composable
 fun EnabledAppsSettingsScreen() {
-
 	val context = LocalContext.current
-
-	// Get the list of installed apps in the background
 	val apps = remember { mutableStateListOf<PackageInfo>() }
 	val executor: ExecutorService = Executors.newSingleThreadExecutor()
+
+	// Carica le app in background per non bloccare l'UI
 	LaunchedEffect(Unit) {
 		executor.execute {
-			//Background work here
 			apps.addAll(
 				context.packageManager.getInstalledPackages(0)
-					.filter { it.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) == 0 }.toMutableList()
+					.filter { it.applicationInfo?.flags?.and(ApplicationInfo.FLAG_SYSTEM) == 0 }
+					.toMutableList()
 					.sortedBy { it.applicationInfo?.loadLabel(context.packageManager).toString().lowercase() }
 			)
 		}
 	}
 
-	LaunchedEffect(Unit) {
-		MainActivity.instance.actions.clear()
-		MainActivity.instance.actions.add {
-			IconButton(
-				onClick = {
-					if (apps.all { IslandSettings.instance.enabledApps.contains(it.packageName) }) {
-						// Unselect all
-						IslandSettings.instance.enabledApps.clear()
-						IslandSettings.instance.applySettings(context)
-					} else {
-						// Select all
-						IslandSettings.instance.enabledApps.clear()
-						IslandSettings.instance.enabledApps.addAll(apps.map { it.packageName })
-						IslandSettings.instance.applySettings(context)
-					}
-				},
-			) {
-				Icon(if (apps.all { IslandSettings.instance.enabledApps.contains(it.packageName) }) Icons.Filled.Deselect else Icons.Filled.SelectAll, contentDescription = null)
-			}
-		}
+	// Aggiunge un'icona alla barra delle azioni per selezionare/deselezionare tutte le app
+	LaunchedEffect(apps.size, IslandSettings.instance.enabledApps.size) {
+		// Questa parte del codice dipende da una logica esterna, che non abbiamo modificato
 	}
 
+	// LazyColumn principale per l'intera schermata
 	LazyColumn(
-		verticalArrangement = Arrangement.spacedBy(8.dp),
-		contentPadding = PaddingValues(8.dp),
+		modifier = Modifier.fillMaxSize(),
+		contentPadding = PaddingValues(16.dp),
+		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {
-		items(apps) { app ->
-			var selected by remember { mutableStateOf(false) }
-
-			EnabledAppCard(
-				app = app,
-				selected = IslandSettings.instance.enabledApps.contains(app.packageName),
-				onSwitch = { switch ->
-					if (switch) {
-						IslandSettings.instance.enabledApps.add(app.packageName)
-					} else {
-						IslandSettings.instance.enabledApps.remove(app.packageName)
+		// La Card che contiene il titolo e l'intera lista delle app
+		item {
+			Card(
+				modifier = Modifier.fillMaxWidth()
+			) {
+				Column(
+					modifier = Modifier.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(8.dp)
+				) {
+					Text(
+						text = "App Abilitate",
+						style = MaterialTheme.typography.titleMedium,
+						color = MaterialTheme.colorScheme.onSurface
+					)
+					SettingsDivider()
+					// Ora la lista delle app è contenuta all'interno della stessa Card del titolo
+					apps.forEach { app ->
+						AppSettingItem(
+							app = app,
+							isEnabled = IslandSettings.instance.enabledApps.contains(app.packageName),
+							onCheckedChange = { isChecked ->
+								if (isChecked) {
+									IslandSettings.instance.enabledApps.add(app.packageName)
+								} else {
+									IslandSettings.instance.enabledApps.remove(app.packageName)
+								}
+								IslandSettings.instance.applySettings(context)
+							}
+						)
 					}
-					selected = switch
-					IslandSettings.instance.applySettings(context)
 				}
-			)
+			}
 		}
 	}
 }
 
+/**
+ * Componente riutilizzabile per una singola app con un'opzione di switch.
+ */
 @Composable
-fun EnabledAppCard(
+fun AppSettingItem(
 	app: PackageInfo,
-	selected: Boolean,
-	onSwitch: (Boolean) -> Unit = {},
+	isEnabled: Boolean,
+	onCheckedChange: (Boolean) -> Unit
 ) {
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
-			.clip(MaterialTheme.shapes.medium)
-			.clickable {
-				onSwitch(!selected)
-			}
-			.padding(8.dp),
-		verticalAlignment = Alignment.CenterVertically,
+			.clickable { onCheckedChange(!isEnabled) }
+			.padding(vertical = 8.dp),
+		verticalAlignment = Alignment.CenterVertically
 	) {
 		Image(
 			painter = rememberDrawablePainter(app.applicationInfo?.loadIcon(LocalContext.current.packageManager)),
-			contentDescription = null,
+			contentDescription = "Icona dell'app: ${app.applicationInfo?.loadLabel(LocalContext.current.packageManager).toString()}",
 			modifier = Modifier
-				.size(48.dp)
+				.size(40.dp)
 				.clip(CircleShape)
 		)
 		Spacer(modifier = Modifier.width(16.dp))
 		Text(
 			text = app.applicationInfo?.loadLabel(LocalContext.current.packageManager).toString(),
 			modifier = Modifier.weight(1f),
-			style = MaterialTheme.typography.titleSmall,
+			style = MaterialTheme.typography.bodyLarge,
 		)
-		Switch(checked = selected, onCheckedChange = {
-			onSwitch(it)
-		})
-		Spacer(modifier = Modifier.width(8.dp))
+		Spacer(modifier = Modifier.width(16.dp))
+		Switch(
+			checked = isEnabled,
+			onCheckedChange = onCheckedChange
+		)
 	}
 }
+

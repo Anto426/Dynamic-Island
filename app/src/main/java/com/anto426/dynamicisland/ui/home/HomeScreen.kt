@@ -1,6 +1,5 @@
 package com.anto426.dynamicisland.ui.home
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Context.POWER_SERVICE
@@ -27,10 +26,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
@@ -41,29 +40,25 @@ import com.anto426.dynamicisland.model.packageName
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.R
-
+import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
 
 @Composable
 fun HomeScreen(
 	onGetStartedClick: () -> Unit,
 	onShowDisclosureClick: () -> Unit,
 ) {
-
 	val context = LocalContext.current
-
 	val settingsPreferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+
 	var optimizationDismissed by remember { mutableStateOf(settingsPreferences.getBoolean(BATTERY_OPTIMIZATION_DISMISSED, false)) }
 	var disclosureAccepted by remember { mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false)) }
 
-	// Celebration animation
 	val celebrateComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.celebrate))
 	var isCelebrating by remember { mutableStateOf(false) }
 
-	// Permissions
 	var isOverlayGranted by remember { mutableStateOf(canDrawOverlays(context)) }
 	var isAccessibilityGranted by remember { mutableStateOf(isAccessibilityServiceEnabled(IslandOverlayService::class.java, context)) }
 
-	// Permissions request
 	val startForPermissionResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		isAccessibilityGranted = isAccessibilityServiceEnabled(IslandOverlayService::class.java, context)
 		isOverlayGranted = canDrawOverlays(context)
@@ -75,55 +70,78 @@ fun HomeScreen(
 			}, celebrateComposition?.duration?.toLong() ?: 0)
 		}
 	}
+
 	fun switchAccessibilityService() {
 		if (!isAccessibilityGranted) {
-			// Start the accessibility service settings activity
 			startForPermissionResult.launch(
-				Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS),
-				null
+				Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
 			)
 		} else {
-			// Automatically disable the accessibility service
 			IslandOverlayService.getInstance()?.disableSelf()
 			isAccessibilityGranted = false
 		}
 	}
 
-	// Battery optimization
 	val powerManager = context.getSystemService(POWER_SERVICE) as PowerManager
 	var isIgnoringBatteryOptimizations by remember { mutableStateOf(!powerManager.isIgnoringBatteryOptimizations(packageName)) }
 	val startForBatteryOptimizationResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		isIgnoringBatteryOptimizations = !powerManager.isIgnoringBatteryOptimizations(packageName)
 	}
 
-	// UI
 	LazyColumn(
 		modifier = Modifier
 			.fillMaxSize()
 			.animateContentSize(),
-		verticalArrangement = Arrangement.spacedBy(8.dp),
+		verticalArrangement = Arrangement.spacedBy(16.dp),
 		horizontalAlignment = Alignment.CenterHorizontally,
-		contentPadding = PaddingValues(8.dp)
+		contentPadding = PaddingValues(16.dp)
 	) {
+		// Card che raggruppa lo stato dei servizi e i permessi
 		item {
-			PermissionsCard(
-				isOverlayGranted = isOverlayGranted,
-				isAccessibilityGranted = isAccessibilityGranted,
-				startForResult = startForPermissionResult,
-				switchAccessibility = { switchAccessibilityService() }
-			)
+			Card(
+				modifier = Modifier.fillMaxWidth()
+			) {
+				Column(
+					modifier = Modifier.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(16.dp)
+				) {
+					ServiceStatusCard(
+						isAccessibilityGranted = isAccessibilityGranted,
+						switchAccessibility = { switchAccessibilityService() }
+					)
+					SettingsDivider()
+					PermissionItem(
+						title = "Permesso di Sovrapposizione",
+						description = "Mostra l'isola sopra le altre app",
+						icon = Icons.Default.Layers,
+						checked = isOverlayGranted,
+						onClick = {
+							startForPermissionResult.launch(
+								Intent(
+									Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+									Uri.parse("package:$packageName")
+								)
+							)
+						}
+					)
+					SettingsDivider()
+					PermissionItem(
+						title = "Permesso di Accessibilità",
+						description = "Necessario per interagire con le app",
+						icon = Icons.Default.SettingsAccessibility,
+						checked = isAccessibilityGranted,
+						onClick = { switchAccessibilityService() }
+					)
+				}
+			}
 		}
 
-		item {
-			ServiceStatusCard(
-				isAccessibilityGranted = isAccessibilityGranted,
-				switchAccessibility = { switchAccessibilityService() }
-			)
-		}
-
+		// Altre schede
 		item {
 			AnimatedVisibility(
 				visible = !disclosureAccepted,
+				enter = fadeIn() + expandVertically(),
+				exit = fadeOut() + shrinkVertically()
 			) {
 				DisclosureCard(
 					onAcceptClick = {
@@ -138,6 +156,8 @@ fun HomeScreen(
 		item {
 			AnimatedVisibility(
 				visible = ExportedPlugins.plugins.all { !it.active },
+				enter = fadeIn() + expandVertically(),
+				exit = fadeOut() + shrinkVertically()
 			) {
 				NoPluginsActivatedCard(
 					onGetStartedClick = onGetStartedClick
@@ -148,6 +168,8 @@ fun HomeScreen(
 		item {
 			AnimatedVisibility(
 				visible = isIgnoringBatteryOptimizations && !optimizationDismissed,
+				enter = fadeIn() + expandVertically(),
+				exit = fadeOut() + shrinkVertically()
 			) {
 				OptimizationCard(
 					startForResult = startForBatteryOptimizationResult,
@@ -158,10 +180,8 @@ fun HomeScreen(
 				)
 			}
 		}
-
 	}
 
-	// Animates the celebration on top of the screen
 	LottieAnimation(
 		composition = celebrateComposition,
 		isPlaying = isCelebrating,
@@ -176,52 +196,35 @@ fun DisclosureCard(
 	onShowClick: () -> Unit,
 ) {
 	Card(
-		modifier = Modifier
-			.fillMaxWidth()
-			.height(IntrinsicSize.Min),
-		colors = CardDefaults.cardColors(
-			containerColor = MaterialTheme.colorScheme.primaryContainer
-		),
+		modifier = Modifier.fillMaxWidth(),
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
 	) {
 		Column(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(16.dp),
-			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier.padding(16.dp),
+			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			Row(
-				verticalAlignment = Alignment.CenterVertically,
+				verticalAlignment = Alignment.CenterVertically
 			) {
-				Icon(
-					imageVector = Icons.Rounded.Policy,
-					contentDescription = null,
-				)
-				Spacer(modifier = Modifier.width(8.dp))
-				Text(
-					text = "Disclosure",
-					style = MaterialTheme.typography.titleLarge,
-				)
+				Icon(Icons.Rounded.Policy, contentDescription = null, modifier = Modifier.size(24.dp))
+				Spacer(modifier = Modifier.width(16.dp))
+				Text("Informativa", style = MaterialTheme.typography.titleLarge)
 			}
 			Text(
-				text = "By using this app, you agree to the terms and conditions of the app and the plugins you use.",
-				style = MaterialTheme.typography.labelMedium,
-				textAlign = TextAlign.Justify,
-				modifier = Modifier.weight(1f)
+				"Utilizzando questa app, accetti i termini e le condizioni dell'app e dei plugin che utilizzi.",
+				style = MaterialTheme.typography.bodyMedium
 			)
-			Spacer(modifier = Modifier.height(8.dp))
 			Row(
 				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceBetween,
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.CenterVertically
 			) {
-				TextButton(
-					onClick = onShowClick,
-				) {
-					Text(text = "Disclosures")
+				TextButton(onClick = onShowClick) {
+					Text("Leggi")
 				}
-				Button(
-					onClick = onAcceptClick
-				) {
-					Text(text = "I understand")
+				Spacer(modifier = Modifier.width(8.dp))
+				Button(onClick = onAcceptClick) {
+					Text("Ho capito")
 				}
 			}
 		}
@@ -233,52 +236,34 @@ fun NoPluginsActivatedCard(
 	onGetStartedClick: () -> Unit
 ) {
 	Card(
-		modifier = Modifier
-			.fillMaxWidth()
-			.height(IntrinsicSize.Min),
-		colors = CardDefaults.cardColors(
-			containerColor = MaterialTheme.colorScheme.primaryContainer
-		),
+		modifier = Modifier.fillMaxWidth(),
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
 	) {
 		Column(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(16.dp),
-			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier.padding(16.dp),
+			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			Row(
-				verticalAlignment = Alignment.CenterVertically,
+				verticalAlignment = Alignment.CenterVertically
 			) {
-				Icon(
-					imageVector = Icons.Rounded.ExtensionOff,
-					contentDescription = null,
-				)
-				Spacer(modifier = Modifier.width(8.dp))
-				Text(
-					text = "No plugins activated",
-					style = MaterialTheme.typography.titleLarge,
-				)
+				Icon(Icons.Rounded.ExtensionOff, contentDescription = null, modifier = Modifier.size(24.dp))
+				Spacer(modifier = Modifier.width(16.dp))
+				Text("Nessun plugin attivo", style = MaterialTheme.typography.titleLarge)
 			}
 			Text(
-				text = "You need to activate at least one plugin to use Dynamic Island.\n" +
-						"Go to the plugins page to activate one.",
-				style = MaterialTheme.typography.labelMedium,
-				textAlign = TextAlign.Justify,
-				modifier = Modifier.weight(1f)
+				"Per usare Dynamic Island, devi attivare almeno un plugin. Vai alla pagina dei plugin per iniziare.",
+				style = MaterialTheme.typography.bodyMedium
 			)
-			Spacer(modifier = Modifier.height(8.dp))
 			Button(
 				onClick = onGetStartedClick,
 				modifier = Modifier.align(Alignment.End)
 			) {
-				Text(text = "Get started")
+				Text("Inizia")
 			}
 		}
 	}
 }
 
-@SuppressLint("UnusedContentLambdaTargetStateParameter")
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ServiceStatusCard(
 	isAccessibilityGranted: Boolean,
@@ -287,153 +272,93 @@ fun ServiceStatusCard(
 	Card(
 		modifier = Modifier
 			.fillMaxWidth()
-			.animateContentSize()
-			.height(64.dp)
-			.height(IntrinsicSize.Min)
-			.clip(MaterialTheme.shapes.medium)
+			.clip(MaterialTheme.shapes.extraLarge)
 			.clickable { switchAccessibility() },
 		colors = CardDefaults.cardColors(
-			containerColor = animateColorAsState(targetValue =
-				if (isAccessibilityGranted) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant
+			containerColor = animateColorAsState(
+				targetValue = if (isAccessibilityGranted) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
 			).value
-		),
+		)
 	) {
 		Row(
 			modifier = Modifier
-				.fillMaxSize(),
+				.fillMaxWidth()
+				.padding(16.dp),
 			verticalAlignment = Alignment.CenterVertically
 		) {
-			// TODO: Add dynamic properties
-			val compositionEnabled by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.service_enabled))
-			val compositionDisabled by rememberLottieComposition(spec = LottieCompositionSpec.RawRes(R.raw.service_disabled))
-
-			AnimatedContent(
-				modifier = Modifier
-					.fillMaxWidth(2 / 5f)
-					.fillMaxHeight(),
-				targetState = isAccessibilityGranted,
-				transitionSpec = {
-					if (isAccessibilityGranted) {
-						slideInHorizontally { width -> -width } + fadeIn() with
-								slideOutHorizontally { width -> -width } + fadeOut()
-					} else {
-						slideInHorizontally { width -> -width } + fadeIn() with
-								slideOutHorizontally { width -> -width } + fadeOut()
-					}
-				}
-			) {
-				Crossfade(
-					targetState = isAccessibilityGranted,
-				) {
-					if (it) {
-						LottieAnimation(
-							composition = compositionEnabled,
-							iterations = LottieConstants.IterateForever,
-							contentScale = ContentScale.Crop,
-						)
-					} else {
-						LottieAnimation(
-							composition = compositionDisabled,
-							iterations = LottieConstants.IterateForever,
-							contentScale = ContentScale.Crop,
-						)
-					}
-				}
-			}
+			val composition by rememberLottieComposition(
+				spec = LottieCompositionSpec.RawRes(if (isAccessibilityGranted) R.raw.service_enabled else R.raw.service_disabled)
+			)
+			LottieAnimation(
+				composition = composition,
+				iterations = LottieConstants.IterateForever,
+				contentScale = ContentScale.Fit,
+				modifier = Modifier.size(64.dp)
+			)
 
 			Spacer(modifier = Modifier.width(16.dp))
 
-			AnimatedContent(
-				modifier = Modifier
-					.weight(1f)
-					.padding(horizontal = 16.dp),
-				targetState = isAccessibilityGranted,
-				transitionSpec = {
-					if (isAccessibilityGranted) {
-						slideInVertically { height -> height } + fadeIn() with
-								slideOutVertically { height -> -height } + fadeOut()
-					} else {
-						slideInVertically { height -> -height } + fadeIn() with
-								slideOutVertically { height -> height } + fadeOut()
-					}.using(
-						SizeTransform(clip = false)
-					)
-				}
-			) { isGranted ->
+			Column(
+				modifier = Modifier.weight(1f)
+			) {
 				Text(
-					text = if (isGranted) { "ACTIVE" } else { "DISABLED" },
+					text = if (isAccessibilityGranted) "SERVIZIO ATTIVO" else "SERVIZIO DISABILITATO",
 					style = MaterialTheme.typography.titleLarge,
-					textAlign = TextAlign.Center,
 					fontWeight = FontWeight.Bold,
-					letterSpacing = 4.sp
+					letterSpacing = 2.sp
+				)
+				Text(
+					text = "Tocca per ${if (isAccessibilityGranted) "disattivare" else "attivare"}",
+					style = MaterialTheme.typography.bodySmall,
+					color = MaterialTheme.colorScheme.onSurfaceVariant
 				)
 			}
 		}
 	}
 }
 
-@SuppressLint("BatteryLife")
 @Composable
 fun OptimizationCard(
 	startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
 	onDismiss: () -> Unit
 ) {
 	val context = LocalContext.current
-
 	Card(
-		modifier = Modifier
-			.fillMaxWidth()
-			.height(IntrinsicSize.Min),
-		colors = CardDefaults.cardColors(
-			containerColor = MaterialTheme.colorScheme.secondaryContainer
-		),
+		modifier = Modifier.fillMaxWidth(),
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
 	) {
 		Column(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(16.dp),
-			verticalArrangement = Arrangement.spacedBy(8.dp),
+			modifier = Modifier.padding(16.dp),
+			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
 			Row(
-				verticalAlignment = Alignment.CenterVertically,
+				verticalAlignment = Alignment.CenterVertically
 			) {
-				Icon(
-					imageVector = Icons.Rounded.Warning,
-					contentDescription = null,
-				)
-				Spacer(modifier = Modifier.width(8.dp))
-				Text(
-					text = "Battery optimization",
-					style = MaterialTheme.typography.titleLarge,
-				)
+				Icon(Icons.Rounded.Warning, contentDescription = null, modifier = Modifier.size(24.dp))
+				Spacer(modifier = Modifier.width(16.dp))
+				Text("Ottimizzazione batteria", style = MaterialTheme.typography.titleLarge)
 			}
 			Text(
-				text = "To prevent the app from being killed by the system, you need to disable battery optimization for Dynamic Island.",
-				style = MaterialTheme.typography.labelMedium,
-				textAlign = TextAlign.Justify,
-				modifier = Modifier.weight(1f)
+				"Per evitare che l'app venga terminata dal sistema, disabilita l'ottimizzazione della batteria per Dynamic Island.",
+				style = MaterialTheme.typography.bodyMedium
 			)
-			Spacer(modifier = Modifier.height(8.dp))
 			Row(
 				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceBetween,
+				horizontalArrangement = Arrangement.End,
+				verticalAlignment = Alignment.CenterVertically
 			) {
-				TextButton(
-					onClick = onDismiss,
-				) {
-					Text(text = "Dismiss")
+				TextButton(onClick = onDismiss) {
+					Text("Ignora")
 				}
-				Button(
-					onClick = {
-						startForResult.launch(
-							Intent().apply {
-								action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-								data = Uri.parse("package:${context.packageName}")
-							}
-						)
-					}
-				) {
-					Text(text = "Disable battery optimization")
+				Spacer(modifier = Modifier.width(8.dp))
+				Button(onClick = {
+					startForResult.launch(
+						Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+							data = Uri.parse("package:${context.packageName}")
+						}
+					)
+				}) {
+					Text("Disabilita ottimizzazione")
 				}
 			}
 		}
@@ -446,8 +371,7 @@ private fun isAccessibilityServiceEnabled(accessibilityService: Class<*>?, conte
 		Settings.Secure.getString(
 			context.contentResolver,
 			Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-		)
-			?: return false
+		) ?: return false
 	val colonSplitter = TextUtils.SimpleStringSplitter(':')
 	colonSplitter.setString(enabledServicesSetting)
 	while (colonSplitter.hasNext()) {
@@ -461,81 +385,37 @@ private fun isAccessibilityServiceEnabled(accessibilityService: Class<*>?, conte
 private fun canDrawOverlays(context: Context): Boolean { return Settings.canDrawOverlays(context) }
 
 @Composable
-fun PermissionsCard(
-	isOverlayGranted: Boolean,
-	isAccessibilityGranted: Boolean,
-	startForResult: ManagedActivityResultLauncher<Intent, ActivityResult>,
-	switchAccessibility: () -> Unit,
+fun PermissionItem(
+	title: String,
+	description: String,
+	icon: ImageVector,
+	checked: Boolean,
+	onClick: () -> Unit
 ) {
-	OutlinedCard(
+	Row(
 		modifier = Modifier
 			.fillMaxWidth()
-			.height(IntrinsicSize.Min)
+			.clip(MaterialTheme.shapes.medium)
+			.clickable(onClick = onClick)
+			.padding(vertical = 8.dp),
+		verticalAlignment = Alignment.CenterVertically
 	) {
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(16.dp),
-			verticalAlignment = Alignment.CenterVertically,
-			horizontalArrangement = Arrangement.spacedBy(8.dp)
+		Icon(
+			imageVector = icon,
+			contentDescription = null,
+			tint = MaterialTheme.colorScheme.primary,
+			modifier = Modifier.size(24.dp)
+		)
+		Spacer(modifier = Modifier.width(16.dp))
+		Column(
+			modifier = Modifier.weight(1f)
 		) {
-			if (isOverlayGranted) {
-				Column(
-					horizontalAlignment = Alignment.CenterHorizontally,
-					modifier = Modifier
-						.weight(1f)
-				) {
-					Icon(
-						imageVector = Icons.Default.SettingsAccessibility,
-						contentDescription = null
-					)
-					Spacer(modifier = Modifier.height(8.dp))
-					Text(
-						text = "Accessibility permission",
-						style = MaterialTheme.typography.titleMedium,
-						textAlign = TextAlign.Center
-					)
-					Switch(
-						checked = isAccessibilityGranted,
-						onCheckedChange = { switchAccessibility() },
-					)
-
-				}
-				Divider(
-					modifier = Modifier
-						.width(1.dp)
-						.fillMaxHeight(),
-					color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-				)
-			}
-			Column(
-				modifier = Modifier
-					.weight(1f)
-					.animateContentSize(),
-				horizontalAlignment = Alignment.CenterHorizontally
-			) {
-				Icon(
-					imageVector = Icons.Default.Layers,
-					contentDescription = null
-				)
-				Spacer(modifier = Modifier.width(8.dp))
-				Text(
-					text = "Overlay permission",
-					style = MaterialTheme.typography.titleMedium,
-					textAlign = TextAlign.Center
-				)
-				Switch(
-					checked = isOverlayGranted,
-					onCheckedChange = {
-						startForResult.launch(
-							Intent(
-								Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-								Uri.parse("package:$packageName")
-							), null
-						)
-					}
-				)
-			}
+			Text(text = title, style = MaterialTheme.typography.titleMedium)
+			Text(text = description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 		}
+		Switch(
+			checked = checked,
+			onCheckedChange = { onClick() }
+		)
 	}
 }

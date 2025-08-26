@@ -21,6 +21,7 @@ import com.anto426.dynamicisland.ui.disclosure.DisclosureScreen
 import com.anto426.dynamicisland.ui.disclosure.Link
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
+import androidx.core.content.edit
 
 class DisclosureActivity : ComponentActivity() {
 
@@ -35,7 +36,7 @@ class DisclosureActivity : ComponentActivity() {
 			Theme.instance.Init()
 			WindowCompat.setDecorFitsSystemWindows(window, false)
 
-			settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+			settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 
 			// Top app bar
 			val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -118,7 +119,7 @@ class DisclosureActivity : ComponentActivity() {
 							onNext = { step++ },
 							onPrevious = { step-- },
 							onStart = {
-								settingsPreferences.edit().putBoolean(DISCLOSURE_ACCEPTED, true).apply()
+								settingsPreferences.edit { putBoolean(DISCLOSURE_ACCEPTED, true) }
 								startActivity(Intent(this, MainActivity::class.java))
 								finish()
 							},

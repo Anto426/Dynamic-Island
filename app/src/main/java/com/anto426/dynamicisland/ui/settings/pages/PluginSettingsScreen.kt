@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anto426.dynamicisland.ui.settings.pages.SwitchSettingsItem
+import com.anto426.dynamicisland.ui.settings.pages.SettingSwitch
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -104,7 +104,7 @@ fun PluginSettingsScreen(
 		}
 		items(plugin.pluginSettings.values.toList()) { settings ->
 			when (settings) {
-				is PluginSettingsItem.SwitchSettingsItem -> SwitchSettingsItem(
+				is PluginSettingsItem.SwitchSettingsItem -> SettingSwitch(
 					title = settings.title,
 					description = settings.description,
 					checked = settings.value.value,

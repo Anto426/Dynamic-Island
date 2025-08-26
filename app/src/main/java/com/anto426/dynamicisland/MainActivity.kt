@@ -7,30 +7,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.anto426.dynamicisland.model.SETTINGS_KEY
-import com.anto426.dynamicisland.model.SETTINGS_THEME_INVERTED
-import com.anto426.dynamicisland.model.THEME_INVERTED
+import com.anto426.dynamicisland.island.IslandSettings
+import com.anto426.dynamicisland.model.*
 import com.anto426.dynamicisland.navigation.*
 import com.anto426.dynamicisland.plugins.ExportedPlugins
-import com.anto426.dynamicisland.island.IslandSettings
-import com.anto426.dynamicisland.model.DISCLOSURE_ACCEPTED
 import com.anto426.dynamicisland.ui.settings.settings
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
-
 
 class MainActivity : ComponentActivity() {
 
@@ -47,118 +50,133 @@ class MainActivity : ComponentActivity() {
 		super.onCreate(savedInstanceState)
 		instance = this
 
-		settingsPreferences = getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
-
+		settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
-		// Invert theme in app
-		settingsPreferences.edit().putBoolean(THEME_INVERTED, true).apply()
-		sendBroadcast(Intent(SETTINGS_THEME_INVERTED))
+		invertTheme(true) // Invert theme on start
 
 		setContent {
-			// Setup plugins
-			ExportedPlugins.setupPlugins(LocalContext.current)
+			val context = LocalContext.current
 
-			// Init
+			// Setup plugins
+			ExportedPlugins.setupPlugins(context)
+
 			Theme.instance.Init()
 			IslandSettings.instance.loadSettings(this)
 
-			val disclosureAccepted by remember { mutableStateOf(settingsPreferences.getBoolean(
-				DISCLOSURE_ACCEPTED, false)
-			) }
+			val disclosureAccepted by remember {
+				mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false))
+			}
 
 			if (!disclosureAccepted) {
 				startActivity(Intent(this, DisclosureActivity::class.java))
 				finish()
 			}
 
-			DynamicIslandTheme(
-				darkTheme = Theme.instance.isDarkTheme,
-			) {
-				// A surface container using the 'background' color from the theme
+			DynamicIslandTheme(darkTheme = Theme.instance.isDarkTheme) {
 				Surface(
 					modifier = Modifier.fillMaxSize(),
 					color = MaterialTheme.colorScheme.background
 				) {
-					// Navigation
-					val settingsRoutes = settings.map { (it as IslandDestination).route }
-
 					val navController = rememberNavController()
 					val currentBackStack by navController.currentBackStackEntryAsState()
 					val currentDestination = currentBackStack?.destination
-					val currentScreen : IslandDestination =
-						bottomDestinations.find { it.route == currentDestination?.route } ?:
-							// If current destination is contained in settings
-						(settings.find { (it as IslandDestination).route == currentDestination?.route }
-							?: if (currentDestination?.route == IslandPluginSettings.routeWithArgs) IslandPluginSettings else IslandHome
-								) as IslandDestination
+					val settingsRoutes = settings.map { (it as IslandDestination).route }
 
-					// Top app bar
+					val currentScreen: IslandDestination =
+						(bottomDestinations.find { it.route == currentDestination?.route }
+							?: settings.find { (it as IslandDestination).route == currentDestination?.route }
+							?: if (currentDestination?.route == IslandPluginSettings.routeWithArgs) IslandPluginSettings else IslandHome) as IslandDestination
+
+					LaunchedEffect(currentScreen) { actions.clear() }
+
 					val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-					LaunchedEffect(currentScreen) {
-						actions.clear()
-					}
-
 					Scaffold(
-						modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
 						topBar = {
 							CenterAlignedTopAppBar(
-								title = {
-									Crossfade(
-										targetState = currentScreen,
-									) { screen ->
-										Text(
-											text = if (screen == IslandHome) {
-												stringResource(id = R.string.app_name)
-											} else {
-												screen.title
-											},
-											textAlign = TextAlign.Center,
-											modifier = Modifier
-												.fillMaxWidth()
-										)
+								scrollBehavior = scrollBehavior,
+								colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+									containerColor = MaterialTheme.colorScheme.surface
+								),
+								navigationIcon = {
+									val showBack = currentDestination?.route in settingsRoutes
+											|| currentDestination?.route == IslandPluginSettings.routeWithArgs
+									if (showBack) {
+										IconButton(onClick = { navController.popBackStack() }) {
+											Icon(Icons.Default.ArrowBack, contentDescription = "Indietro")
+										}
+									} else {
+										Spacer(modifier = Modifier.width(48.dp)) // balance space
 									}
 								},
-								navigationIcon = {
-									if (
-										currentDestination?.route in settingsRoutes
-										|| currentDestination?.route == IslandPluginSettings.routeWithArgs
-									) {
-										IconButton(onClick = { navController.popBackStack() }) {
-											Icon(
-												imageVector = Icons.Default.ArrowBack,
-												contentDescription = "Back"
+								title = {
+									Box(modifier = Modifier.fillMaxWidth()) {
+										Crossfade(targetState = if (currentScreen == IslandHome) stringResource(R.string.app_name) else currentScreen.title) { text ->
+											Text(
+												text = text,
+												style = MaterialTheme.typography.titleLarge,
+												modifier = Modifier.align(Alignment.Center),
+												textAlign = TextAlign.Center
 											)
 										}
 									}
 								},
 								actions = {
-									actions.forEach { it() }
-								},
-								scrollBehavior = scrollBehavior
+									Row { actions.forEach { it() } }
+								}
 							)
 						},
 						bottomBar = {
-							NavigationBar {
-								for (destination in bottomDestinations) {
-									NavigationBarItem(
-										icon = { Icon(destination.icon, contentDescription = null) },
-										label = { Text(destination.title) },
-										selected = currentScreen == destination
-												|| (destination == com.anto426.dynamicisland.navigation.IslandSettings && settings.contains(currentScreen))
-												|| (destination == IslandPlugins && currentScreen == IslandPluginSettings),
-										onClick = {
-											navController.navigateSingleTopTo(destination.route)
-										}
-									)
+							Box(
+								modifier = Modifier
+									.fillMaxWidth()
+									.padding(bottom = 24.dp),
+								contentAlignment = Alignment.Center
+							) {
+								NavigationBar(
+									modifier = Modifier
+										.clip(RoundedCornerShape(32.dp))
+										.shadow(elevation = 12.dp, shape = RoundedCornerShape(32.dp))
+										.align(Alignment.Center),
+									containerColor = MaterialTheme.colorScheme.surface,
+									contentColor = MaterialTheme.colorScheme.onSurface
+								) {
+									bottomDestinations.forEach { destination ->
+										val selected = currentScreen == destination
+												|| (destination == IslandSettings && settings.contains(currentScreen))
+												|| (destination == IslandPlugins && currentScreen == IslandPluginSettings)
+										val scale by animateFloatAsState(targetValue = if (selected) 1.2f else 1f)
+
+										NavigationBarItem(
+											icon = {
+												Icon(
+													destination.icon,
+													contentDescription = null,
+													modifier = Modifier
+														.size(22.dp)
+														.graphicsLayer { scaleX = scale; scaleY = scale }
+												)
+											},
+											label = { Text(destination.title, style = MaterialTheme.typography.labelSmall) },
+											selected = selected,
+											onClick = { navController.navigateSingleTopTo(destination.route) },
+											colors = NavigationBarItemDefaults.colors(
+												indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+												selectedIconColor = MaterialTheme.colorScheme.primary,
+												selectedTextColor = MaterialTheme.colorScheme.primary,
+												unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+												unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+											)
+										)
+									}
 								}
 							}
-						},
-					) {
+						}
+					) { paddingValues ->
 						IslandNavHost(
 							modifier = Modifier
-								.padding(it)
+								.padding(paddingValues)
 								.fillMaxSize(),
 							navController = navController
 						)
@@ -168,31 +186,13 @@ class MainActivity : ComponentActivity() {
 		}
 	}
 
-	override fun onDestroy() {
-		super.onDestroy()
-		// Un-invert theme in app
-		settingsPreferences.edit().putBoolean(THEME_INVERTED, false).apply()
+	private fun invertTheme(invert: Boolean) {
+		settingsPreferences.edit { putBoolean(THEME_INVERTED, invert) }
 		sendBroadcast(Intent(SETTINGS_THEME_INVERTED))
 	}
 
-	override fun onStop() {
-		super.onStop()
-		// Un-invert theme in app
-		settingsPreferences.edit().putBoolean(THEME_INVERTED, false).apply()
-		sendBroadcast(Intent(SETTINGS_THEME_INVERTED))
-	}
-
-	override fun onPause() {
-		super.onPause()
-		// Un-invert theme in app
-		settingsPreferences.edit().putBoolean(THEME_INVERTED, false).apply()
-		sendBroadcast(Intent(SETTINGS_THEME_INVERTED))
-	}
-
-	override fun onResume() {
-		super.onResume()
-		// Invert theme in app
-		settingsPreferences.edit().putBoolean(THEME_INVERTED, true).apply()
-		sendBroadcast(Intent(SETTINGS_THEME_INVERTED))
-	}
+	override fun onResume() { super.onResume(); invertTheme(true) }
+	override fun onPause() { super.onPause(); invertTheme(false) }
+	override fun onStop() { super.onStop(); invertTheme(false) }
+	override fun onDestroy() { super.onDestroy(); invertTheme(false) }
 }

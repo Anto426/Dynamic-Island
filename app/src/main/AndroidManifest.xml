@@ -5,8 +5,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" /> <!-- This is required for the app to fetch app icons when receiving notifications -->
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"

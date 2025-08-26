@@ -71,7 +71,7 @@ class NotificationService : NotificationListenerService() {
 				addAction(ACTION_OPEN_CLOSE)
 				addAction(ACTION_CLOSE)
 			},
-			Context.RECEIVER_NOT_EXPORTED
+			RECEIVER_NOT_EXPORTED
 		)
 	}
 

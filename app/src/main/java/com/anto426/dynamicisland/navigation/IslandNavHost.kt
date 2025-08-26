@@ -1,5 +1,11 @@
 package com.anto426.dynamicisland.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -12,6 +18,8 @@ import com.anto426.dynamicisland.ui.home.HomeScreen
 import com.anto426.dynamicisland.ui.plugins.PluginScreen
 import com.anto426.dynamicisland.ui.settings.*
 import com.anto426.dynamicisland.ui.settings.pages.*
+import com.anto426.dynamicisland.ui.settings.pages.dev.DeveloperScreen
+
 
 @Composable
 fun IslandNavHost(
@@ -23,56 +31,112 @@ fun IslandNavHost(
 		startDestination = bottomDestinations.first().route,
 		modifier = modifier,
 	) {
-		// Main destinations
-		composable(IslandHome.route) {
+		composable(
+			route = IslandHome.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			HomeScreen(
 				onGetStartedClick = {
 					navController.navigateSingleTopTo(IslandPlugins.route)
 				},
 				onShowDisclosureClick = {
-					navController.navigateSingleTopTo(AboutSetting.route)
+					navController.navigate(AboutSetting.route)
 				},
 			)
 		}
-		composable(IslandPlugins.route) {
+		composable(
+			route = IslandPlugins.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			PluginScreen(
 				onPluginClicked = { plugin ->
 					navController.navigateToPluginSettings(plugin.id)
 				}
 			)
 		}
-		composable(IslandSettings.route) {
+		composable(
+			route = IslandSettings.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			SettingsScreen(
 				onSettingClicked = { setting ->
 					navController.navigate(setting.route)
 				}
 			)
 		}
-		// Settings screens
-		composable(ThemeSetting.route) {
+		composable(
+			route = ThemeSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			ThemeSettingsScreen()
 		}
-		composable(BehaviorSetting.route) {
+		composable(
+			route = BehaviorSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			BehaviorSettingsScreen()
 		}
-		composable(PositionSizeSetting.route) {
+		composable(
+			route = PositionSizeSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			PositionSizeSettingsScreen()
 		}
-		composable(EnabledAppsSetting.route) {
+		composable(
+			route = EnabledAppsSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			EnabledAppsSettingsScreen()
 		}
-		composable(AboutSetting.route) {
+		composable(
+			route = AboutSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
 			AboutSettingsScreen()
 		}
-
-		// Plugin settings
+		composable(
+			route = DeveloperScreen.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
+			DeveloperScreen()
+		}
 		composable(
 			route = IslandPluginSettings.routeWithArgs,
 			arguments = IslandPluginSettings.arguments,
 			deepLinks = IslandPluginSettings.deepLinks,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
 		) { backStackEntry ->
 			val pluginId = backStackEntry.arguments?.getString(IslandPluginSettings.pluginArg)
-
 			if (pluginId != null) {
 				PluginSettingsScreen(
 					plugin = ExportedPlugins.getPlugin(pluginId)
@@ -84,18 +148,12 @@ fun IslandNavHost(
 
 fun NavHostController.navigateSingleTopTo(route: String) =
 	this.navigate(route) {
-		// Pop up to the start destination of the graph to
-		// avoid building up a large stack of destinations
-		// on the back stack as users select items
 		popUpTo(
 			this@navigateSingleTopTo.graph.findStartDestination().id
 		) {
 			saveState = true
 		}
-		// Avoid multiple copies of the same destination when
-		// reselecting the same item
 		launchSingleTop = true
-		// Restore state when reselecting a previously selected item
 		restoreState = true
 	}
 
@@ -104,8 +162,30 @@ fun NavHostController.navigateToPluginSettings(pluginId: String) {
 		popUpTo(IslandSettings.route) {
 			saveState = true
 		}
-		// Avoid multiple copies of the same destination when
-		// reselecting the same item
 		launchSingleTop = true
 	}
 }
+
+fun AnimatedContentTransitionScope<*>.slideInFromEnd() =
+	slideInHorizontally(
+		initialOffsetX = { fullWidth -> fullWidth },
+		animationSpec = tween(300)
+	) + fadeIn(animationSpec = tween(300))
+
+fun AnimatedContentTransitionScope<*>.slideOutToStart() =
+	slideOutHorizontally(
+		targetOffsetX = { fullWidth -> -fullWidth },
+		animationSpec = tween(300)
+	) + fadeOut(animationSpec = tween(300))
+
+fun AnimatedContentTransitionScope<*>.slideInFromStart() =
+	slideInHorizontally(
+		initialOffsetX = { fullWidth -> -fullWidth },
+		animationSpec = tween(300)
+	) + fadeIn(animationSpec = tween(300))
+
+fun AnimatedContentTransitionScope<*>.slideOutToEnd() =
+	slideOutHorizontally(
+		targetOffsetX = { fullWidth -> fullWidth },
+		animationSpec = tween(300)
+	) + fadeOut(animationSpec = tween(300))

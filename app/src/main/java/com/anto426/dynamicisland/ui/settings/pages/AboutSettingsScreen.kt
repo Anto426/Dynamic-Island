@@ -2,120 +2,242 @@ package com.anto426.dynamicisland.ui.settings.pages
 
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.content.Context.CLIPBOARD_SERVICE
+import android.os.Build
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Mail
-import androidx.compose.material.icons.filled.Policy
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import com.skydoves.landscapist.rememberDrawablePainter
 import com.anto426.dynamicisland.R
-import com.anto426.dynamicisland.ui.settings.SettingsDivider
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun AboutSettingsScreen() {
 	val context = LocalContext.current
+	val uriHandler = LocalUriHandler.current
+	val packageManager = context.packageManager
+	val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+	val appIcon = rememberDrawablePainter(packageInfo.applicationInfo?.loadIcon(packageManager))
 
-	val manager = context.packageManager
-	val info = manager.getPackageInfo(
-		context.packageName, 0
+	val appName = context.applicationInfo.loadLabel(packageManager).toString()
+	val packageName = context.packageName
+	val versionName = packageInfo.versionName
+	val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+		packageInfo.longVersionCode
+	} else {
+		@Suppress("DEPRECATION")
+		packageInfo.versionCode.toLong()
+	}
+	val targetSdk = context.applicationInfo.targetSdkVersion
+	val minSdk = context.applicationInfo.minSdkVersion
+
+	val buildDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(
+		Date(context.applicationInfo.sourceDir.let {
+			java.io.File(it).lastModified()
+		})
 	)
-	val version = info.versionName
 
 	LazyColumn(
 		modifier = Modifier
-			.fillMaxSize(),
-		contentPadding = PaddingValues(16.dp)
+			.fillMaxSize()
+			.padding(16.dp),
+		verticalArrangement = Arrangement.spacedBy(16.dp)
 	) {
 		item {
-			TextSettingsItem(
-				title = "Developer",
-				description = "Anto426",
-				icon = Icons.Filled.Code,
-			)
-			TextSettingsItem(
-				icon = Icons.Default.BugReport,
-				title = "GitHub",
-				description = "https://github.com/Anto426/MaterialYou-Dynamic-Island",
-				onClick = {
-					val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-					val clip = ClipData.newPlainText("Dynamic Island GitHub", "https://github.com/Anto426/MaterialYou-Dynamic-Island")
-					clipboard.setPrimaryClip(clip)
-					Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+			Card(
+				modifier = Modifier.fillMaxWidth(),
+				elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+			) {
+				Column(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(24.dp),
+					horizontalAlignment = Alignment.CenterHorizontally
+				) {
+					Image(
+						painter = appIcon,
+						contentDescription = "Icona dell'app",
+						modifier = Modifier
+							.size(48.dp)
+							.clip(CircleShape)
+					)
+					Spacer(Modifier.height(8.dp))
+					Text(appName, style = MaterialTheme.typography.titleLarge)
+					Text(
+						packageName,
+						style = MaterialTheme.typography.bodySmall,
+						color = MaterialTheme.colorScheme.onSurfaceVariant
+					)
 				}
-			)
-			TextSettingsItem(
-				icon = Icons.Default.Info,
-				title = "Version",
-				description = version
-			)
-			SettingsDivider(modifier = Modifier.padding(vertical = 4.dp))
-			TextSettingsItem(
-				icon = Icons.Default.VerifiedUser,
-				title = "Disclosure",
-				description = context.getString(R.string.disclosure),
-			)
+			}
+		}
+		item {
+			Card(
+				modifier = Modifier.fillMaxWidth(),
+				colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
+			) {
+				Column(
+					modifier = Modifier.padding(16.dp),
+					verticalArrangement = Arrangement.spacedBy(16.dp)
+				) {
+					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+						Text(
+							text = "Informazioni sull'App",
+							style = MaterialTheme.typography.titleMedium,
+							color = MaterialTheme.colorScheme.onSurface
+						)
+						InfoItem(
+							icon = Icons.Default.Info,
+							title = "Versione",
+							value = "$versionName ($versionCode)",
+							isCopyable = true,
+							context = context
+						)
+						SettingsDivider()
+						InfoItem(
+							icon = Icons.Default.Build,
+							title = "SDK di destinazione",
+							value = "$targetSdk",
+							isCopyable = true,
+							context = context
+						)
+						SettingsDivider()
+						InfoItem(
+							icon = Icons.Default.SystemUpdate,
+							title = "SDK minimo",
+							value = "$minSdk",
+							isCopyable = true,
+							context = context
+						)
+						SettingsDivider()
+						InfoItem(
+							icon = Icons.Default.DateRange,
+							title = "Data di compilazione",
+							value = buildDate,
+							isCopyable = true,
+							context = context
+						)
+					}
+					SettingsDivider()
+					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+						Text(
+							text = "Informazioni sul Dispositivo",
+							style = MaterialTheme.typography.titleMedium,
+							color = MaterialTheme.colorScheme.onSurface
+						)
+						InfoItem(
+							icon = Icons.Default.PhoneAndroid,
+							title = "Versione Android",
+							value = "${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})",
+							isCopyable = true,
+							context = context
+						)
+						SettingsDivider()
+						InfoItem(
+							icon = Icons.Default.Memory,
+							title = "Architettura CPU",
+							value = Build.SUPPORTED_ABIS.joinToString(", "),
+							isCopyable = true,
+							context = context
+						)
+					}
+					SettingsDivider()
+					Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+						Text(
+							text = "Link Utili",
+							style = MaterialTheme.typography.titleMedium,
+							color = MaterialTheme.colorScheme.onSurface
+						)
+						InfoItem(
+							icon = Icons.Default.Code,
+							title = "Sviluppatore",
+							value = "Anto426",
+							onClick = {
+								val url = "https://github.com/Anto426"
+								uriHandler.openUri(url)
+							}
+						)
+						SettingsDivider()
+						InfoItem(
+							icon = Icons.Default.BugReport,
+							title = "GitHub",
+							value = "Apri nel browser",
+							onClick = {
+								val url = "https://github.com/Anto426/MaterialYou-Dynamic-Island"
+								uriHandler.openUri(url)
+							}
+						)
+					}
+				}
+			}
 		}
 	}
 }
 
 @Composable
-fun TextSettingsItem(
-	icon: ImageVector? = null,
+fun InfoItem(
+	icon: ImageVector,
 	title: String,
-	description: String? = null,
-	onClick: () -> Unit = {}
+	value: String,
+	isCopyable: Boolean = false,
+	context: Context? = null,
+	onClick: (() -> Unit)? = null
 ) {
+	val clipboardManager = context?.getSystemService(CLIPBOARD_SERVICE) as? ClipboardManager
+	val isClickable = isCopyable || onClick != null
+
+	val onAction: () -> Unit = {
+		when {
+			isCopyable && clipboardManager != null -> {
+				clipboardManager.setPrimaryClip(ClipData.newPlainText(title, value))
+				Toast.makeText(context, "$title copiato!", Toast.LENGTH_SHORT).show()
+			}
+			onClick != null -> onClick.invoke()
+		}
+	}
+
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.clip(MaterialTheme.shapes.medium)
-			.clickable(onClick = onClick)
+			.clickable(enabled = isClickable) { onAction() }
 			.padding(16.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {
-		if (icon != null) {
-			Icon(
-				imageVector = icon,
-				contentDescription = null,
-			)
-			Spacer(modifier = Modifier.width(16.dp))
-		}
+		Icon(
+			imageVector = icon,
+			contentDescription = null,
+			tint = MaterialTheme.colorScheme.onSecondaryContainer,
+			modifier = Modifier.size(24.dp)
+		)
+		Spacer(Modifier.width(16.dp))
 		Column(modifier = Modifier.weight(1f)) {
 			Text(
 				text = title,
-				style = MaterialTheme.typography.titleMedium
+				style = MaterialTheme.typography.bodyMedium
 			)
-			if (description != null) {
-				Text(
-					text = description,
-					style = MaterialTheme.typography.labelMedium
-				)
-			}
+			Text(
+				text = value,
+				style = MaterialTheme.typography.bodySmall,
+				color = MaterialTheme.colorScheme.onSurfaceVariant
+			)
 		}
 	}
 }

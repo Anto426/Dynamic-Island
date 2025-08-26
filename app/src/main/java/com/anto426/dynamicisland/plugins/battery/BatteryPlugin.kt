@@ -341,7 +341,8 @@ class BatteryPlugin(
 		}
 	}
 
-	private fun formatChargeTime(millis: Long): String {
+	@SuppressLint("DefaultLocale")
+    private fun formatChargeTime(millis: Long): String {
 		if (millis <= 0) return "Calcolo..."
 		val hours = TimeUnit.MILLISECONDS.toHours(millis)
 		val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60
