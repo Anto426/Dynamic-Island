@@ -2,6 +2,9 @@ package com.anto426.dynamicisland.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -31,6 +34,12 @@ object IslandSettings : IslandDestination {
 	override val icon = Icons.Filled.Settings
 	override val route = "settings"
 	override val title = "Settings"
+}
+
+object IslandAdvancedSettings : IslandDestination {
+	override val icon = Icons.Filled.Build
+	override val route = "advanced"
+	override val title = "Advanced"
 }
 
 // Destinazione per le impostazioni dei plugin con argomenti e deep link

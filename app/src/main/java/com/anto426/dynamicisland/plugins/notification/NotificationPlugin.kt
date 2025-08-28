@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,9 +25,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.model.ACTION_OPEN_CLOSE
 import com.anto426.dynamicisland.model.NOTIFICATION_POSTED
@@ -130,7 +133,113 @@ class NotificationPlugin(
 
 	@Composable
 	override fun Composable() {
-		TODO("Not yet implemented")
+		val meta = notificationMeta ?: return
+
+		Column(
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(20.dp),
+			horizontalAlignment = Alignment.CenterHorizontally,
+			verticalArrangement = Arrangement.spacedBy(16.dp)
+		) {
+			// Header con icona e titolo
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.spacedBy(16.dp)
+			) {
+				// Icona dell'app
+				Surface(
+					modifier = Modifier.size(56.dp),
+					shape = CircleShape,
+					color = MaterialTheme.colorScheme.primaryContainer
+				) {
+					Box(
+						contentAlignment = Alignment.Center,
+						modifier = Modifier.fillMaxSize()
+					) {
+						Icon(
+							painter = rememberDrawablePainter(drawable = meta.iconDrawable),
+							contentDescription = "Icona app",
+							tint = MaterialTheme.colorScheme.onPrimaryContainer,
+							modifier = Modifier.size(28.dp)
+						)
+					}
+				}
+
+				// Titolo e corpo
+				Column(
+					modifier = Modifier.weight(1f),
+					verticalArrangement = Arrangement.spacedBy(4.dp)
+				) {
+					Text(
+						text = meta.title ?: "Notifica",
+						style = MaterialTheme.typography.titleLarge,
+						fontWeight = FontWeight.SemiBold,
+						color = MaterialTheme.colorScheme.onSurface,
+						maxLines = 2,
+						overflow = TextOverflow.Ellipsis
+					)
+
+					if (meta.body.isNotBlank()) {
+						Text(
+							text = meta.body,
+							style = MaterialTheme.typography.bodyMedium,
+							color = MaterialTheme.colorScheme.onSurfaceVariant,
+							maxLines = 3,
+							overflow = TextOverflow.Ellipsis,
+							lineHeight = 18.sp
+						)
+					}
+				}
+			}
+
+			// Azioni disponibili
+			if (meta.actions.isNotEmpty()) {
+				Card(
+					modifier = Modifier.fillMaxWidth(),
+					colors = CardDefaults.cardColors(
+						containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+					),
+					shape = MaterialTheme.shapes.large
+				) {
+					Column(
+						modifier = Modifier.padding(16.dp),
+						verticalArrangement = Arrangement.spacedBy(12.dp)
+					) {
+						Text(
+							text = "Azioni",
+							style = MaterialTheme.typography.titleSmall,
+							fontWeight = FontWeight.Medium,
+							color = MaterialTheme.colorScheme.primary
+						)
+
+						NotificationActions(meta)
+					}
+				}
+			}
+
+			// Indicatore di swipe per chiudere
+			Row(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(top = 8.dp),
+				horizontalArrangement = Arrangement.Center,
+				verticalAlignment = Alignment.CenterVertically
+			) {
+				Icon(
+					imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+					contentDescription = "Scorri a sinistra per chiudere",
+					tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+					modifier = Modifier.size(16.dp)
+				)
+				Text(
+					text = "Scorri per chiudere",
+					style = MaterialTheme.typography.bodySmall,
+					color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+				)
+			}
+		}
 	}
 
 

@@ -12,6 +12,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.model.BATTERY_SHOW_PERCENTAGE
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.BasePlugin
@@ -44,6 +46,7 @@ import com.anto426.dynamicisland.plugins.PluginSettingsItem
 import com.anto426.dynamicisland.ui.theme.BatteryEmpty
 import com.anto426.dynamicisland.ui.theme.BatteryFull
 import java.util.concurrent.TimeUnit
+import androidx.core.content.edit
 
 private enum class DisplayMode {
 	CHARGING, LOW_BATTERY, POWER_SAVER
@@ -189,6 +192,9 @@ class BatteryPlugin(
 			}
 		}, 500) // Ritardo di 500 millisecondi
 
+		// Inizializza le impostazioni del plugin
+		initializePluginSettings()
+
 		pluginSettings.values.forEach {
 			if (it is PluginSettingsItem.SwitchSettingsItem) {
 				it.value.value = it.isSettingEnabled(context, it.id)
@@ -216,7 +222,7 @@ class BatteryPlugin(
 	) {
 		val animatedProgress = animateFloatAsState(
 			targetValue = batteryPercent / 100f,
-			animationSpec = tween(1000),
+			animationSpec = tween(1200, easing = EaseOutCubic),
 			label = "BatteryProgress"
 		).value
 		val textColorOnBattery = if (progressColor.luminance() > 0.5)
@@ -419,9 +425,81 @@ class BatteryPlugin(
 		}
 	}
 
-	override fun onClick() {}
-	override fun onLeftSwipe() {}
-	override fun onRightSwipe() {}
+	private fun initializePluginSettings() {
+		// Impostazione per mostrare la temperatura
+		pluginSettings["battery_show_temperature"] = PluginSettingsItem.SwitchSettingsItem(
+			id = "battery_show_temperature",
+			title = "Mostra Temperatura",
+			description = "Visualizza la temperatura della batteria durante la ricarica",
+			value = mutableStateOf(true),
+			onValueChange = { context, enabled -> saveBooleanSetting(context, id, enabled) }
+		)
+
+		// Impostazione per notifiche batteria bassa
+		pluginSettings["battery_low_notification"] = PluginSettingsItem.SwitchSettingsItem(
+			id = "battery_low_notification",
+			title = "Notifiche Batteria Bassa",
+			description = "Mostra notifiche quando la batteria è sotto il 20%",
+			value = mutableStateOf(true),
+			onValueChange = { context, enabled -> saveBooleanSetting(context, id, enabled) }
+		)
+
+		// Impostazione per soglia batteria bassa personalizzata - COMMENTATA per ora
+		/*
+		pluginSettings["battery_custom_threshold"] = PluginSettingsItem.SliderSettingsItem(
+			id = "battery_custom_threshold",
+			title = "Soglia Batteria Bassa",
+			description = "Imposta la percentuale per le notifiche di batteria bassa",
+			value = mutableStateOf(20f),
+			range = 10f..30f,
+			steps = 20,
+			isSettingEnabled = { context, id -> getFloatSetting(context, id, 20f) },
+			onValueChange = { context, value ->
+				saveFloatSetting(context, id, value)
+				LOW_BATTERY_THRESHOLD = value.toInt()
+			}
+		)
+		*/
+	}
+
+	private fun getBooleanSetting(context: Context, key: String, default: Boolean): Boolean {
+		val prefs = context.getSharedPreferences("battery_plugin_prefs", Context.MODE_PRIVATE)
+		return prefs.getBoolean(key, default)
+	}
+
+	private fun saveBooleanSetting(context: Context, key: String, value: Boolean) {
+		val prefs = context.getSharedPreferences("battery_plugin_prefs", Context.MODE_PRIVATE)
+		prefs.edit { putBoolean(key, value) }
+	}
+
+	private fun getFloatSetting(context: Context, key: String, default: Float): Float {
+		val prefs = context.getSharedPreferences("battery_plugin_prefs", Context.MODE_PRIVATE)
+		return prefs.getFloat(key, default)
+	}
+
+	private fun saveFloatSetting(context: Context, key: String, value: Float) {
+		val prefs = context.getSharedPreferences("battery_plugin_prefs", Context.MODE_PRIVATE)
+		prefs.edit().putFloat(key, value).apply()
+	}
+
+	// Implementazione metodi astratti mancanti
+	override fun onClick() {
+		// Espandi l'isola quando si clicca sulla batteria
+		context.expand()
+	}
+
 	@Composable
-	override fun PermissionsRequired() {}
+	override fun PermissionsRequired() {
+		// La batteria non richiede permessi speciali
+	}
+
+	override fun onRightSwipe() {
+		// Swipe destra - potrebbe aprire impostazioni batteria
+		context.expand()
+	}
+
+	override fun onLeftSwipe() {
+		// Swipe sinistra - potrebbe chiudere l'isola
+		context.shrink()
+	}
 }

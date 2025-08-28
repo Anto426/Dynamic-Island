@@ -148,7 +148,7 @@ private fun createWavesShader(width: Int, height: Int, color: Color): Shader {
 	)
 }
 
-private const val AmplitudeRatio = 0.05f
-private const val WaterLevelRatio = 0.5f
-private const val WavesShiftAnimationDurationInMillis = 2500
-private const val WavesAmplitudeAnimationDurationInMillis = 3000
+private const val AmplitudeRatio = 0.08f  // Aumentato per onde più visibili
+private const val WaterLevelRatio = 0.45f  // Leggermente più in alto
+private const val WavesShiftAnimationDurationInMillis = 2000  // Più veloce per effetto più dinamico
+private const val WavesAmplitudeAnimationDurationInMillis = 2500  // Più fluido

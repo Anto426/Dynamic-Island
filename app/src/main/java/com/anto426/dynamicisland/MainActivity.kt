@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
@@ -35,6 +37,7 @@ import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.ui.settings.settings
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
+import com.anto426.dynamicisland.updater.UpdateManager
 
 class MainActivity : ComponentActivity() {
 
@@ -56,6 +59,9 @@ class MainActivity : ComponentActivity() {
 
 		invertTheme(true) // Invert theme on start
 
+		// Gestisci gli intent per gli aggiornamenti
+		handleUpdateIntent(intent)
+
 		setContent {
 			val context = LocalContext.current
 
@@ -64,6 +70,12 @@ class MainActivity : ComponentActivity() {
 
 			Theme.instance.Init()
 			IslandSettings.instance.loadSettings(this)
+
+			// Inizializza il sistema di aggiornamenti
+			val updateManager = UpdateManager(this)
+			if (updateManager.isAutoUpdateEnabled()) {
+				updateManager.startPeriodicUpdateCheck()
+			}
 
 			val disclosureAccepted by remember {
 				mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false))
@@ -98,33 +110,54 @@ class MainActivity : ComponentActivity() {
 							CenterAlignedTopAppBar(
 								scrollBehavior = scrollBehavior,
 								colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-									containerColor = MaterialTheme.colorScheme.surface
+									containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.95f),
+									titleContentColor = MaterialTheme.colorScheme.onSurface,
+									navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+									actionIconContentColor = MaterialTheme.colorScheme.onSurface
 								),
 								navigationIcon = {
 									val showBack = currentDestination?.route in settingsRoutes
 											|| currentDestination?.route == IslandPluginSettings.routeWithArgs
 									if (showBack) {
-										IconButton(onClick = { navController.popBackStack() }) {
-											Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Indietro")
+										IconButton(
+											onClick = { navController.popBackStack() },
+											colors = IconButtonDefaults.iconButtonColors(
+												contentColor = MaterialTheme.colorScheme.onSurface
+											)
+										) {
+											Icon(
+												Icons.AutoMirrored.Filled.ArrowBack,
+												contentDescription = "Indietro",
+												modifier = Modifier.size(24.dp)
+											)
 										}
-									} else {
-										Spacer(modifier = Modifier.width(48.dp)) // balance space
 									}
 								},
 								title = {
 									Box(modifier = Modifier.fillMaxWidth()) {
-										Crossfade(targetState = if (currentScreen == IslandHome) stringResource(R.string.app_name) else currentScreen.title) { text ->
+										Crossfade(
+											targetState = if (currentScreen == IslandHome) stringResource(R.string.app_name) else currentScreen.title,
+											animationSpec = tween(300)
+										) { text ->
 											Text(
 												text = text,
-												style = MaterialTheme.typography.titleLarge,
+												style = MaterialTheme.typography.titleLarge.copy(
+													fontWeight = if (currentScreen == IslandHome) FontWeight.Bold else FontWeight.SemiBold
+												),
 												modifier = Modifier.align(Alignment.Center),
-												textAlign = TextAlign.Center
+												textAlign = TextAlign.Center,
+												maxLines = 1
 											)
 										}
 									}
 								},
 								actions = {
-									Row { actions.forEach { it() } }
+									Row(
+										horizontalArrangement = Arrangement.End,
+										verticalAlignment = Alignment.CenterVertically
+									) {
+										actions.forEach { it() }
+									}
 								}
 							)
 						},
@@ -140,18 +173,20 @@ class MainActivity : ComponentActivity() {
 										modifier = Modifier
 											.windowInsetsPadding(NavigationBarDefaults.windowInsets)
 											.padding(horizontal = 16.dp, vertical = 8.dp)
-											.clip(RoundedCornerShape(24.dp)),
-										tonalElevation = 0.dp,
-										containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp).copy(alpha = 0.9f) // Sfondo leggermente trasparente
+											.clip(RoundedCornerShape(28.dp))
+											.height(72.dp),
+										tonalElevation = 8.dp,
+										containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp).copy(alpha = 0.95f),
+										contentColor = MaterialTheme.colorScheme.onSurface
 									) {
 										bottomDestinations.forEach { destination ->
 											val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
 
 											val scale by animateFloatAsState(
-												targetValue = if (selected) 1.1f else 1.0f,
+												targetValue = if (selected) 1.15f else 1.0f,
 												animationSpec = spring(
-													dampingRatio = 0.4f,
-													stiffness = 500f
+													dampingRatio = 0.5f,
+													stiffness = 600f
 												),
 												label = "icon_scale_animation"
 											)
@@ -162,14 +197,21 @@ class MainActivity : ComponentActivity() {
 														destination.icon,
 														contentDescription = null,
 														modifier = Modifier
-															.size(24.dp)
+															.size(if (selected) 28.dp else 24.dp)
 															.graphicsLayer {
 																scaleX = scale
 																scaleY = scale
 															}
 													)
 												},
-												label = { Text(destination.title, style = MaterialTheme.typography.labelSmall) },
+												label = {
+													Text(
+														destination.title,
+														style = MaterialTheme.typography.labelSmall.copy(
+															fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+														)
+													)
+												},
 												selected = selected,
 												onClick = {
 													navController.navigate(destination.route) {
@@ -181,8 +223,8 @@ class MainActivity : ComponentActivity() {
 													}
 												},
 												colors = NavigationBarItemDefaults.colors(
-													indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-													selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+													indicatorColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+													selectedIconColor = MaterialTheme.colorScheme.primary,
 													selectedTextColor = MaterialTheme.colorScheme.primary,
 													unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
 													unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -215,4 +257,43 @@ class MainActivity : ComponentActivity() {
 	override fun onPause() { super.onPause(); invertTheme(false) }
 	override fun onStop() { super.onStop(); invertTheme(false) }
 	override fun onDestroy() { super.onDestroy(); invertTheme(false) }
+
+	/**
+	 * Gestisce gli intent per gli aggiornamenti
+	 */
+	private fun handleUpdateIntent(intent: Intent?) {
+		intent?.let {
+			val showUpdateDialog = it.getBooleanExtra("show_update_dialog", false)
+			if (showUpdateDialog) {
+				val newVersion = it.getStringExtra("new_version")
+				val downloadUrl = it.getStringExtra("download_url")
+				val releaseNotes = it.getStringExtra("release_notes")
+
+				if (newVersion != null && downloadUrl != null) {
+					showUpdateDialog(newVersion, downloadUrl, releaseNotes)
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gestisce i nuovi intent quando l'app è già aperta
+	 */
+	override fun onNewIntent(intent: Intent) {
+		super.onNewIntent(intent)
+		handleUpdateIntent(intent)
+	}
+
+	/**
+	 * Mostra il dialog per l'aggiornamento disponibile
+	 */
+	private fun showUpdateDialog(version: String, downloadUrl: String, releaseNotes: String?) {
+		// TODO: Implementare il dialog di aggiornamento
+		// Per ora mostriamo un toast
+		android.widget.Toast.makeText(
+			this,
+			"Nuova versione disponibile: $version",
+			android.widget.Toast.LENGTH_LONG
+		).show()
+	}
 }

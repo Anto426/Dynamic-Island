@@ -104,8 +104,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
 
+    // -------------------- WorkManager (per aggiornamenti automatici) --------------------
+    implementation "androidx.work:work-runtime-ktx:2.10.0"
+
     // -------------------- Other --------------------
-    implementation 'androidx.core:core-splashscreen:1.0.1'
 
     // -------------------- Testing --------------------
     testImplementation 'junit:junit:4.13.2'

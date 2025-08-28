@@ -12,7 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.anto426.dynamicisland.model.DISCLOSURE_ACCEPTED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
@@ -107,8 +109,17 @@ class DisclosureActivity : ComponentActivity() {
 								title = { Text(
 									text = disclosureScreens[step].title,
 									textAlign = TextAlign.Center,
+									style = MaterialTheme.typography.titleLarge.copy(
+										fontWeight = FontWeight.SemiBold
+									)
 								) },
-								scrollBehavior = scrollBehavior
+								scrollBehavior = scrollBehavior,
+								colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+									containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.95f),
+									titleContentColor = MaterialTheme.colorScheme.onSurface,
+									navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+									actionIconContentColor = MaterialTheme.colorScheme.onSurface
+								)
 							)
 						},
 					) {

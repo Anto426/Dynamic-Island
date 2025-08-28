@@ -31,6 +31,16 @@ class IslandSettings {
 
 	var autoHideOpenedAfter by mutableFloatStateOf(5000f)
 
+	// Nuove impostazioni avanzate
+	var animationsEnabled by mutableStateOf(true)
+	var hapticFeedback by mutableStateOf(true)
+	var soundEnabled by mutableStateOf(false)
+	var autoHideExpandedAfter by mutableFloatStateOf(10000f)
+	var dynamicThemeEnabled by mutableStateOf(false)
+	var silentMode by mutableStateOf(false)
+	var lowPowerMode by mutableStateOf(false)
+	var notificationPriority by mutableIntStateOf(1) // 0: bassa, 1: normale, 2: alta
+
 	fun applySettings(context: Context) {
 		val settings = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
 		settings.edit {
@@ -45,6 +55,14 @@ class IslandSettings {
                 .putFloat(AUTO_HIDE_OPENED_AFTER, autoHideOpenedAfter)
                 .putBoolean(SHOW_BORDER, showBorders)
                 .putString(GRAVITY, gravity.name)
+                .putBoolean(ANIMATIONS_ENABLED, animationsEnabled)
+                .putBoolean(HAPTIC_FEEDBACK, hapticFeedback)
+                .putBoolean(SOUND_ENABLED, soundEnabled)
+                .putFloat(AUTO_HIDE_EXPANDED_AFTER, autoHideExpandedAfter)
+                .putBoolean(DYNAMIC_THEME_ENABLED, dynamicThemeEnabled)
+                .putBoolean(SILENT_MODE, silentMode)
+                .putBoolean(LOW_POWER_MODE, lowPowerMode)
+                .putInt(NOTIFICATION_PRIORITY, notificationPriority)
         }
 	}
 
@@ -62,6 +80,16 @@ class IslandSettings {
 		autoHideOpenedAfter = settings.getFloat(AUTO_HIDE_OPENED_AFTER, 5000f)
 		showBorders = settings.getBoolean(SHOW_BORDER, false)
 		gravity = IslandGravity.valueOf(settings.getString(GRAVITY, IslandGravity.Center.name) ?: IslandGravity.Center.name)
+
+		// Carica nuove impostazioni avanzate
+		animationsEnabled = settings.getBoolean(ANIMATIONS_ENABLED, true)
+		hapticFeedback = settings.getBoolean(HAPTIC_FEEDBACK, true)
+		soundEnabled = settings.getBoolean(SOUND_ENABLED, false)
+		autoHideExpandedAfter = settings.getFloat(AUTO_HIDE_EXPANDED_AFTER, 10000f)
+		dynamicThemeEnabled = settings.getBoolean(DYNAMIC_THEME_ENABLED, false)
+		silentMode = settings.getBoolean(SILENT_MODE, false)
+		lowPowerMode = settings.getBoolean(LOW_POWER_MODE, false)
+		notificationPriority = settings.getInt(NOTIFICATION_PRIORITY, 1)
 	}
 }
 

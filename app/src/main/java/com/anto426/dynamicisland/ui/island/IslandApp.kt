@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.anto426.dynamicisland.island.*
@@ -47,28 +48,70 @@ fun IslandApp(
 
 	val height by animateDpAsState(
 		targetValue = islandView.height,
-		animationSpec = spring(
-			dampingRatio = DampingRatioMediumBouncy,
-			stiffness = StiffnessLow
-		),
+		animationSpec = if (islandOverlayService.shouldAnimate()) {
+			spring(
+				dampingRatio = DampingRatioMediumBouncy,
+				stiffness = StiffnessLow
+			)
+		} else {
+			spring(
+				dampingRatio = 1.0f,  // No bouncy
+				stiffness = 10000f    // High stiffness
+			)
+		},
 		label = "IslandHeight"
 	)
 	val width by animateDpAsState(
 		targetValue = islandView.width,
-		animationSpec = spring(
-			dampingRatio = DampingRatioMediumBouncy,
-			stiffness = StiffnessLow
-		),
+		animationSpec = if (islandOverlayService.shouldAnimate()) {
+			spring(
+				dampingRatio = DampingRatioMediumBouncy,
+				stiffness = StiffnessLow
+			)
+		} else {
+			spring(
+				dampingRatio = 1.0f,  // No bouncy
+				stiffness = 10000f    // High stiffness
+			)
+		},
 		label = "IslandWidth"
 	)
 	val cornerPercentage by animateFloatAsState(
 		targetValue = islandView.cornerPercentage,
+		animationSpec = if (islandOverlayService.shouldAnimate()) {
+			tween(
+				durationMillis = 400,
+				easing = EaseOutCubic
+			)
+		} else {
+			tween(durationMillis = 0)
+		},
 		label = "IslandCorner"
 	)
 
+	// Aggiungiamo animazione di scala per effetti più dinamici
+	val scale by animateFloatAsState(
+		targetValue = when (islandView.state) {
+			IslandStates.Closed -> 1f
+			IslandStates.Opened -> if (islandOverlayService.shouldAnimate()) 1.05f else 1f
+			IslandStates.Expanded -> 1f
+		},
+		animationSpec = if (islandOverlayService.shouldAnimate()) {
+			spring(
+				dampingRatio = DampingRatioMediumBouncy,
+				stiffness = 1500f  // Medium stiffness
+			)
+		} else {
+			spring(
+				dampingRatio = 1.0f,  // No bouncy
+				stiffness = 10000f    // High stiffness
+			)
+		},
+		label = "IslandScale"
+	)
+
 	AnimatedVisibility(
-		visible = (Island.isScreenOn || IslandSettings.instance.showOnLockScreen)
-				&& (!Island.isInLandscape || IslandSettings.instance.showInLandscape),
+		visible = Island.isVisible || Island.shouldShowOnLockScreen,
 	) {
 		DynamicIslandTheme(
 			darkTheme = if (islandOverlayService.invertedTheme) !Theme.instance.isDarkTheme else Theme.instance.isDarkTheme,
@@ -91,13 +134,22 @@ fun IslandApp(
 					modifier = Modifier
 						.width(width)
 						.height(height)
+						.graphicsLayer(
+							scaleX = scale,
+							scaleY = scale
+						)
 						.combinedClickable(
 							interactionSource = remember { MutableInteractionSource() },
 							indication = null,
-							onClick = { bindedPlugin?.onClick() },
+							onClick = {
+								bindedPlugin?.onClick()
+								islandOverlayService.performHapticFeedback()
+								islandOverlayService.playSound()
+							},
 							onLongClick = {
 								if (bindedPlugin?.canExpand() == true) {
 									islandOverlayService.expand()
+									islandOverlayService.performHapticFeedback()
 								}
 							}
 						)
@@ -116,8 +168,12 @@ fun IslandApp(
 						containerColor = MaterialTheme.colorScheme.surface,
 					),
 					elevation = CardDefaults.cardElevation(
-						defaultElevation = 8.dp,
-						pressedElevation = 12.dp
+						defaultElevation = when (islandView.state) {
+							IslandStates.Closed -> 4.dp
+							IslandStates.Opened -> 12.dp
+							IslandStates.Expanded -> 16.dp
+						},
+						pressedElevation = 20.dp
 					)
 				) {
 					Crossfade(

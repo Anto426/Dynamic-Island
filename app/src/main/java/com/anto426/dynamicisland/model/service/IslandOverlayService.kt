@@ -19,6 +19,8 @@ import androidx.lifecycle.*
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.anto426.dynamicisland.island.Island
 import com.anto426.dynamicisland.island.IslandState
+import com.anto426.dynamicisland.island.IslandStates
+import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.island.IslandViewState
 import com.anto426.dynamicisland.model.*
 import com.anto426.dynamicisland.plugins.BasePlugin
@@ -225,6 +227,35 @@ class IslandOverlayService : AccessibilityService() {
 
 	fun expand() { islandState = IslandViewState.Expanded(configuration = resources.configuration) }
 	fun shrink() { islandState = IslandViewState.Opened }
+
+	// Metodi per gestire le nuove impostazioni avanzate
+	fun performHapticFeedback() {
+		if (IslandSettings.instance.hapticFeedback) {
+			// Implementa haptic feedback qui
+			// Per ora usiamo una vibrazione semplice
+			val vibrator = getSystemService(VIBRATOR_SERVICE) as? android.os.Vibrator
+			vibrator?.vibrate(50)
+		}
+	}
+
+	fun playSound() {
+		if (IslandSettings.instance.soundEnabled && !IslandSettings.instance.silentMode) {
+			// Implementa riproduzione suono qui
+			// Per ora è un placeholder
+		}
+	}
+
+	fun shouldAnimate(): Boolean {
+		return IslandSettings.instance.animationsEnabled && !IslandSettings.instance.lowPowerMode
+	}
+
+	fun getAutoHideDelay(): Long {
+		return when (islandState.state) {
+			IslandStates.Opened -> IslandSettings.instance.autoHideOpenedAfter.toLong()
+			IslandStates.Expanded -> IslandSettings.instance.autoHideExpandedAfter.toLong()
+			else -> 0L
+		}
+	}
 
 	override fun onUnbind(intent: Intent?): Boolean {
 		instance = null

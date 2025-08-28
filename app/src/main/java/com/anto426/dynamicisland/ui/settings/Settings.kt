@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Straighten
 import androidx.compose.material.icons.filled.Token
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,6 +45,12 @@ object BehaviorSetting : IslandDestination, SettingItem {
 	override val icon: ImageVector = Icons.Default.Token
 	override val route: String = "behavior"
 }
+object AdvancedSetting : IslandDestination, SettingItem {
+	override val title: String = "settings_item_advanced"
+	override val subtitle: String = "settings_item_advanced_subtitle"
+	override val icon: ImageVector = Icons.Default.Settings
+	override val route: String = "advanced"
+}
 object AboutSetting : IslandDestination, SettingItem {
 	override val title: String = "settings_item_about"
 	override val subtitle: String = "settings_item_about_subtitle"
@@ -63,6 +70,7 @@ object DeveloperScreen : IslandDestination, SettingItem {
 val settings = listOf(
 	ThemeSetting,
 	BehaviorSetting,
+	AdvancedSetting,
 	PositionSizeSetting,
 	EnabledAppsSetting,
 	AboutSetting,

@@ -15,9 +15,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -28,6 +30,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -109,26 +113,44 @@ fun HomeScreen(
 				horizontalAlignment = Alignment.CenterHorizontally,
 				verticalArrangement = Arrangement.spacedBy(16.dp)
 			) {
-				// Icona dell'app con badge di stato
+				// Icona dell'app - Isola Dinamica
 				Box(
 					contentAlignment = Alignment.Center,
-					modifier = Modifier.size(80.dp)
+					modifier = Modifier.size(100.dp)
 				) {
+					// Sfondo circolare con gradiente
+					Box(
+						modifier = Modifier
+							.size(80.dp)
+							.background(
+								brush = Brush.radialGradient(
+									colors = listOf(
+										MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+										MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+										Color.Transparent
+									)
+								),
+								shape = CircleShape
+							)
+							.align(Alignment.Center)
+					)
+
+					// Icona principale
 					Icon(
-						imageVector = Icons.Rounded.Android,
+						imageVector = Icons.Rounded.Widgets,
 						contentDescription = null,
-						modifier = Modifier.size(64.dp),
+						modifier = Modifier.size(48.dp),
 						tint = MaterialTheme.colorScheme.primary
 					)
 
-					// Badge di stato
+					// Badge di stato sovrapposto
 					val allPermissionsGranted = isAccessibilityGranted && isOverlayGranted
 					if (allPermissionsGranted) {
 						Icon(
 							imageVector = Icons.Default.CheckCircle,
 							contentDescription = "Configurato",
 							modifier = Modifier
-								.size(24.dp)
+								.size(28.dp)
 								.align(Alignment.BottomEnd),
 							tint = MaterialTheme.colorScheme.primary
 						)

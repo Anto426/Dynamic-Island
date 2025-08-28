@@ -263,33 +263,98 @@ class MediaSessionPlugin(
 					transportControls.seekTo((sliderPosition * duration).roundToLong())
 					isDragging = false
 				},
-				modifier = Modifier.fillMaxWidth()
+				modifier = Modifier.fillMaxWidth(),
+				colors = SliderDefaults.colors(
+					thumbColor = MaterialTheme.colorScheme.primary,
+					activeTrackColor = MaterialTheme.colorScheme.primary,
+					inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
+				)
 			)
-			Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+			Row(
+				Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 8.dp),
+				verticalAlignment = Alignment.CenterVertically
+			) {
 				val currentTime = if (isDragging) (sliderPosition * duration).toLong() else elapsed
-				Text(formatTime(currentTime), style = MaterialTheme.typography.labelSmall)
+				Text(
+					formatTime(currentTime),
+					style = MaterialTheme.typography.labelSmall.copy(
+						color = MaterialTheme.colorScheme.onSurfaceVariant
+					)
+				)
 				Spacer(modifier = Modifier.weight(1f))
-				Text(formatTime(duration), style = MaterialTheme.typography.labelSmall)
+				Text(
+					formatTime(duration),
+					style = MaterialTheme.typography.labelSmall.copy(
+						color = MaterialTheme.colorScheme.onSurfaceVariant
+					)
+				)
 			}
 		}
 	}
 
 	@Composable
 	private fun PlayerControls(isPlaying: Boolean, transportControls: MediaController.TransportControls) {
-		Row(Modifier.fillMaxWidth(), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
-			IconButton(onClick = { transportControls.skipToPrevious() }) { Icon(Icons.Default.SkipPrevious, null, Modifier.size(36.dp)) }
+		Row(
+			Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 8.dp),
+			Arrangement.SpaceEvenly,
+			Alignment.CenterVertically
+		) {
+			// Pulsante precedente con feedback visivo
+			FilledTonalIconButton(
+				onClick = { transportControls.skipToPrevious() },
+				modifier = Modifier.size(56.dp),
+				colors = IconButtonDefaults.filledTonalIconButtonColors(
+					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+				)
+			) {
+				Icon(
+					Icons.Default.SkipPrevious,
+					contentDescription = "Traccia precedente",
+					Modifier.size(28.dp)
+				)
+			}
+
+			// Pulsante play/pause principale
 			FilledIconButton(
 				onClick = { if (isPlaying) transportControls.pause() else transportControls.play() },
-				modifier = Modifier.size(72.dp),
-				shape = CircleShape
+				modifier = Modifier.size(80.dp),
+				colors = IconButtonDefaults.filledIconButtonColors(
+					containerColor = MaterialTheme.colorScheme.primary
+				)
 			) {
-				AnimatedContent(isPlaying, label = "PlayPause", transitionSpec = {
-					scaleIn(animationSpec = tween(200)) togetherWith scaleOut(animationSpec = tween(200))
-				}) { playing ->
-					Icon(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, null, Modifier.size(42.dp))
+				AnimatedContent(
+					isPlaying,
+					label = "PlayPause",
+					transitionSpec = {
+						scaleIn(animationSpec = tween(200)) togetherWith scaleOut(animationSpec = tween(200))
+					}
+				) { playing ->
+					Icon(
+						if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
+						contentDescription = if (playing) "Pausa" else "Play",
+						Modifier.size(36.dp)
+					)
 				}
 			}
-			IconButton(onClick = { transportControls.skipToNext() }) { Icon(Icons.Default.SkipNext, null, Modifier.size(36.dp)) }
+
+			// Pulsante successivo con feedback visivo
+			FilledTonalIconButton(
+				onClick = { transportControls.skipToNext() },
+				modifier = Modifier.size(56.dp),
+				colors = IconButtonDefaults.filledTonalIconButtonColors(
+					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+				)
+			) {
+				Icon(
+					Icons.Default.SkipNext,
+					contentDescription = "Traccia successiva",
+					Modifier.size(28.dp)
+				)
+			}
 		}
 	}
 

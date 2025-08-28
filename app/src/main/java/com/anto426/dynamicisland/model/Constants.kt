@@ -35,5 +35,15 @@ const val AUTO_HIDE_OPENED_AFTER = "auto_hide_opened_after"
 const val SHOW_BORDER = "show_border"
 const val GRAVITY = "gravity"
 
+// Nuove impostazioni avanzate
+const val ANIMATIONS_ENABLED = "animations_enabled"
+const val HAPTIC_FEEDBACK = "haptic_feedback"
+const val SOUND_ENABLED = "sound_enabled"
+const val AUTO_HIDE_EXPANDED_AFTER = "auto_hide_expanded_after"
+const val DYNAMIC_THEME_ENABLED = "dynamic_theme_enabled"
+const val SILENT_MODE = "silent_mode"
+const val LOW_POWER_MODE = "low_power_mode"
+const val NOTIFICATION_PRIORITY = "notification_priority"
+
 // Battery Plugin Settings
 const val BATTERY_SHOW_PERCENTAGE = "battery_show_percentage"
