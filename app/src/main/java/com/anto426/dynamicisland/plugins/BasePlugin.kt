@@ -1,5 +1,6 @@
 package com.anto426.dynamicisland.plugins
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -13,9 +14,10 @@ import androidx.core.content.edit
 abstract class BasePlugin {
 	abstract val id: String
 	abstract val name: String
-
-	abstract val version : String
 	abstract val description: String
+	abstract val author: String
+	abstract val version : String
+	abstract val sourceCodeUrl: Any
 	abstract val permissions: ArrayList<String>
 	abstract var enabled: MutableState<Boolean>
 	abstract var pluginSettings: MutableMap<String, PluginSettingsItem>
@@ -40,12 +42,11 @@ abstract class BasePlugin {
 	abstract fun onRightSwipe()
 	abstract fun onLeftSwipe()
 
-	fun switchEnabled(context: Context, enabled: Boolean = !this.enabled.value): Boolean {
+	@SuppressLint("SuspiciousIndentation")
+    fun switchEnabled(context: Context, enabled: Boolean = !this.enabled.value): Boolean {
 
 		// Check if all permissions are granted
 		return if (allPermissionsGranted || !enabled) {
-			// If all permissions are granted, we can enable the plugin
-			// Save value in settings preferences
             context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE).edit {
                 putBoolean(id, enabled)
             }
@@ -55,7 +56,6 @@ abstract class BasePlugin {
 
 			true
 		} else {
-			// If not, we can't enable the plugin
 			false
 		}
 	}

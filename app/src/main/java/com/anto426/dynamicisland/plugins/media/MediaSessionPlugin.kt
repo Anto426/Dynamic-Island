@@ -49,13 +49,16 @@ private object MediaPluginDefaults {
 }
 
 class MediaSessionPlugin(
+	override val author: String = "Anto426",
+	override val description: String = "Show the current media session playing",
+	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override val id: String = "MediaSessionPlugin",
 	override val name: String = "MediaSession",
-	override val description: String = "Show the current media session playing",
 	override val permissions: ArrayList<String> = arrayListOf(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
-	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
 	override val version: String = "1.0.0",
+	override val sourceCodeUrl:String = "https://github.com/Anto426/Dynamic-Island/blob/main/app/src/main/java/com/anto426/dynamicisland/plugins/media/MediaSessionPlugin.kt"
+
 ) : BasePlugin() {
 
 	lateinit var context: IslandOverlayService

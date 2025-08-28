@@ -81,20 +81,16 @@ private fun InfoRow(icon: ImageVector, label: String, value: String) {
 }
 
 class BatteryPlugin(
-	override val id: String = "BatteryPlugin",
-	override val name: String = "Battery",
-	override val description: String = "Show the current battery level when charging",
+	override val id: String = "battery",
+	override val name: String = "Batteria",
+	override val description: String = "Mostra lo stato della batteria",
+	override val author: String = "Anto426",
+	override val version: String = "1.0.0",
 	override val permissions: ArrayList<String> = arrayListOf(),
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
-	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(
-		BATTERY_SHOW_PERCENTAGE to PluginSettingsItem.SwitchSettingsItem(
-			title = "Show percentage",
-			description = "Show the battery percentage",
-			id = BATTERY_SHOW_PERCENTAGE,
-			value = mutableStateOf(true),
-		),
-	),
-	override val version: String = "1.0.0",
+	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override val sourceCodeUrl:String = "https://github.com/Anto426/Dynamic-Island/blob/main/app/src/main/java/com/anto426/dynamicisland/plugins/battery/BatteryPlugin.kt"
+
 ) : BasePlugin() {
 
 	private lateinit var context: IslandOverlayService
