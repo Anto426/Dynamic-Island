@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
+import android.os.Handler // NUOVO: Import necessario
+import android.os.Looper // NUOVO: Import necessario
+import android.os.PowerManager
 import android.provider.Settings
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -40,13 +43,13 @@ import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
 import com.anto426.dynamicisland.ui.theme.BatteryEmpty
 import com.anto426.dynamicisland.ui.theme.BatteryFull
-import com.github.compose.waveloading.DrawType
-import com.github.compose.waveloading.WaveLoading
 import java.util.concurrent.TimeUnit
 
 private enum class DisplayMode {
-	CHARGING, LOW_BATTERY
+	CHARGING, LOW_BATTERY, POWER_SAVER
 }
+
+val PowerSaverYellow = Color(0xFFFBC02D)
 
 class BatteryShape : Shape {
 	override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
@@ -91,12 +94,16 @@ class BatteryPlugin(
 			value = mutableStateOf(true),
 		),
 	),
+	override val version: String = "1.0.0",
 ) : BasePlugin() {
 
 	private lateinit var context: IslandOverlayService
 	private lateinit var batteryManager: BatteryManager
+	private lateinit var powerManager: PowerManager
+
 	private var batteryPercent by mutableStateOf(0)
 	private var isCharging by mutableStateOf(false)
+	private var isPowerSaveModeOn by mutableStateOf(false)
 	private var chargeTimeRemaining by mutableStateOf(-1L)
 	private var batteryTemperature by mutableStateOf(0f)
 	private var batteryHealth by mutableStateOf("")
@@ -104,39 +111,59 @@ class BatteryPlugin(
 
 	private var displayMode by mutableStateOf<DisplayMode?>(null)
 	private val LOW_BATTERY_THRESHOLD = 20
+	private var lowBatteryNotified by mutableStateOf(false)
+
+	private fun updateDisplayState() {
+		val isLow = batteryPercent <= LOW_BATTERY_THRESHOLD
+
+		if (isCharging || !isLow) {
+			lowBatteryNotified = false
+		}
+
+		val newDisplayMode = when {
+			isCharging -> DisplayMode.CHARGING
+			isPowerSaveModeOn -> DisplayMode.POWER_SAVER
+			isLow && !lowBatteryNotified -> {
+				lowBatteryNotified = true
+				DisplayMode.LOW_BATTERY
+			}
+			else -> null
+		}
+
+		if (newDisplayMode != displayMode) {
+			displayMode = newDisplayMode
+			if (newDisplayMode != null) {
+				context.addPlugin(this@BatteryPlugin)
+			} else {
+				context.removePlugin(this@BatteryPlugin)
+			}
+		}
+	}
 
 	private val batteryBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
 			val status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-			val newIsCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
 			val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
 			val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-			batteryPercent = (level * 100 / scale)
-			isCharging = newIsCharging
 
-			val isLow = batteryPercent <= LOW_BATTERY_THRESHOLD && !isCharging
+			batteryPercent = (level * 100 / scale)
+			isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
 
 			if (isCharging) {
 				chargeTimeRemaining = batteryManager.computeChargeTimeRemaining()
 				batteryTemperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f
 				batteryHealth = mapHealthToString(intent.getIntExtra(BatteryManager.EXTRA_HEALTH, 0))
 				chargingSource = mapPluggedToString(intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0))
-
-				if (displayMode != DisplayMode.CHARGING) {
-					displayMode = DisplayMode.CHARGING
-					this@BatteryPlugin.context.addPlugin(this@BatteryPlugin)
-				}
-			} else if (isLow) {
-				if (displayMode != DisplayMode.LOW_BATTERY) {
-					displayMode = DisplayMode.LOW_BATTERY
-					this@BatteryPlugin.context.addPlugin(this@BatteryPlugin)
-				}
-			} else {
-				if (displayMode != null) {
-					displayMode = null
-					this@BatteryPlugin.context.removePlugin(this@BatteryPlugin)
-				}
 			}
+
+			updateDisplayState()
+		}
+	}
+
+	private val powerSaveModeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+		override fun onReceive(c: Context, i: Intent) {
+			isPowerSaveModeOn = powerManager.isPowerSaveMode
+			updateDisplayState()
 		}
 	}
 
@@ -145,13 +172,27 @@ class BatteryPlugin(
 	override fun onCreate(context: IslandOverlayService?) {
 		this.context = context ?: return
 		this.batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-		val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-		context.registerReceiver(batteryBroadcastReceiver, intentFilter)
+		this.powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
 
-		val initialStatusIntent: Intent? = context.registerReceiver(null, intentFilter)
-		if (initialStatusIntent != null) {
-			batteryBroadcastReceiver.onReceive(context, initialStatusIntent)
-		}
+		isPowerSaveModeOn = powerManager.isPowerSaveMode
+
+		val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+		context.registerReceiver(batteryBroadcastReceiver, batteryFilter)
+
+		val powerSaverFilter = IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+		context.registerReceiver(powerSaveModeReceiver, powerSaverFilter)
+
+		// ====================================================================================
+		// NUOVA MODIFICA: Aggiungiamo un piccolo ritardo al controllo iniziale
+		// per dare tempo alla UI di prepararsi completamente.
+		// ====================================================================================
+		Handler(Looper.getMainLooper()).postDelayed({
+			// Questo codice verrà eseguito dopo 500ms
+			context.registerReceiver(null, batteryFilter)?.let { initialIntent ->
+				batteryBroadcastReceiver.onReceive(context, initialIntent)
+			}
+		}, 500) // Ritardo di 500 millisecondi
+
 		pluginSettings.values.forEach {
 			if (it is PluginSettingsItem.SwitchSettingsItem) {
 				it.value.value = it.isSettingEnabled(context, it.id)
@@ -164,106 +205,136 @@ class BatteryPlugin(
 		when (displayMode) {
 			DisplayMode.CHARGING -> ChargingView()
 			DisplayMode.LOW_BATTERY -> LowBatteryView()
+			DisplayMode.POWER_SAVER -> PowerSaverView()
 			null -> {}
 		}
 	}
 
-	@SuppressLint("Range")
-    @Composable
-	private fun ChargingView() {
+	@Composable
+	private fun BatteryStatusView(
+		progressColor: Color,
+		title: String,
+		subtitle: String,
+		overlayIcon: ImageVector? = null,
+		actions: @Composable () -> Unit = {}
+	) {
 		val animatedProgress = animateFloatAsState(
 			targetValue = batteryPercent / 100f,
 			animationSpec = tween(1000),
 			label = "BatteryProgress"
 		).value
-		val progressColor = lerp(BatteryEmpty, BatteryFull, animatedProgress)
+		val textColorOnBattery = if (progressColor.luminance() > 0.5)
+			MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+		else
+			Color.White
 
 		Column(
 			modifier = Modifier.fillMaxSize().padding(16.dp),
 			horizontalAlignment = Alignment.CenterHorizontally,
-			verticalArrangement = Arrangement.SpaceAround
-		) { 			Box(
-			modifier = Modifier
-				.fillMaxHeight(0.5f)
-				.aspectRatio(0.55f),
-			contentAlignment = Alignment.Center
+			verticalArrangement = Arrangement.SpaceBetween
 		) {
 			Box(
-				modifier = Modifier.fillMaxSize(),
+				modifier = Modifier.weight(1f, fill = false).aspectRatio(0.55f),
 				contentAlignment = Alignment.Center
 			) {
 				Box(
-					modifier = Modifier
-						.fillMaxSize()
-						.clip(BatteryShape())
+					modifier = Modifier.fillMaxSize().clip(BatteryShape())
 						.background(progressColor.copy(alpha = 0.3f)),
 					contentAlignment = Alignment.BottomCenter
 				) {
 					Box(
-						modifier = Modifier
-							.fillMaxWidth()
-							.fillMaxHeight(animatedProgress)
+						modifier = Modifier.fillMaxWidth().fillMaxHeight(animatedProgress)
 							.background(progressColor)
 					)
 				}
-				Text(
-					text = "$batteryPercent%",
-					style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-					color = MaterialTheme.colorScheme.onSurface
-				)
+				Column(horizontalAlignment = Alignment.CenterHorizontally) {
+					overlayIcon?.let {
+						Icon(
+							imageVector = it,
+							contentDescription = title,
+							tint = textColorOnBattery,
+							modifier = Modifier.size(40.dp)
+						)
+						Spacer(modifier = Modifier.height(8.dp))
+					}
+					Text(
+						text = "$batteryPercent%",
+						style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+						color = textColorOnBattery
+					)
+				}
 			}
-		}
 
-			Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-				InfoRow(Icons.Rounded.HourglassTop, "Tempo rimanente", formatChargeTime(chargeTimeRemaining))
-				InfoRow(Icons.Rounded.DeviceThermostat, "Temperatura", "${"%.1f".format(batteryTemperature)}°C")
-				InfoRow(Icons.Rounded.Power, "Fonte", chargingSource)
-				InfoRow(Icons.Rounded.HealthAndSafety, "Salute", batteryHealth)
+			Column(
+				horizontalAlignment = Alignment.CenterHorizontally,
+				modifier = Modifier.padding(vertical = 24.dp)
+			) {
+				Text(text = title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+				Spacer(modifier = Modifier.height(4.dp))
+				Text(text = subtitle, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
+			}
+
+			Box(modifier = Modifier.padding(bottom = 8.dp)) {
+				actions()
 			}
 		}
 	}
 
 	@Composable
-	private fun LowBatteryView() {
-		Column(
-			modifier = Modifier.fillMaxSize().padding(24.dp),
-			horizontalAlignment = Alignment.CenterHorizontally,
-			verticalArrangement = Arrangement.SpaceEvenly
-		) {
-			Icon(
-				imageVector = Icons.Rounded.BatteryAlert,
-				contentDescription = "Batteria Scarica",
-				modifier = Modifier.size(64.dp),
-				tint = BatteryEmpty
-			)
-			Text(
-				text = "Batteria Scarica",
-				style = MaterialTheme.typography.headlineSmall,
-				fontWeight = FontWeight.Bold
-			)
-			Text(
-				text = "$batteryPercent% rimanente",
-				style = MaterialTheme.typography.bodyLarge,
-				textAlign = TextAlign.Center
-			)
-			Spacer(modifier = Modifier.height(16.dp))
-			Row(
-				modifier = Modifier.fillMaxWidth(),
-				horizontalArrangement = Arrangement.SpaceAround
-			) {
-				TextButton(onClick = { context.removePlugin(this@BatteryPlugin) }) {
-					Text("Ignora")
-				}
-				Button(onClick = {
-					val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
-					intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-					context.startActivity(intent)
-					context.shrink()
-				}) {
-					Text("Risparmio Energetico")
+	private fun ChargingView() {
+		val progressColor = lerp(BatteryEmpty, BatteryFull, batteryPercent / 100f)
+		BatteryStatusView(
+			progressColor = progressColor,
+			title = "In Carica",
+			subtitle = formatChargeTime(chargeTimeRemaining),
+			overlayIcon = Icons.Rounded.Bolt,
+			actions = {
+				Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+					InfoRow(Icons.Rounded.DeviceThermostat, "Temperatura", "${"%.1f".format(batteryTemperature)}°C")
+					InfoRow(Icons.Rounded.Power, "Fonte", chargingSource)
+					InfoRow(Icons.Rounded.HealthAndSafety, "Salute", batteryHealth)
 				}
 			}
-		}
+		)
+	}
+
+	@Composable
+	private fun LowBatteryView() {
+		BatteryStatusView(
+			progressColor = BatteryEmpty,
+			title = "Batteria Scarica",
+			subtitle = "$batteryPercent% rimanente",
+			actions = {
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					horizontalArrangement = Arrangement.SpaceEvenly,
+					verticalAlignment = Alignment.CenterVertically
+				) {
+					TextButton(onClick = { context.removePlugin(this@BatteryPlugin) }) {
+						Text("Ignora")
+					}
+					Button(onClick = {
+						val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
+						intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+						context.startActivity(intent)
+						context.shrink()
+					}) {
+						Text("Risparmio Energetico")
+					}
+				}
+			}
+		)
+	}
+
+	@Composable
+	private fun PowerSaverView() {
+		BatteryStatusView(
+			progressColor = PowerSaverYellow,
+			title = "Risparmio Energetico",
+			subtitle = "Modalità attiva per estendere la durata",
+			overlayIcon = Icons.Rounded.EnergySavingsLeaf,
+			actions = {}
+		)
 	}
 
 	@Composable
@@ -275,16 +346,13 @@ class BatteryPlugin(
 			when (displayMode) {
 				DisplayMode.CHARGING -> {
 					val progressColor = lerp(BatteryEmpty, BatteryFull, batteryPercent / 100f)
-					Icon(
-						imageVector = Icons.Rounded.Bolt, "Charging",
-						tint = progressColor, modifier = Modifier.fillMaxSize()
-					)
+					Icon(imageVector = Icons.Rounded.Bolt, "Charging", tint = progressColor, modifier = Modifier.fillMaxSize())
 				}
 				DisplayMode.LOW_BATTERY -> {
-					Icon(
-						imageVector = Icons.Rounded.BatteryAlert, "Low Battery",
-						tint = BatteryEmpty, modifier = Modifier.fillMaxSize()
-					)
+					Icon(imageVector = Icons.Rounded.BatteryAlert, "Low Battery", tint = BatteryEmpty, modifier = Modifier.fillMaxSize())
+				}
+				DisplayMode.POWER_SAVER -> {
+					Icon(imageVector = Icons.Rounded.EnergySavingsLeaf, "Power Saver", tint = PowerSaverYellow, modifier = Modifier.fillMaxSize())
 				}
 				null -> {}
 			}
@@ -302,6 +370,7 @@ class BatteryPlugin(
 			val color = when (displayMode) {
 				DisplayMode.CHARGING -> lerp(BatteryEmpty, BatteryFull, batteryPercent / 100f)
 				DisplayMode.LOW_BATTERY -> BatteryEmpty
+				DisplayMode.POWER_SAVER -> PowerSaverYellow
 				else -> MaterialTheme.colorScheme.onSurface
 			}
 			Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -318,6 +387,7 @@ class BatteryPlugin(
 		if (!::context.isInitialized) return
 		try {
 			context.unregisterReceiver(batteryBroadcastReceiver)
+			context.unregisterReceiver(powerSaveModeReceiver)
 		} catch (e: IllegalArgumentException) {}
 	}
 
@@ -342,7 +412,7 @@ class BatteryPlugin(
 	}
 
 	@SuppressLint("DefaultLocale")
-    private fun formatChargeTime(millis: Long): String {
+	private fun formatChargeTime(millis: Long): String {
 		if (millis <= 0) return "Calcolo..."
 		val hours = TimeUnit.MILLISECONDS.toHours(millis)
 		val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
+import android.media.session.PlaybackState
 import android.provider.Settings
 import android.util.Log
 import androidx.compose.animation.*
@@ -26,17 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
-import com.skydoves.landscapist.rememberDrawablePainter
+import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
@@ -54,14 +55,24 @@ class MediaSessionPlugin(
 	override val permissions: ArrayList<String> = arrayListOf(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override val version: String = "1.0.0",
 ) : BasePlugin() {
 
 	lateinit var context: IslandOverlayService
 	private lateinit var mediaSessionManager: MediaSessionManager
 	private val callbackMap = mutableStateMapOf<String, MediaCallback>()
 
+	val pluginScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+	private var activeCallback by mutableStateOf<MediaCallback?>(null)
+
 	private val listenerForActiveSessions = MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
 		controllers?.forEach { registerController(it) }
+		val activePackages = controllers?.map { it.packageName } ?: emptyList()
+		callbackMap.keys.filterNot { it in activePackages }.forEach { packageName ->
+			callbackMap.remove(packageName)?.let { it.mediaController.unregisterCallback(it) }
+		}
+		updateActiveMediaSession()
 	}
 
 	override fun canExpand(): Boolean = true
@@ -73,29 +84,55 @@ class MediaSessionPlugin(
 		try {
 			mediaSessionManager.addOnActiveSessionsChangedListener(listenerForActiveSessions, componentName)
 			mediaSessionManager.getActiveSessions(componentName).forEach(::registerController)
+			updateActiveMediaSession()
 		} catch (e: SecurityException) {
 			Log.e(MediaPluginDefaults.TAG, "Notification Listener permission not granted.", e)
-			this.context.removePlugin(this)
 		}
 	}
 
 	private fun registerController(controller: MediaController) {
 		if (callbackMap.containsKey(controller.packageName)) return
-		val callback = MediaCallback(controller, this)
+		Log.d(MediaPluginDefaults.TAG, "Registering controller for ${controller.packageName}")
+		val callback = MediaCallback(controller, this, ::updateActiveMediaSession)
 		callbackMap[controller.packageName] = callback
 		controller.registerCallback(callback)
+		callback.initialUpdate()
 	}
 
-	fun removeMedia(mediaController: MediaController) {
-		callbackMap.remove(mediaController.packageName)
-		if (callbackMap.isEmpty()) context.removePlugin(this)
+	fun updateActiveMediaSession() {
+		val playingSession = callbackMap.values.firstOrNull { it.mediaStruct.isPlaying() }
+
+		if (playingSession != null) {
+			activeCallback = playingSession
+			context.addPlugin(this)
+		} else {
+			val mostRecentActive = callbackMap.values.filter {
+				// CORREZIONE 1: Aggiunto operatore safe-call (?.) e valore di default (?:)
+				val state = it.mediaStruct.playbackState.value?.state ?: PlaybackState.STATE_NONE
+				state != PlaybackState.STATE_NONE && state != PlaybackState.STATE_STOPPED
+			}.maxByOrNull {
+				// CORREZIONE 2: Aggiunto operatore safe-call (?.) e valore di default (?:)
+				it.mediaStruct.playbackState.value?.lastPositionUpdateTime ?: 0L
+			}
+
+			if (mostRecentActive != null) {
+				activeCallback = mostRecentActive
+				context.addPlugin(this)
+				mostRecentActive.startAutoHideJob()
+			} else {
+				activeCallback = null
+				context.removePlugin(this)
+			}
+		}
 	}
+
 
 	override fun onClick() {
-		callbackMap.values.firstOrNull()?.mediaController?.sessionActivity?.send(0)
+		activeCallback?.mediaController?.sessionActivity?.send(0)
 	}
 
 	override fun onDestroy() {
+		pluginScope.cancel()
 		if (::mediaSessionManager.isInitialized) {
 			try { mediaSessionManager.removeOnActiveSessionsChangedListener(listenerForActiveSessions) }
 			catch (e: Exception) { Log.w(MediaPluginDefaults.TAG, "Failed to remove listener", e) }
@@ -114,7 +151,7 @@ class MediaSessionPlugin(
 
 	@Composable
 	override fun Composable() {
-		val mediaCallback = callbackMap.values.firstOrNull() ?: return
+		val mediaCallback = activeCallback ?: return
 		val mediaStruct by remember { derivedStateOf { mediaCallback.mediaStruct } }
 
 		Box(modifier = Modifier.fillMaxSize()) {
@@ -144,7 +181,7 @@ class MediaSessionPlugin(
 				modifier = Modifier.fillMaxSize().blur(radius = MediaPluginDefaults.BackgroundBlurRadius),
 				contentScale = ContentScale.Crop
 			)
-			Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)))
+			Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.6f)))
 		} else {
 			Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface))
 		}
@@ -152,7 +189,7 @@ class MediaSessionPlugin(
 
 	@Composable
 	private fun PlayerArtwork(modifier: Modifier = Modifier, cover: Bitmap?) {
-		Card(modifier = modifier, shape = MediaPluginDefaults.PlayerArtworkShape) {
+		Card(modifier = modifier, shape = MediaPluginDefaults.PlayerArtworkShape, elevation = CardDefaults.cardElevation(8.dp)) {
 			AnimatedContent(
 				targetState = cover,
 				label = "CoverArtAnimation",
@@ -170,7 +207,7 @@ class MediaSessionPlugin(
 						contentAlignment = Alignment.Center,
 						modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)
 					) {
-						Icon(Icons.Default.MusicNote, "No Cover", modifier = Modifier.size(64.dp))
+						Icon(Icons.Default.MusicNote, "No Cover", modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
 					}
 				}
 			}
@@ -182,14 +219,17 @@ class MediaSessionPlugin(
 	private fun TrackDetails(modifier: Modifier = Modifier, title: String, artist: String) {
 		Column(
 			modifier = modifier.fillMaxWidth(),
-			horizontalAlignment = Alignment.CenterHorizontally,
-			verticalArrangement = Arrangement.Center
+			horizontalAlignment = Alignment.CenterHorizontally
 		) {
-			AnimatedContent(targetState = title, label = "TitleAnimation") { text ->
-				Text(text, style = MaterialTheme.typography.titleLarge, maxLines = 1, modifier = Modifier.basicMarquee())
+			AnimatedContent(targetState = title, label = "TitleAnimation", transitionSpec = {
+				slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
+			}) { text ->
+				Text(text, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold), maxLines = 1, modifier = Modifier.basicMarquee())
 			}
 			Spacer(modifier = Modifier.height(4.dp))
-			AnimatedContent(targetState = artist, label = "ArtistAnimation") { text ->
+			AnimatedContent(targetState = artist, label = "ArtistAnimation", transitionSpec = {
+				slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
+			}) { text ->
 				Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, modifier = Modifier.basicMarquee())
 			}
 		}
@@ -197,27 +237,35 @@ class MediaSessionPlugin(
 
 	@Composable
 	private fun PlayerScrubber(mediaStruct: MediaStruct, transportControls: MediaController.TransportControls) {
-		var sliderPosition by remember { mutableStateOf(0f) }
+		var sliderPosition by remember { mutableFloatStateOf(0f) }
 		var isDragging by remember { mutableStateOf(false) }
 		val duration by remember { mediaStruct.duration }
-		val elapsed = mediaStruct.playbackState.value.position
+		// CORREZIONE 3: Aggiunto operatore safe-call (?.) e valore di default (?:)
+		val elapsed by remember { derivedStateOf { mediaStruct.playbackState.value?.position ?: 0L } }
 
-		LaunchedEffect(elapsed, duration) {
-			if (!isDragging && duration > 0) { sliderPosition = elapsed.toFloat() / duration }
+		LaunchedEffect(elapsed, isDragging) {
+			if (!isDragging) {
+				sliderPosition = if (duration > 0) elapsed.toFloat() / duration else 0f
+			}
 		}
+
 		Column(horizontalAlignment = Alignment.CenterHorizontally) {
 			Slider(
 				value = sliderPosition,
-				onValueChange = { isDragging = true; sliderPosition = it },
+				onValueChange = {
+					isDragging = true
+					sliderPosition = it
+				},
 				onValueChangeFinished = {
 					transportControls.seekTo((sliderPosition * duration).roundToLong())
 					isDragging = false
 				},
 				modifier = Modifier.fillMaxWidth()
 			)
-			Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp), Arrangement.SpaceBetween) {
-				val current = if (isDragging) (sliderPosition * duration).toLong() else elapsed
-				Text(formatTime(current), style = MaterialTheme.typography.labelSmall)
+			Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp)) {
+				val currentTime = if (isDragging) (sliderPosition * duration).toLong() else elapsed
+				Text(formatTime(currentTime), style = MaterialTheme.typography.labelSmall)
+				Spacer(modifier = Modifier.weight(1f))
 				Text(formatTime(duration), style = MaterialTheme.typography.labelSmall)
 			}
 		}
@@ -226,81 +274,88 @@ class MediaSessionPlugin(
 	@Composable
 	private fun PlayerControls(isPlaying: Boolean, transportControls: MediaController.TransportControls) {
 		Row(Modifier.fillMaxWidth(), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
-			FilledTonalIconButton({ transportControls.skipToPrevious() }, Modifier.size(56.dp)) { Icon(Icons.Default.SkipPrevious, null, Modifier.size(28.dp)) }
-			FilledIconButton({ if (isPlaying) transportControls.pause() else transportControls.play() }, Modifier.size(72.dp)) {
-				AnimatedContent(isPlaying, label = "PlayPause") { playing ->
+			IconButton(onClick = { transportControls.skipToPrevious() }) { Icon(Icons.Default.SkipPrevious, null, Modifier.size(36.dp)) }
+			FilledIconButton(
+				onClick = { if (isPlaying) transportControls.pause() else transportControls.play() },
+				modifier = Modifier.size(72.dp),
+				shape = CircleShape
+			) {
+				AnimatedContent(isPlaying, label = "PlayPause", transitionSpec = {
+					scaleIn(animationSpec = tween(200)) togetherWith scaleOut(animationSpec = tween(200))
+				}) { playing ->
 					Icon(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, null, Modifier.size(42.dp))
 				}
 			}
-			FilledTonalIconButton({ transportControls.skipToNext() }, Modifier.size(56.dp)) { Icon(Icons.Default.SkipNext, null, Modifier.size(28.dp)) }
+			IconButton(onClick = { transportControls.skipToNext() }) { Icon(Icons.Default.SkipNext, null, Modifier.size(36.dp)) }
 		}
 	}
 
-	@Composable
-	private fun rememberAppIcon(packageName: String) = remember(packageName) {
-		try {
-			context.packageManager.getApplicationIcon(packageName)
-		} catch (e: PackageManager.NameNotFoundException) {
-			Log.e(MediaPluginDefaults.TAG, "Icon not found for $packageName", e)
-			null
-		}
-	}
-
-	// MODIFICATO: Ora mostra l'icona dell'app musicale in uso a sinistra.
 	@Composable
 	override fun LeftOpenedComposable() {
-		val mediaCallback = callbackMap.values.firstOrNull() ?: return
-		val icon = rememberAppIcon(mediaCallback.mediaController.packageName)
+		val mediaCallback = activeCallback ?: return
+		val cover by remember { derivedStateOf { mediaCallback.mediaStruct.cover } }
 
-		if (icon != null) {
-			Box(
-				modifier = Modifier
-					.fillMaxSize()
-					.padding(6.dp) // Leggero padding
-					.clip(CircleShape),
-				contentAlignment = Alignment.Center
-			) {
-				Image(
-					painter = rememberDrawablePainter(drawable = icon),
-					contentDescription = "App Icon",
-					modifier = Modifier.size(28.dp) // Aumentata la dimensione dell'icona
-				)
+		Box(
+			modifier = Modifier.fillMaxSize().padding(4.dp),
+			contentAlignment = Alignment.Center
+		) {
+			AnimatedContent(
+				targetState = cover.value,
+				label = "PeekCoverArt",
+				transitionSpec = { fadeIn(tween(400)) togetherWith fadeOut(tween(400)) }
+			) { art ->
+				if (art != null) {
+					Image(
+						bitmap = art.asImageBitmap(),
+						contentDescription = "Album Art",
+						modifier = Modifier.fillMaxSize().clip(CircleShape),
+						contentScale = ContentScale.Crop
+					)
+				} else {
+					Box(
+						modifier = Modifier.fillMaxSize().clip(CircleShape)
+							.background(MaterialTheme.colorScheme.surfaceVariant),
+						contentAlignment = Alignment.Center
+					) {
+						Icon(Icons.Rounded.MusicNote, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+					}
+				}
 			}
 		}
 	}
 
-	// MODIFICATO: Ora mostra una nota musicale che pulsa a destra quando la musica è in riproduzione.
+	@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 	@Composable
 	override fun RightOpenedComposable() {
-		val mediaCallback = callbackMap.values.firstOrNull() ?: return
-		val isPlaying by remember { derivedStateOf { mediaCallback.mediaStruct.isPlaying() } }
+		val mediaCallback = activeCallback ?: return
+		val title by remember { derivedStateOf { mediaCallback.mediaStruct.title } }
+		val artist by remember { derivedStateOf { mediaCallback.mediaStruct.artist } }
 
-		val infiniteTransition = rememberInfiniteTransition(label = "PulseTransition")
-		val scale by infiniteTransition.animateFloat(
-			initialValue = if (isPlaying) 1f else 1.2f,
-			targetValue = if (isPlaying) 1.2f else 1f,
-			animationSpec = infiniteRepeatable(
-				animation = tween(800, easing = FastOutSlowInEasing),
-				repeatMode = RepeatMode.Reverse
-			),
-			label = "PulseScale"
-		)
-
-		Box(
-			contentAlignment = Alignment.Center,
-			modifier = Modifier.fillMaxSize()
+		Column(
+			modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+			verticalArrangement = Arrangement.Center
 		) {
-			Icon(
-				imageVector = Icons.Rounded.MusicNote,
-				contentDescription = "Playing music",
-				tint = MaterialTheme.colorScheme.primary,
-				modifier = Modifier.size(28.dp).scale(scale) // Dimensione uguale all'icona dell'app
+			Text(
+				text = title.value,
+				style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+				color = MaterialTheme.colorScheme.onSurface,
+				maxLines = 1,
+				overflow = TextOverflow.Clip,
+				modifier = Modifier.basicMarquee()
+			)
+			Text(
+				text = artist.value,
+				style = MaterialTheme.typography.bodySmall,
+				color = MaterialTheme.colorScheme.onSurfaceVariant,
+				maxLines = 1,
+				overflow = TextOverflow.Clip,
+				modifier = Modifier.basicMarquee()
 			)
 		}
 	}
 
 	@Composable
 	override fun PermissionsRequired() {}
-	override fun onLeftSwipe() { callbackMap.values.firstOrNull()?.mediaController?.transportControls?.skipToPrevious() }
-	override fun onRightSwipe() { callbackMap.values.firstOrNull()?.mediaController?.transportControls?.skipToNext() }
+	override fun onLeftSwipe() { activeCallback?.mediaController?.transportControls?.skipToPrevious() }
+	override fun onRightSwipe() { activeCallback?.mediaController?.transportControls?.skipToNext() }
 }

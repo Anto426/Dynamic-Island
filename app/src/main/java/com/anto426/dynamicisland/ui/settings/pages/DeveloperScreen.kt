@@ -188,7 +188,7 @@ fun DeveloperProfileContent(data: DeveloperInfo) {
 
 @Composable
 fun DeveloperProfileCard(profile: GitHubUser) {
-    val context = LocalContext.current
+    LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

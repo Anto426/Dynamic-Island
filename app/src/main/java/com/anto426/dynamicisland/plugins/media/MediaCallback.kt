@@ -3,64 +3,75 @@ package com.anto426.dynamicisland.plugins.media
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.PlaybackState
-import android.os.Handler
-import android.os.Looper
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+// Timeout per la rimozione automatica in millisecondi (es. 2 minuti)
+private const val AUTO_HIDE_TIMEOUT = 120_000L
 
 class MediaCallback(
 	val mediaController: MediaController,
-	private val context: MediaSessionPlugin,
+	private val plugin: MediaSessionPlugin,
+	// NUOVO: Callback per notificare il plugin principale di un cambiamento
+	private val onStateChanged: () -> Unit
 ) : MediaController.Callback() {
 
-	private lateinit var mediaMetadata: MediaMetadata
 	val mediaStruct = MediaStruct()
-	private val handler = Handler(Looper.getMainLooper())
+	// NUOVO: Job per la coroutine di auto-rimozione
+	private var autoHideJob: Job? = null
 
-	init {
-		if (mediaController.metadata != null && mediaController.playbackState != null) {
-			mediaMetadata = mediaController.metadata!!
-			mediaStruct.playbackState.value = mediaController.playbackState!!
-
-			updateMediaStruct(addPlugin = mediaStruct.playbackState.value.state == PlaybackState.STATE_PLAYING)
-		}
+	// NUOVO: Metodo per l'aggiornamento iniziale
+	fun initialUpdate() {
+		onMetadataChanged(mediaController.metadata)
+		onPlaybackStateChanged(mediaController.playbackState)
 	}
 
 	override fun onPlaybackStateChanged(state: PlaybackState?) {
 		super.onPlaybackStateChanged(state)
 		if (state == null) return
-		// Update the playback state
-		mediaStruct.playbackState.value = state
-		context.context.addPlugin(context)
 
-		// If media is paused, remove the plugin after 60 seconds
-		if (state.state == PlaybackState.STATE_PLAYING) {
-			handler.removeCallbacksAndMessages(null)
-		} else {
-			handler.postDelayed ({
-				context.context.removePlugin(context)
-			}, 60000)
+		mediaStruct.playbackState.value = state
+
+		// Se la musica è in riproduzione, cancella ogni job di auto-rimozione
+		if (mediaStruct.isPlaying()) {
+			autoHideJob?.cancel()
+			autoHideJob = null
+		}
+
+		// Notifica il plugin che lo stato è cambiato, così può decidere chi è "attivo"
+		onStateChanged()
+	}
+
+	// NUOVO: Funzione chiamata dal plugin per avviare il timer di rimozione
+	fun startAutoHideJob() {
+		// Se è già in esecuzione, non fare nulla
+		if (autoHideJob?.isActive == true) return
+
+		autoHideJob = plugin.pluginScope.launch {
+			delay(AUTO_HIDE_TIMEOUT)
+			// Dopo il timeout, ricontrolla lo stato
+			plugin.updateActiveMediaSession()
 		}
 	}
 
 	override fun onMetadataChanged(metadata: MediaMetadata?) {
 		super.onMetadataChanged(metadata)
-		mediaMetadata = metadata ?: return
+		if (metadata == null) return
 
-		if (this::mediaMetadata.isInitialized) {
-			updateMediaStruct()
-		}
+		mediaStruct.title.value = (metadata.getText(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title").toString()
+		mediaStruct.artist.value = (metadata.getText(MediaMetadata.METADATA_KEY_ARTIST) ?: "Unknown Artist").toString()
+		mediaStruct.cover.value = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+			?: metadata.getBitmap(MediaMetadata.METADATA_KEY_ART)
+					?: metadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
+		mediaStruct.duration.value = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION)
+
+		onStateChanged()
 	}
 
 	override fun onSessionDestroyed() {
 		super.onSessionDestroyed()
-		context.removeMedia(mediaController)
-	}
-
-	private fun updateMediaStruct(addPlugin: Boolean = true) {
-		mediaStruct.title.value = (mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE) ?: "") as String
-		mediaStruct.artist.value = (mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST) ?: "") as String
-		mediaStruct.cover.value = mediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
-		mediaStruct.duration.value = mediaMetadata.getLong(MediaMetadata.METADATA_KEY_DURATION)
-
-		if (addPlugin) { context.context.addPlugin(context) }
+		autoHideJob?.cancel()
+		plugin.updateActiveMediaSession() // Aggiorna per rimuovere la sessione distrutta
 	}
 }

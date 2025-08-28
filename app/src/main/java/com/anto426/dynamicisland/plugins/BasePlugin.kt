@@ -8,10 +8,13 @@ import androidx.compose.runtime.MutableState
 import com.anto426.dynamicisland.model.SETTINGS_CHANGED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.service.IslandOverlayService
+import androidx.core.content.edit
 
 abstract class BasePlugin {
 	abstract val id: String
 	abstract val name: String
+
+	abstract val version : String
 	abstract val description: String
 	abstract val permissions: ArrayList<String>
 	abstract var enabled: MutableState<Boolean>
@@ -43,9 +46,9 @@ abstract class BasePlugin {
 		return if (allPermissionsGranted || !enabled) {
 			// If all permissions are granted, we can enable the plugin
 			// Save value in settings preferences
-			val editor = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE).edit()
-			editor.putBoolean(id, enabled)
-			editor.apply()
+            context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE).edit {
+                putBoolean(id, enabled)
+            }
 
 			context.sendBroadcast(Intent(SETTINGS_CHANGED))
 			this.enabled.value = enabled

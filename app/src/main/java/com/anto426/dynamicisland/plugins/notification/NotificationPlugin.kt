@@ -1,45 +1,45 @@
 package com.anto426.dynamicisland.plugins.notification
 
+import android.app.Notification
 import android.app.RemoteInput
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
+import android.service.notification.StatusBarNotification
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.skydoves.landscapist.rememberDrawablePainter
 import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.model.ACTION_CLOSE
@@ -50,412 +50,351 @@ import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
+import kotlinx.coroutines.*
+import androidx.compose.material3.*
+
 
 
 class NotificationPlugin(
 	override val id: String = "NotificationPlugin",
 	override val name: String = "Notification",
-	override val description: String = "Show the current notification on the screen and allow you to interact with it (reply, open, etc.)",
+	override val description: String = "Mostra le notifiche e permette di interagire con esse (rispondere, aprire, ecc.).",
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override val permissions: ArrayList<String> = arrayListOf(
 		Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 	),
 	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override val version: String = "1.0.0",
 ) : BasePlugin() {
+
+	private companion object {
+		private const val TAG = "NotificationPlugin"
+	}
 
 	private lateinit var context: IslandOverlayService
 	private val notificationService = NotificationService.getInstance()
+	private var notificationMeta by mutableStateOf<NotificationMeta?>(null)
 
-	private var notificationMeta : MutableState<NotificationMeta?> = mutableStateOf(null)
+	private val pluginScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+	private var dismissJob: Job? = null
 
-	private val handler = Handler(Looper.getMainLooper())
-
-	private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+	private val notificationBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
+			val extras: Bundle = intent.extras ?: return
 
-			val extras : Bundle = intent.extras ?: return
+			when (intent.action) {
+				NOTIFICATION_POSTED -> {
+					val notificationId = extras.getInt("id")
+					val sbn = notificationService?.notifications?.lastOrNull { it.id == notificationId }
+                        ?: return
 
-			if (intent.action == NOTIFICATION_POSTED) {
+					Log.d(TAG, "Notifica ricevuta: ${sbn.notification.extras.getString(Notification.EXTRA_TITLE)}")
 
-				// Add notification to list
-				val notification = notificationService?.notifications?.lastOrNull { it.id == extras.getInt("id") } ?: return
-				// notifications.add(notification)
+					notificationMeta = NotificationMeta(
+						title = sbn.notification.extras.getString(Notification.EXTRA_TITLE),
+						body = sbn.notification.extras.getString(Notification.EXTRA_TEXT) ?: "",
+						id = sbn.id,
+						iconDrawable = sbn.notification.smallIcon.loadDrawable(context) ?: return,
+						packageName = sbn.packageName,
+						actions = (sbn.notification.actions ?: arrayOf()).toList(),
+						statusBarNotification = sbn
+					)
 
-				// Update notification meta
-				var total = ""
-				notificationService.notifications.filter { it.id == notification.id }.forEach { total += it.notification.extras.getString("android.text") }
-
-				Log.d("NotificationPlugin", "Notification posted: ${notification.notification.extras.getString("android.title")} - ${notification.notification.extras.getString("android.text")}")
-
-				notificationMeta.value = NotificationMeta(
-					title = extras.getString("title"),
-					body = notification.notification.extras.getString("android.text") ?: "",
-					id = extras.getInt("id"),
-					iconDrawable = notification.notification.smallIcon.loadDrawable(context) ?: return,
-					packageName = extras.getString("package_name") ?: "com.anto426.dynamicisland",
-					actions = (notification.notification.actions ?: arrayOf()).toList(),
-					all = extras,
-					statusBarNotification = notification
-				)
-
-				// Setup timeout
-				restartTimeout()
-
-				// Add plugin
-				Log.d("NotificationPlugin", "BroadcastReceiver: Add plugin")
-				this@NotificationPlugin.context.addPlugin(this@NotificationPlugin)
-			}
-			if (intent.action == NOTIFICATION_REMOVED) {
-				// val id = extras.getInt("id")
-				// removeNotificationAndUpdateState(id, true) // Notification already removed
-				Log.d("NotificationPlugin", "id: $id")
-				if (notificationService?.notifications?.isEmpty() == true) {
-					this@NotificationPlugin.context.removePlugin(this@NotificationPlugin)
+					startDismissTimeout()
+					this@NotificationPlugin.context.addPlugin(this@NotificationPlugin)
+				}
+				NOTIFICATION_REMOVED -> {
+					val removedId = extras.getInt("id")
+					if (notificationMeta?.id == removedId) {
+						Log.d(TAG, "Rimuovendo notifica attiva: $removedId")
+						removeNotificationAndUpdateState(removedId)
+					}
 				}
 			}
 		}
 	}
 
 	private fun removeNotificationAndUpdateState(id: Int) {
+        notificationService?.notifications?.removeAll { it.id == id }
+		dismissJob?.cancel()
 
-		// Remove notification from list
-		notificationService?.notifications?.removeAll { it.id == id }
-
-		// Reset timeout
-		handler.removeCallbacksAndMessages(null)
-
-		// Update notification meta if list is not empty else set to null
-		notificationMeta.value = notificationService?.notifications?.firstOrNull()?.let { notification ->
-			NotificationMeta(
-				title = notification.notification.extras.getString("android.title"),
-				body = notification.notification.extras.getString("android.text") ?: "",
-				id = notification.id,
-				iconDrawable = notification.notification.smallIcon.loadDrawable(context) ?: return,
-				packageName = notification.packageName,
-				actions = notification.notification.actions.toList(),
-				all = notification.notification.extras,
-				statusBarNotification = notification
-			)
+		if (notificationService?.notifications?.isEmpty() ?: false) {
+			notificationMeta = null
+			Log.d(TAG, "Nessuna notifica rimasta, rimuovo il plugin.")
+			context.removePlugin(this@NotificationPlugin)
+		} else {
+			val nextSbn = notificationService?.notifications?.firstOrNull()
+			notificationMeta = nextSbn?.let {
+				NotificationMeta(
+					title = it.notification.extras.getString(Notification.EXTRA_TITLE),
+					body = it.notification.extras.getString(Notification.EXTRA_TEXT) ?: "",
+					id = it.id,
+					iconDrawable = it.notification.smallIcon.loadDrawable(context) ?: return@let null,
+					packageName = it.packageName,
+					actions = (it.notification.actions ?: emptyArray()).toList(),
+					statusBarNotification = it
+				)
+			}
+			startDismissTimeout()
 		}
-
-		// If no more notifications, remove plugin
-		if (notificationService?.notifications?.isEmpty() == true) {
-			// Remove plugin
-			Log.d("NotificationPlugin", "BroadcastReceiver: Remove plugin")
-			this@NotificationPlugin.context.removePlugin(this@NotificationPlugin)
-		}/* else {
-			// Setup timeout
-			handler.removeCallbacksAndMessages(null)
-			startTimeout()
-		}*/
 	}
 
-	override fun canExpand(): Boolean { return true }
+	override fun canExpand(): Boolean = true
 
 	override fun onCreate(context: IslandOverlayService?) {
 		this.context = context ?: return
-		val filter = IntentFilter()
-		filter.addAction(NOTIFICATION_POSTED)
-		filter.addAction(NOTIFICATION_REMOVED)
-        ContextCompat.registerReceiver(
-            context,
-            mBroadcastReceiver,
-            filter,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
+		val filter = IntentFilter().apply {
+			addAction(NOTIFICATION_POSTED)
+			addAction(NOTIFICATION_REMOVED)
+		}
+		context.registerReceiver(
+			notificationBroadcastReceiver,
+			filter,
+			Context.RECEIVER_NOT_EXPORTED
+		)
 	}
 
-	@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+	@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 	@Composable
 	override fun Composable() {
-		val meta = notificationMeta.value ?: return
+		val meta = notificationMeta ?: return
 
-		// Cancel notification timeout
-		handler.removeCallbacksAndMessages(null)
+		DisposableEffect(Unit) {
+			dismissJob?.cancel()
+			onDispose { }
+		}
 
-		val dismissState = rememberDismissState(
-			confirmStateChange = {
-				if (it == DismissValue.DismissedToStart || it == DismissValue.DismissedToEnd) {
-					context.sendBroadcast(Intent(ACTION_CLOSE))
+		val dismissState = rememberDismissState()
+
+		LaunchedEffect(dismissState.dismissDirection) {
+			when (dismissState.dismissDirection) {
+				DismissDirection.StartToEnd, DismissDirection.EndToStart -> {
+					notificationMeta?.let { removeNotificationAndUpdateState(it.id) }
 				}
-				true
+				null -> {} // Nessuno swipe attivo
 			}
-		)
+		}
+
 		SwipeToDismiss(
 			state = dismissState,
-			dismissThresholds = { FractionalThreshold(0.5f) },
-			background = {
-				when (dismissState.dismissDirection) {
-					DismissDirection.StartToEnd -> {
-						Box(
-							modifier = Modifier
-								.fillMaxSize()
-								.background(MaterialTheme.colorScheme.primaryContainer)
-						) {
-							Icon(
-								imageVector = Icons.Default.Delete,
-								contentDescription = null,
-								modifier = Modifier
-									.align(Alignment.CenterStart)
-									.padding(start = 16.dp)
-							)
-						}
-					}
-					DismissDirection.EndToStart -> {
-						Box(
-							modifier = Modifier
-								.fillMaxSize()
-								.background(MaterialTheme.colorScheme.primaryContainer)
-						) {
-							Icon(
-								imageVector = Icons.Default.Delete,
-								contentDescription = null,
-								modifier = Modifier
-									.align(Alignment.CenterEnd)
-									.padding(end = 16.dp)
-							)
-						}
-					}
-					else -> {
-						Box(
-							modifier = Modifier
-								.fillMaxSize()
-								.background(MaterialTheme.colorScheme.background)
-						)
-					}
-				}
-			},
 			directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
-		) {
-			Column(
-				modifier = Modifier
-					.fillMaxSize()
-					.clip(RoundedCornerShape(context.islandState.cornerPercentage))
-					.background(MaterialTheme.colorScheme.background)
-					.padding(16.dp),
-			) {
-				// Notification title + app name + close button + icon
-				Row(modifier = Modifier.fillMaxWidth(),
-					verticalAlignment = Alignment.CenterVertically
-				) {
-					// Icon
-					Icon(painter = rememberDrawablePainter(drawable = meta.iconDrawable),
-						contentDescription = null,
-						tint = MaterialTheme.colorScheme.primary,
-						modifier = Modifier.size(48.dp)
-					)
-					Spacer(modifier = Modifier.width(16.dp))
-					// Title + app name
-					Column(modifier = Modifier.weight(1f)) {
-						Text(
-							text = meta.getAppName(context),
-							style = MaterialTheme.typography.titleMedium,
-							overflow = TextOverflow.Ellipsis,
-							maxLines = 1,
-						)
-						if (meta.title != null) {
-							Text(text = meta.title!!,
-								style = MaterialTheme.typography.titleSmall,
-								overflow = TextOverflow.Ellipsis,
-								maxLines = 1
-							)
-						}
-					}
-					// Close button
-					IconButton(modifier = Modifier.align(Alignment.Top),
-						onClick = {
-							context.shrink()
-							restartTimeout()
-						}
-					) { Icon(imageVector = Icons.Default.ExpandLess, contentDescription = null) }
-				}
-				Spacer(modifier = Modifier.height(4.dp))
-				// Notification body
-				Box(modifier = Modifier.weight(1f),
+			dismissThresholds = { FractionalThreshold(0.5f) }, // Puoi regolare la soglia
+			background = {
+				val color by animateColorAsState(
+					targetValue = if (dismissState.dismissDirection != null)
+						MaterialTheme.colorScheme.errorContainer
+					else
+						MaterialTheme.colorScheme.surfaceVariant
+				)
+				Box(
+					modifier = Modifier
+						.fillMaxSize()
+						.background(color)
+						.padding(horizontal = 24.dp),
 					contentAlignment = Alignment.CenterStart
 				) {
-					Text(
-						text = meta.body,
-						style = MaterialTheme.typography.bodySmall,
-						textAlign = TextAlign.Justify,
-						overflow = TextOverflow.Ellipsis,
+					Icon(
+						imageVector = Icons.Default.Delete,
+						contentDescription = "Elimina notifica"
 					)
 				}
-				// Notification actions
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.spacedBy(8.dp)
+			},
+			dismissContent = {
+				Column(
+					modifier = Modifier
+						.fillMaxSize()
+						.clip(RoundedCornerShape(context.islandState.cornerPercentage))
+						.background(MaterialTheme.colorScheme.surface)
+						.padding(16.dp),
 				) {
-					var isReplying by remember { mutableStateOf(false) }
-					var replyText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-
-					meta.actions.forEach { action ->
-						val remoteInput = action.remoteInputs?.firstOrNull()
-
-						if (!isReplying) {
-							// Show buttons
-							if (remoteInput == null) {
-								// Not a reply button
-								Button(
-									modifier = Modifier.weight(1f),
-									onClick = {
-										// Classic action
-										val intent = action.actionIntent
-										intent.send()
-										// Remove notification
-										context.sendBroadcast(Intent(ACTION_CLOSE).apply {
-											putExtra("id", meta.id)
-										})
-									},
-								) {
-									Text(
-										text = action.title.toString(),
-										style = MaterialTheme.typography.labelSmall,
-									)
-								}
-							} else {
-								// Reply button
-								Button(
-									modifier = Modifier.weight(1f),
-									onClick = {
-										// Reply action
-										isReplying = true
-									},
-								) {
-									Text(
-										text = action.title.toString(),
-										style = MaterialTheme.typography.labelSmall,
-									)
-								}
-							}
-						} else if (remoteInput != null) {
-							// Create reply text field
-							Row(
-								modifier = Modifier
-									.weight(1f),
-								verticalAlignment = Alignment.CenterVertically
-							) {
-
-
-								TextField(
-									value = replyText,
-									onValueChange = { replyText = it },
-									modifier = Modifier
-										.weight(1f)
-										.onFocusChanged {
-											Log.d("Focus", it.isFocused.toString())
-											val imm =
-												context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-											if (it.isFocused) {
-												imm.toggleSoftInput(
-													InputMethodManager.SHOW_FORCED,
-													0
-												)
-											}
-										}
-										.displayCutoutPadding(),
-									shape = CircleShape,
-									singleLine = true,
-
+					Row(
+						modifier = Modifier.fillMaxWidth(),
+						verticalAlignment = Alignment.CenterVertically
+					) {
+						Icon(
+							painter = rememberDrawablePainter(drawable = meta.iconDrawable),
+							contentDescription = null,
+							tint = MaterialTheme.colorScheme.primary,
+							modifier = Modifier.size(24.dp)
+						)
+						Spacer(modifier = Modifier.width(12.dp))
+						Column(modifier = Modifier.weight(1f)) {
+							Text(
+								text = meta.getAppName(context),
+								style = MaterialTheme.typography.titleSmall,
+								maxLines = 1,
+								overflow = TextOverflow.Ellipsis
+							)
+							meta.title?.let {
+								Text(
+									text = it,
+									style = MaterialTheme.typography.bodyMedium,
+									maxLines = 1,
+									overflow = TextOverflow.Ellipsis
 								)
-								IconButton(onClick = {
-									// Send reply action
-									val intent = Intent().addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
-									val bundle = Bundle().apply {
-										putCharSequence(remoteInput.resultKey, replyText.text)
-									}
-									RemoteInput.addResultsToIntent(action.remoteInputs, intent, bundle)
-									action.actionIntent.send(context, 0, intent)
-									// Remove notification
-									context.sendBroadcast(Intent(ACTION_CLOSE).apply {
-										putExtra("id", meta.id)
-									})
-								}) {
-									Icon(
-										imageVector = Icons.Default.Send,
-										contentDescription = null
-									)
-								}
 							}
 						}
+						IconButton(
+							modifier = Modifier.align(Alignment.Top),
+							onClick = {
+								context.shrink()
+								startDismissTimeout()
+							}
+						) {
+							Icon(imageVector = Icons.Default.ExpandLess, contentDescription = "Riduci")
+						}
+					}
+					Spacer(modifier = Modifier.height(8.dp))
+
+					Box(
+						modifier = Modifier.weight(1f),
+						contentAlignment = Alignment.CenterStart
+					) {
+						Text(
+							text = meta.body,
+							style = MaterialTheme.typography.bodyMedium,
+							textAlign = TextAlign.Justify
+						)
+					}
+
+					NotificationActions(meta)
+				}
+			}
+		)
+	}
+
+	@Composable
+	private fun NotificationActions(meta: NotificationMeta) {
+		var isReplying by remember { mutableStateOf(false) }
+		var replyText by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+		val focusRequester = remember { FocusRequester() }
+
+		LaunchedEffect(isReplying) {
+			if (isReplying) {
+				focusRequester.requestFocus()
+			}
+		}
+
+		Row(
+			modifier = Modifier.fillMaxWidth(),
+			horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+		) {
+			val replyAction = meta.actions.firstOrNull { it.remoteInputs?.isNotEmpty() == true }
+
+			if (isReplying && replyAction != null) {
+				OutlinedTextField(
+					value = replyText,
+					onValueChange = { replyText = it },
+					modifier = Modifier
+						.weight(1f)
+						.focusRequester(focusRequester),
+					placeholder = { Text(replyAction.remoteInputs.first().label.toString()) },
+					shape = CircleShape,
+				)
+				IconButton(onClick = {
+					sendReply(replyAction, replyText.text)
+					removeNotificationAndUpdateState(meta.id)
+				}) {
+					Icon(imageVector = Icons.Default.Send, contentDescription = "Invia risposta")
+				}
+			} else {
+				meta.actions.forEach { action ->
+					Button(
+						modifier = Modifier.weight(1f),
+						onClick = {
+							if (action.remoteInputs?.isNotEmpty() == true) {
+								isReplying = true
+							} else {
+								action.actionIntent.send()
+								removeNotificationAndUpdateState(meta.id)
+							}
+						}
+					) {
+						Text(text = action.title.toString())
 					}
 				}
 			}
 		}
 	}
 
+	private fun sendReply(action: Notification.Action, text: String) {
+		val remoteInput = action.remoteInputs.first()
+		val intent = Intent().addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
+		val bundle = Bundle().apply {
+			putCharSequence(remoteInput.resultKey, text)
+		}
+		RemoteInput.addResultsToIntent(action.remoteInputs, intent, bundle)
+		action.actionIntent.send(context, 0, intent)
+	}
+
 	override fun onClick() {
-		val meta = notificationMeta.value ?: return
-		val intent = Intent(ACTION_OPEN_CLOSE)
-		intent.putExtra("id", meta.id)
-		context.sendBroadcast(intent)
+		notificationMeta?.let {
+			context.sendBroadcast(Intent(ACTION_OPEN_CLOSE).putExtra("id", it.id))
+		}
 	}
 
 	override fun onDestroy() {
 		if (!::context.isInitialized) return
 		try {
-			context.unregisterReceiver(mBroadcastReceiver)
-		} catch (_: Exception) {} // Ignore exception if receiver is not registered
+			context.unregisterReceiver(notificationBroadcastReceiver)
+		} catch (e: IllegalArgumentException) {
+			Log.w(TAG, "BroadcastReceiver non era registrato.", e)
+		}
+		pluginScope.cancel()
 	}
 
-	@Composable
-	override fun PermissionsRequired() {
-
-	}
+	@Composable override fun PermissionsRequired() { }
 
 	@Composable
 	override fun LeftOpenedComposable() {
-		val meta = notificationMeta.value ?: return
-
-		Box(
-			modifier = Modifier
-				.clip(CircleShape)
-				.background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-		) {
-			Icon(
-				painter = rememberDrawablePainter(drawable = meta.iconDrawable),
-				tint = MaterialTheme.colorScheme.primary,
-				contentDescription = null,
-				modifier = Modifier.padding(2.dp)
-			)
+		notificationMeta?.let { meta ->
+			Box(
+				modifier = Modifier
+					.clip(CircleShape)
+					.background(MaterialTheme.colorScheme.primaryContainer)
+			) {
+				Icon(
+					painter = rememberDrawablePainter(drawable = meta.iconDrawable),
+					tint = MaterialTheme.colorScheme.onPrimaryContainer,
+					contentDescription = null,
+					modifier = Modifier.padding(4.dp)
+				)
+			}
 		}
 	}
 
 	@Composable
 	override fun RightOpenedComposable() {
-		when (notificationMeta.value?.statusBarNotification?.notification?.category) {
-			"msg" -> {
-				Box(
-					modifier = Modifier
-						.clip(CircleShape)
-						.background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-				) {
-					Icon(
-						imageVector = Icons.Default.Chat,
-						tint = MaterialTheme.colorScheme.primary,
-						contentDescription = null,
-						modifier = Modifier.padding(4.dp)
-					)
-				}
+			Box(
+				modifier = Modifier
+					.clip(CircleShape)
+					.background(MaterialTheme.colorScheme.secondaryContainer)
+			) {
+				Icon(
+					imageVector = Icons.Default.Chat,
+					tint = MaterialTheme.colorScheme.onSecondaryContainer,
+					contentDescription = null,
+					modifier = Modifier.padding(4.dp)
+				)
 			}
-		}
 	}
 
 	override fun onLeftSwipe() {
-		Log.d("Notification", "Left swipe")
-		context.sendBroadcast(Intent(ACTION_CLOSE))
-		context.removePlugin(this)
+		Log.d(TAG, "Swipe a sinistra, rimuovo notifica.")
+		notificationMeta?.let { removeNotificationAndUpdateState(it.id) }
 	}
 
 	override fun onRightSwipe() {}
 
-	private fun restartTimeout() {
-		handler.removeCallbacksAndMessages(null)
-		handler.postDelayed({
-			if (notificationMeta.value != null) {
-				removeNotificationAndUpdateState(notificationMeta.value!!.id)
-				Log.d("NotificationPlugin", "Timeout: Remove notification")
+	private fun startDismissTimeout() {
+		dismissJob?.cancel()
+		dismissJob = pluginScope.launch {
+			delay(IslandSettings.instance.autoHideOpenedAfter.toLong())
+			notificationMeta?.let {
+				Log.d(TAG, "Timeout: rimozione automatica della notifica ${it.id}")
+				removeNotificationAndUpdateState(it.id)
 			}
-		}, IslandSettings.instance.autoHideOpenedAfter.toLong())
+		}
 	}
 }
+
