@@ -13,7 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.anto426.dynamicisland.plugins.ExportedPlugins
-import com.anto426.dynamicisland.plugins.PluginSettingsScreen
+import com.anto426.dynamicisland.ui.settings.pages.PluginSettingsScreen
 import com.anto426.dynamicisland.ui.home.HomeScreen
 import com.anto426.dynamicisland.ui.plugins.PluginScreen
 import com.anto426.dynamicisland.ui.settings.*

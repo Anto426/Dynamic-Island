@@ -104,7 +104,7 @@ fun IslandApp(
 						.let {
 							if (IslandSettings.instance.showBorders) {
 								it.border(
-									width = 1.dp,
+									width = 2.dp,
 									color = MaterialTheme.colorScheme.primary,
 									shape = RoundedCornerShape(cornerPercentage)
 								)
@@ -114,6 +114,10 @@ fun IslandApp(
 						},
 					colors = CardDefaults.cardColors(
 						containerColor = MaterialTheme.colorScheme.surface,
+					),
+					elevation = CardDefaults.cardElevation(
+						defaultElevation = 8.dp,
+						pressedElevation = 12.dp
 					)
 				) {
 					Crossfade(
@@ -212,15 +216,15 @@ private fun CloseHandle(
 				indication = null,
 				onClick = onClick
 			)
-			.padding(vertical = 12.dp),
+			.padding(vertical = 16.dp),
 		contentAlignment = Alignment.Center
 	) {
 		Box(
 			modifier = Modifier
-				.width(40.dp)
-				.height(4.dp)
-				.clip(CircleShape)
-				.background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f))
+				.width(48.dp)
+				.height(6.dp)
+				.clip(RoundedCornerShape(3.dp))
+				.background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
 		)
 	}
 }

@@ -16,6 +16,7 @@ import com.anto426.dynamicisland.model.THEME
 import com.anto426.dynamicisland.ui.theme.themes.BlackTheme
 import com.anto426.dynamicisland.ui.theme.themes.QuinacridoneMagentaThemeDarkColors
 import com.anto426.dynamicisland.ui.theme.themes.QuinacridoneMagentaThemeLightColors
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 
 class Theme {
 
@@ -76,6 +77,7 @@ class Theme {
 	}
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DynamicIslandTheme(
 	darkTheme: Boolean = isSystemInDarkTheme(),

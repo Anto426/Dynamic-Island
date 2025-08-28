@@ -1,145 +1,283 @@
 package com.anto426.dynamicisland.ui.settings.pages
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.island.IslandSettings
+import com.anto426.dynamicisland.ui.settings.pages.EnhancedSettingSwitch
 
 /**
- * Redesigned Behavior Settings Screen with a clean, card-based layout.
+ * Schermata completamente ridisegnata per le impostazioni di comportamento
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BehaviorSettingsScreen() {
-	LazyColumn(
-		modifier = Modifier.fillMaxSize(),
-		contentPadding = PaddingValues(16.dp),
-		verticalArrangement = Arrangement.spacedBy(16.dp)
-	) {
-		// Main Card for the behavior settings
-		item {
-			Card(
-				modifier = Modifier.fillMaxWidth()
-			) {
-				Column(
-					modifier = Modifier.padding(16.dp),
-					verticalArrangement = Arrangement.spacedBy(8.dp)
-				) {
-					Text(
-						text = "Visual Behavior",
-						style = MaterialTheme.typography.titleMedium,
-						color = MaterialTheme.colorScheme.onSurface
-					)
-					Spacer(modifier = Modifier.height(8.dp))
+    val context = LocalContext.current
 
-					SettingSwitch(
-						title = "Show on lock screen",
-						description = "Show the island on the lock screen and on the always-on display",
-						checked = IslandSettings.instance.showOnLockScreen
-					) { IslandSettings.instance.showOnLockScreen = it }
 
-					SettingsDivider()
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            contentPadding = PaddingValues(vertical = 24.dp)
+        ) {
+            // Header informativo
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    shape = MaterialTheme.shapes.extraLarge
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Surface(
+                            modifier = Modifier.size(48.dp),
+                            shape = androidx.compose.foundation.shape.CircleShape,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.SettingsSuggest,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
 
-					SettingSwitch(
-						title = "Show in landscape",
-						description = "Show island in landscape mode",
-						checked = IslandSettings.instance.showInLandscape
-					) { IslandSettings.instance.showInLandscape = it }
-				}
-			}
-		}
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Controlla il comportamento",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Text(
+                                text = "Gestisci quando e come appare l'isola dinamica",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                }
+            }
 
-		// Card for the auto-hide settings
-		item {
-			Card(
-				modifier = Modifier.fillMaxWidth()
-			) {
-				Column(
-					modifier = Modifier.padding(16.dp),
-					verticalArrangement = Arrangement.spacedBy(8.dp)
-				) {
-					Text(
-						text = "Auto-hide",
-						style = MaterialTheme.typography.titleMedium,
-						color = MaterialTheme.colorScheme.onSurface
-					)
-					Spacer(modifier = Modifier.height(8.dp))
+            // Sezione: Visibilità
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(
+                        text = "Visibilità",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
 
-					SettingsSliderItem(
-						title = "Auto hide opened island after",
-						extension = "s",
-						value = IslandSettings.instance.autoHideOpenedAfter / 1000,
-						range = 0.5f..60f,
-						onValueChange = {
-							IslandSettings.instance.autoHideOpenedAfter = it * 1000
-						}
-					)
-				}
-			}
-		}
-	}
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.behavior_show_on_lockscreen_title),
+                                description = stringResource(id = R.string.behavior_show_on_lockscreen_description),
+                                icon = Icons.Default.ScreenLockPortrait,
+                                checked = IslandSettings.instance.showOnLockScreen,
+                                onCheckedChange = {
+                                    IslandSettings.instance.showOnLockScreen = it
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
+                            Divider(
+                                modifier = Modifier.fillMaxWidth(),
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                thickness = 1.dp
+                            )
+
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.behavior_show_in_landscape_title),
+                                description = stringResource(id = R.string.behavior_show_in_landscape_description),
+                                icon = Icons.Default.ScreenRotation,
+                                checked = IslandSettings.instance.showInLandscape,
+                                onCheckedChange = {
+                                    IslandSettings.instance.showInLandscape = it
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Sezione: Auto-nascondimento
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(
+                        text = "Auto-nascondimento",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.behavior_autohide_title),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            EnhancedSliderItem(
+                                title = stringResource(id = R.string.behavior_autohide_opened_island_title),
+                                value = IslandSettings.instance.autoHideOpenedAfter / 1000f,
+                                range = 0.5f..60f,
+                                onValueChange = {
+                                    IslandSettings.instance.autoHideOpenedAfter = it * 1000
+                                    IslandSettings.instance.applySettings(context)
+                                },
+                                icon = Icons.Default.Schedule,
+                                unit = "s"
+                            )
+                        }
+                    }
+                }
+            }
+    }
 }
 
 /**
- * A reusable settings item with a slider.
+ * Componente avanzato per switch delle impostazioni con icona e design moderno
+ */
+
+
+/**
+ * Componente avanzato per slider delle impostazioni con icona
  */
 @Composable
-fun SettingsSliderItem(
-	title: String,
-	extension: String,
-	value: Float,
-	range: ClosedFloatingPointRange<Float>,
-	onValueChange: (Float) -> Unit
+fun EnhancedSliderItem(
+    title: String,
+    value: Float,
+    range: ClosedFloatingPointRange<Float>,
+    onValueChange: (Float) -> Unit,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    unit: String = ""
 ) {
-	var sliderValue by remember { mutableFloatStateOf(value) }
+    var sliderValue by remember { mutableFloatStateOf(value) }
 
-	Column(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(vertical = 8.dp),
-	) {
-		Row(
-			modifier = Modifier.fillMaxWidth(),
-			horizontalArrangement = Arrangement.SpaceBetween,
-			verticalAlignment = Alignment.CenterVertically
-		) {
-			Text(text = title, style = MaterialTheme.typography.titleMedium)
-			Text(
-				text = "${"%.1f".format(sliderValue)}$extension",
-				style = MaterialTheme.typography.bodyLarge,
-				color = MaterialTheme.colorScheme.onSurfaceVariant
-			)
-		}
-		Spacer(Modifier.height(8.dp))
-		Slider(
-			value = sliderValue,
-			onValueChange = {
-				sliderValue = it
-				onValueChange(it)
-			},
-			valueRange = range
-		)
-	}
-}
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // Header con icona, titolo e valore
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Surface(
+                modifier = Modifier.size(40.dp),
+                shape = androidx.compose.foundation.shape.CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
 
-/**
- * A simple divider to separate settings items.
- */
-@Composable
-fun SettingsDivider() {
-	Divider(
-		modifier = Modifier.padding(vertical = 8.dp),
-		color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-	)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "${"%.1f".format(sliderValue)} $unit",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+
+        // Slider
+        Slider(
+            modifier = Modifier.fillMaxWidth(),
+            value = sliderValue,
+            onValueChange = {
+                sliderValue = it
+                onValueChange(it)
+            },
+            valueRange = range,
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+            )
+        )
+    }
 }

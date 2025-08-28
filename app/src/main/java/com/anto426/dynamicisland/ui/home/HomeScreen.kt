@@ -18,10 +18,12 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +31,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
@@ -40,7 +44,6 @@ import com.anto426.dynamicisland.model.packageName
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.R
-import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
 import androidx.core.net.toUri
 import androidx.core.content.edit
 
@@ -60,6 +63,8 @@ fun HomeScreen(
 
 	var isOverlayGranted by remember { mutableStateOf(canDrawOverlays(context)) }
 	var isAccessibilityGranted by remember { mutableStateOf(isAccessibilityServiceEnabled(IslandOverlayService::class.java, context)) }
+
+	val allPermissionsGranted = isAccessibilityGranted && isOverlayGranted
 
 	val startForPermissionResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 		isAccessibilityGranted = isAccessibilityServiceEnabled(IslandOverlayService::class.java, context)
@@ -94,42 +99,122 @@ fun HomeScreen(
 		modifier = Modifier
 			.fillMaxSize()
 			.animateContentSize(),
-		verticalArrangement = Arrangement.spacedBy(16.dp),
+		verticalArrangement = Arrangement.spacedBy(24.dp),
 		horizontalAlignment = Alignment.CenterHorizontally,
-		contentPadding = PaddingValues(16.dp)
+		contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp)
 	) {
-		// Card che raggruppa lo stato dei servizi e i permessi
+		// Header con stato dell'app
+		item {
+			Column(
+				horizontalAlignment = Alignment.CenterHorizontally,
+				verticalArrangement = Arrangement.spacedBy(16.dp)
+			) {
+				// Icona dell'app con badge di stato
+				Box(
+					contentAlignment = Alignment.Center,
+					modifier = Modifier.size(80.dp)
+				) {
+					Icon(
+						imageVector = Icons.Rounded.Android,
+						contentDescription = null,
+						modifier = Modifier.size(64.dp),
+						tint = MaterialTheme.colorScheme.primary
+					)
+
+					// Badge di stato
+					val allPermissionsGranted = isAccessibilityGranted && isOverlayGranted
+					if (allPermissionsGranted) {
+						Icon(
+							imageVector = Icons.Default.CheckCircle,
+							contentDescription = "Configurato",
+							modifier = Modifier
+								.size(24.dp)
+								.align(Alignment.BottomEnd),
+							tint = MaterialTheme.colorScheme.primary
+						)
+					}
+				}
+
+				Text(
+					text = stringResource(R.string.app_name),
+					style = MaterialTheme.typography.headlineMedium,
+					fontWeight = FontWeight.Bold,
+					color = MaterialTheme.colorScheme.onSurface
+				)
+
+				Text(
+					text = if (allPermissionsGranted) "App configurata e pronta!" else "Configura i permessi per iniziare",
+					style = MaterialTheme.typography.bodyLarge,
+					color = MaterialTheme.colorScheme.onSurfaceVariant,
+					textAlign = TextAlign.Center
+				)
+
+				// Indicatore di progresso
+				if (!allPermissionsGranted) {
+					LinearProgressIndicator(
+					progress = { ((if (isOverlayGranted) 1 else 0) + (if (isAccessibilityGranted) 1 else 0)) / 2f },
+					modifier = Modifier
+												.fillMaxWidth(0.8f)
+												.height(4.dp)
+												.clip(RoundedCornerShape(2.dp)),
+					color = MaterialTheme.colorScheme.primary,
+					trackColor = MaterialTheme.colorScheme.surfaceVariant,
+					strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+					)
+				}
+			}
+		}
+
+		// Card principale dei permessi con design migliorato
 		item {
 			Card(
-				modifier = Modifier.fillMaxWidth()
+				modifier = Modifier.fillMaxWidth(),
+				colors = CardDefaults.cardColors(
+					containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+				),
+				elevation = CardDefaults.cardElevation(
+					defaultElevation = 4.dp
+				),
+				shape = MaterialTheme.shapes.extraLarge
 			) {
 				Column(
-					modifier = Modifier.padding(16.dp),
-					verticalArrangement = Arrangement.spacedBy(16.dp)
+					modifier = Modifier.padding(24.dp),
+					verticalArrangement = Arrangement.spacedBy(24.dp)
 				) {
+					Text(
+						text = "Permessi richiesti",
+						style = MaterialTheme.typography.titleLarge,
+						fontWeight = FontWeight.SemiBold,
+						color = MaterialTheme.colorScheme.onSurface
+					)
+
 					ServiceStatusCard(
 						isAccessibilityGranted = isAccessibilityGranted,
 						switchAccessibility = { switchAccessibilityService() }
 					)
-					SettingsDivider()
+
+					Divider(color = MaterialTheme.colorScheme.outlineVariant)
+
 					PermissionItem(
-						title = "Permesso di Sovrapposizione",
-						description = "Mostra l'isola sopra le altre app",
+						title = stringResource(R.string.overlay_permission_title),
+						description = stringResource(R.string.overlay_permission_description),
 						icon = Icons.Default.Layers,
 						checked = isOverlayGranted,
 						onClick = {
 							startForPermissionResult.launch(
 								Intent(
 									Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                    "package:$packageName".toUri()
+									"package:$packageName".toUri()
 								)
 							)
 						}
 					)
-					SettingsDivider()
+
+					Divider(color = MaterialTheme.colorScheme.outlineVariant)
+
 					PermissionItem(
-						title = "Permesso di Accessibilità",
-						description = "Necessario per interagire con le app",
+						title = stringResource(R.string.accessibility_permission_title),
+						description = stringResource(R.string.accessibility_permission_description),
 						icon = Icons.Default.SettingsAccessibility,
 						checked = isAccessibilityGranted,
 						onClick = { switchAccessibilityService() }
@@ -178,11 +263,8 @@ fun HomeScreen(
 					onDismiss = {
 						optimizationDismissed = true
 						settingsPreferences.edit {
-                            putBoolean(
-                                BATTERY_OPTIMIZATION_DISMISSED,
-                                true
-                            )
-                        }
+							putBoolean(BATTERY_OPTIMIZATION_DISMISSED, true)
+						}
 					}
 				)
 			}
@@ -197,6 +279,7 @@ fun HomeScreen(
 	)
 }
 
+
 @Composable
 fun DisclosureCard(
 	onAcceptClick: () -> Unit,
@@ -204,34 +287,58 @@ fun DisclosureCard(
 ) {
 	Card(
 		modifier = Modifier.fillMaxWidth(),
-		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+		elevation = CardDefaults.cardElevation(
+			defaultElevation = 4.dp
+		)
 	) {
 		Column(
-			modifier = Modifier.padding(16.dp),
+			modifier = Modifier.padding(20.dp),
 			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				Icon(Icons.Rounded.Policy, contentDescription = null, modifier = Modifier.size(24.dp))
+			Row(verticalAlignment = Alignment.CenterVertically) {
+				Icon(
+					Icons.Rounded.Policy,
+					contentDescription = null,
+					modifier = Modifier.size(28.dp),
+					tint = MaterialTheme.colorScheme.onPrimaryContainer
+				)
 				Spacer(modifier = Modifier.width(16.dp))
-				Text("Informativa", style = MaterialTheme.typography.titleLarge)
+				Text(
+					stringResource(R.string.informativa),
+					style = MaterialTheme.typography.headlineSmall,
+					color = MaterialTheme.colorScheme.onPrimaryContainer,
+					fontWeight = FontWeight.SemiBold
+				)
 			}
 			Text(
-				"Utilizzando questa app, accetti i termini e le condizioni dell'app e dei plugin che utilizzi.",
-				style = MaterialTheme.typography.bodyMedium
+				stringResource(R.string.informativa_description),
+				style = MaterialTheme.typography.bodyMedium,
+				color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+				lineHeight = 20.sp
 			)
 			Row(
 				modifier = Modifier.fillMaxWidth(),
 				horizontalArrangement = Arrangement.End,
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				TextButton(onClick = onShowClick) {
-					Text("Leggi")
+				TextButton(
+					onClick = onShowClick,
+					colors = ButtonDefaults.textButtonColors(
+						contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+					)
+				) {
+					Text(stringResource(R.string.read))
 				}
-				Spacer(modifier = Modifier.width(8.dp))
-				Button(onClick = onAcceptClick) {
-					Text("Ho capito")
+				Spacer(modifier = Modifier.width(12.dp))
+				Button(
+					onClick = onAcceptClick,
+					colors = ButtonDefaults.buttonColors(
+						containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
+						contentColor = MaterialTheme.colorScheme.primaryContainer
+					)
+				) {
+					Text(stringResource(R.string.understood))
 				}
 			}
 		}
@@ -244,28 +351,45 @@ fun NoPluginsActivatedCard(
 ) {
 	Card(
 		modifier = Modifier.fillMaxWidth(),
-		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+		elevation = CardDefaults.cardElevation(
+			defaultElevation = 4.dp
+		)
 	) {
 		Column(
-			modifier = Modifier.padding(16.dp),
+			modifier = Modifier.padding(20.dp),
 			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				Icon(Icons.Rounded.ExtensionOff, contentDescription = null, modifier = Modifier.size(24.dp))
+			Row(verticalAlignment = Alignment.CenterVertically) {
+				Icon(
+					Icons.Rounded.ExtensionOff,
+					contentDescription = null,
+					modifier = Modifier.size(28.dp),
+					tint = MaterialTheme.colorScheme.onSecondaryContainer
+				)
 				Spacer(modifier = Modifier.width(16.dp))
-				Text("Nessun plugin attivo", style = MaterialTheme.typography.titleLarge)
+				Text(
+					stringResource(R.string.no_active_plugins),
+					style = MaterialTheme.typography.headlineSmall,
+					color = MaterialTheme.colorScheme.onSecondaryContainer,
+					fontWeight = FontWeight.SemiBold
+				)
 			}
 			Text(
-				"Per usare Dynamic Island, devi attivare almeno un plugin. Vai alla pagina dei plugin per iniziare.",
-				style = MaterialTheme.typography.bodyMedium
+				stringResource(R.string.no_plugins_description),
+				style = MaterialTheme.typography.bodyMedium,
+				color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
+				lineHeight = 20.sp
 			)
 			Button(
 				onClick = onGetStartedClick,
-				modifier = Modifier.align(Alignment.End)
+				modifier = Modifier.align(Alignment.End),
+				colors = ButtonDefaults.buttonColors(
+					containerColor = MaterialTheme.colorScheme.onSecondaryContainer,
+					contentColor = MaterialTheme.colorScheme.secondaryContainer
+				)
 			) {
-				Text("Inizia")
+				Text(stringResource(R.string.get_started))
 			}
 		}
 	}
@@ -285,12 +409,16 @@ fun ServiceStatusCard(
 			containerColor = animateColorAsState(
 				targetValue = if (isAccessibilityGranted) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
 			).value
+		),
+		elevation = CardDefaults.cardElevation(
+			defaultElevation = 4.dp,
+			pressedElevation = 8.dp
 		)
 	) {
 		Row(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(16.dp),
+				.padding(20.dp),
 			verticalAlignment = Alignment.CenterVertically
 		) {
 			val composition by rememberLottieComposition(
@@ -300,23 +428,24 @@ fun ServiceStatusCard(
 				composition = composition,
 				iterations = LottieConstants.IterateForever,
 				contentScale = ContentScale.Fit,
-				modifier = Modifier.size(64.dp)
+				modifier = Modifier.size(72.dp)
 			)
 
-			Spacer(modifier = Modifier.width(16.dp))
+			Spacer(modifier = Modifier.width(20.dp))
 
 			Column(
 				modifier = Modifier.weight(1f)
 			) {
 				Text(
-					text = if (isAccessibilityGranted) "SERVIZIO ATTIVO" else "SERVIZIO DISABILITATO",
-					style = MaterialTheme.typography.titleLarge,
+					text = if (isAccessibilityGranted) stringResource(R.string.service_active) else stringResource(R.string.service_disabled),
+					style = MaterialTheme.typography.headlineSmall,
 					fontWeight = FontWeight.Bold,
-					letterSpacing = 2.sp
+					letterSpacing = 1.sp,
+					color = if (isAccessibilityGranted) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurface
 				)
 				Text(
-					text = "Tocca per ${if (isAccessibilityGranted) "disattivare" else "attivare"}",
-					style = MaterialTheme.typography.bodySmall,
+					text = if (isAccessibilityGranted) stringResource(R.string.tap_to_disable) else stringResource(R.string.tap_to_enable),
+					style = MaterialTheme.typography.bodyMedium,
 					color = MaterialTheme.colorScheme.onSurfaceVariant
 				)
 			}
@@ -333,40 +462,64 @@ fun OptimizationCard(
 	val context = LocalContext.current
 	Card(
 		modifier = Modifier.fillMaxWidth(),
-		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+		colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer),
+		elevation = CardDefaults.cardElevation(
+			defaultElevation = 4.dp
+		)
 	) {
 		Column(
-			modifier = Modifier.padding(16.dp),
+			modifier = Modifier.padding(20.dp),
 			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
-			Row(
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				Icon(Icons.Rounded.Warning, contentDescription = null, modifier = Modifier.size(24.dp))
+			Row(verticalAlignment = Alignment.CenterVertically) {
+				Icon(
+					Icons.Rounded.Warning,
+					contentDescription = null,
+					modifier = Modifier.size(28.dp),
+					tint = MaterialTheme.colorScheme.onTertiaryContainer
+				)
 				Spacer(modifier = Modifier.width(16.dp))
-				Text("Ottimizzazione batteria", style = MaterialTheme.typography.titleLarge)
+				Text(
+					stringResource(R.string.battery_optimization_title),
+					style = MaterialTheme.typography.headlineSmall,
+					color = MaterialTheme.colorScheme.onTertiaryContainer,
+					fontWeight = FontWeight.SemiBold
+				)
 			}
 			Text(
-				"Per evitare che l'app venga terminata dal sistema, disabilita l'ottimizzazione della batteria per Dynamic Island.",
-				style = MaterialTheme.typography.bodyMedium
+				stringResource(R.string.battery_optimization_description),
+				style = MaterialTheme.typography.bodyMedium,
+				color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f),
+				lineHeight = 20.sp
 			)
 			Row(
 				modifier = Modifier.fillMaxWidth(),
 				horizontalArrangement = Arrangement.End,
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				TextButton(onClick = onDismiss) {
-					Text("Ignora")
-				}
-				Spacer(modifier = Modifier.width(8.dp))
-				Button(onClick = {
-					startForResult.launch(
-						Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-							data = "package:${context.packageName}".toUri()
-						}
+				TextButton(
+					onClick = onDismiss,
+					colors = ButtonDefaults.textButtonColors(
+						contentColor = MaterialTheme.colorScheme.onTertiaryContainer
 					)
-				}) {
-					Text("Disabilita ottimizzazione")
+				) {
+					Text(stringResource(R.string.ignore))
+				}
+				Spacer(modifier = Modifier.width(12.dp))
+				Button(
+					onClick = {
+						startForResult.launch(
+							Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+								data = "package:${context.packageName}".toUri()
+							}
+						)
+					},
+					colors = ButtonDefaults.buttonColors(
+						containerColor = MaterialTheme.colorScheme.onTertiaryContainer,
+						contentColor = MaterialTheme.colorScheme.tertiaryContainer
+					)
+				) {
+					Text(stringResource(R.string.disable_optimization))
 				}
 			}
 		}
@@ -405,25 +558,41 @@ fun PermissionItem(
 			.fillMaxWidth()
 			.clip(MaterialTheme.shapes.medium)
 			.clickable(onClick = onClick)
-			.padding(vertical = 8.dp),
+			.padding(vertical = 12.dp, horizontal = 4.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Icon(
 			imageVector = icon,
 			contentDescription = null,
-			tint = MaterialTheme.colorScheme.primary,
-			modifier = Modifier.size(24.dp)
+			tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+			modifier = Modifier.size(28.dp)
 		)
 		Spacer(modifier = Modifier.width(16.dp))
 		Column(
 			modifier = Modifier.weight(1f)
 		) {
-			Text(text = title, style = MaterialTheme.typography.titleMedium)
-			Text(text = description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+			Text(
+				text = title,
+				style = MaterialTheme.typography.titleMedium,
+				color = MaterialTheme.colorScheme.onSurface,
+				fontWeight = FontWeight.Medium
+			)
+			Text(
+				text = description,
+				style = MaterialTheme.typography.bodyMedium,
+				color = MaterialTheme.colorScheme.onSurfaceVariant,
+				lineHeight = 18.sp
+			)
 		}
 		Switch(
 			checked = checked,
-			onCheckedChange = { onClick() }
+			onCheckedChange = { onClick() },
+			colors = SwitchDefaults.colors(
+				checkedThumbColor = MaterialTheme.colorScheme.primary,
+				checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+				uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+				uncheckedTrackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+			)
 		)
 	}
 }
