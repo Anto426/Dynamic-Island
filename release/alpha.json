@@ -1,0 +1,25 @@
+﻿{
+  "channel": "alpha",
+  "latest_version": "2.3.0-alpha",
+  "version_code": 11,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.3.0-alpha/app-debug.apk",
+  "release_notes": "Versione alpha con funzionalità cutting-edge",
+  "release_date": "2024-08-29",
+  "minimum_supported_version": "2.1.0",
+  "force_update": false,
+  "checksum": "alpha_sha256_hash_here",
+  "file_size": 45424123,
+  "changelog": [
+    {
+      "version": "2.3.0-alpha",
+      "date": "2024-08-29",
+      "changes": [
+        "Funzionalità cutting-edge altamente sperimentali",
+        "Nuove API per sviluppatori",
+        "Miglioramenti radicali alle prestazioni",
+        "Interfaccia utente completamente ridisegnata",
+        "Possibili instabilità - versione alpha"
+      ]
+    }
+  ]
+}
