@@ -1,7 +1,7 @@
 ﻿{
   "channel": "stable",
   "latest_version": "2.1.1",
-  "version_code": 8,
+  "version_code": 9,
   "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/v1.2.0/MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk",
   "release_notes": "Rilascio completo del sistema di aggiornamenti automatici con interfaccia migliorata e notifiche visive. Include controllo automatico degli aggiornamenti all'avvio, stato persistente, e badge di notifica nella barra di navigazione.",
   "release_date": "2025-08-29",
