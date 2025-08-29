@@ -14,7 +14,7 @@ import java.io.IOException
  */
 class GitHubApiManager(
     private val owner: String = "Anto426",
-    private val repo: String = "MaterialYou-Dynamic-Island"
+    private val repo: String = "Dynamic-Island"
 ) {
     private val client = OkHttpClient()
     private val gson = Gson()
