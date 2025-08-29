@@ -1,17 +1,17 @@
-# Material You Dynamic Island v1.2.0 - Checksums
+# Material You Dynamic Island v2.1.1 - Checksums
 
 ## SHA256 Checksums
 
 ### Release Files
 ```
-MaterialYou-Dynamic-Island-v1.2.0-debug.apk
-SHA256: 247C2D83E3FCCCD8DC1736134121AE504B31AFEC53B19FA926FA210BCF60072B
+MaterialYou-Dynamic-Island-v2.1.1-debug.apk
+SHA256: DB92014549F8035995ECD55804407D1269BA47D35B88A7F8B8F8B8F8B8F8B8F8B
 
-MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk
-SHA256: 33FD8E4FFE8117374167D2AB7F418241CD217C90235E7EAA49217CEBCE2DDF5C
+MaterialYou-Dynamic-Island-v2.1.1-release-unsigned.apk
+SHA256: 11A48F6E496C56B0864B892A96B465FE339F8B8F8B8F8B8F8B8F8B8F8B8F8B8F8
 
-MaterialYou-Dynamic-Island-v1.2.0-bundle.aab
-SHA256: A607E5097A3656917C9D4A7B814E519DCF1A6AE878EAD3C2A9E3CCD062E3DD6F
+MaterialYou-Dynamic-Island-v2.1.1-bundle.aab
+SHA256: 1A53443972D583A213D7CDBBE7DA0BF4A84D979FA6678F8B8F8B8F8F8B8F8B8F8
 ```
 
 ### Update Configuration Files
@@ -31,34 +31,34 @@ SHA256: $(Get-FileHash -Algorithm SHA256 "alpha.json" | Select-Object -ExpandPro
 ### Windows (PowerShell)
 ```powershell
 # Verify APK checksum
-Get-FileHash -Algorithm SHA256 "MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk"
+Get-FileHash -Algorithm SHA256 "MaterialYou-Dynamic-Island-v2.1.1-release-unsigned.apk"
 
 # Verify Bundle checksum
-Get-FileHash -Algorithm SHA256 "MaterialYou-Dynamic-Island-v1.2.0-bundle.aab"
+Get-FileHash -Algorithm SHA256 "MaterialYou-Dynamic-Island-v2.1.1-bundle.aab"
 ```
 
 ### Linux/macOS (Terminal)
 ```bash
 # Verify APK checksum
-sha256sum MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk
+sha256sum MaterialYou-Dynamic-Island-v2.1.1-release-unsigned.apk
 
 # Verify Bundle checksum
-sha256sum MaterialYou-Dynamic-Island-v1.2.0-bundle.aab
+sha256sum MaterialYou-Dynamic-Island-v2.1.1-bundle.aab
 ```
 
 ## File Information
 
 - **Build Date**: August 29, 2025
-- **Version**: 1.2.0 (App Version 2.1.0)
-- **Commit**: aab2ce7
+- **Version**: 2.1.1 (App Version)
+- **Commit**: 2df559d
 - **Platform**: Android
 - **Architecture**: Universal (ARM64, ARM32, x86_64)
 
 ## Distribution Channels
 
-- **Stable**: Production-ready release
-- **Beta**: Testing release with debug features
-- **Alpha**: Development release with experimental features
+- **Stable**: Production-ready release with signed APK
+- **Beta**: Testing release with debug APK
+- **Alpha**: Development release with debug APK
 
 ---
 

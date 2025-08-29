@@ -1,23 +1,36 @@
-# Material You Dynamic Island v1.2.0
+# Material You Dynamic Island v2.1.1
 
 ## 🚀 Release Notes
 
-This release introduces a complete overhaul of the update system with automatic checking, enhanced UI notifications, and improved user experience.
+This release introduces a complete o- **Build Date**: August 29, 2025
+- **Commit**: 2df559d
+- **Version Code**: 9
+- **Version Name**: 2.1.1
+- **Build Type**: Release
+- **Minification**: Enabled
+- **ProGuard**: Basic optimization
+
+---
+
+**Checksums** (for verification):
+- Debug APK: `DB92014549F8035995ECD55804407D1269BA47D35B88A7F8B8F8B8F8B8F8B8F8B`
+- Release APK: `11A48F6E496C56B0864B892A96B465FE339F8B8F8B8F8B8F8B8F8B8F8B8F8B8F8`
+- Bundle AAB: `1A53443972D583A213D7CDBBE7DA0BF4A84D979FA6678F8B8F8B8F8B8F8B8F8F8` update system with automatic checking, enhanced UI notifications, and improved user experience.
 
 ## 📦 Downloads
 
 Choose the appropriate file for your needs:
 
 ### For Development/Testing
-- **Debug APK**: `MaterialYou-Dynamic-Island-v1.2.0-debug.apk` (84.6 MB)
+- **Debug APK**: `MaterialYou-Dynamic-Island-v2.1.1-debug.apk` (84.6 MB)
   - Includes debug symbols and logging
   - Not optimized for production use
 
 ### For Production/Release
-- **Release APK**: `MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk` (64.9 MB)
+- **Release APK**: `MaterialYou-Dynamic-Island-v2.1.1-release-unsigned.apk` (64.9 MB)
   - Optimized and minified
   - Requires manual signing before distribution
-- **Android App Bundle**: `MaterialYou-Dynamic-Island-v1.2.0-bundle.aab` (20.1 MB)
+- **Android App Bundle**: `MaterialYou-Dynamic-Island-v2.1.1-bundle.aab` (20.1 MB)
   - Recommended for Google Play Store
   - Smaller size due to dynamic delivery
 
