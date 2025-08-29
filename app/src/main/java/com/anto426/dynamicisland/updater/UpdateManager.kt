@@ -5,16 +5,16 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-
-// Import locali per le classi del sistema di aggiornamenti
-import com.anto426.dynamicisland.updater.UpdateCheckWorker
-import com.anto426.dynamicisland.updater.UpdateDownloadService
-import com.anto426.dynamicisland.updater.GitHubApiManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Classe di utilità per gestire gli aggiornamenti dell'app
+ * Ora utilizza il nuovo sistema basato su file JSON locali
  */
 class UpdateManager(private val context: Context) {
 
@@ -29,6 +29,10 @@ class UpdateManager(private val context: Context) {
 
     private val workManager = WorkManager.getInstance(context)
     private val preferences = context.getSharedPreferences("update_prefs", Context.MODE_PRIVATE)
+
+    // Nuovi manager
+    private val localUpdateManager = LocalUpdateManager(context)
+    private val downloadManager = DownloadManager(context)
 
     /**
      * Stati possibili dell'aggiornamento
@@ -71,52 +75,118 @@ class UpdateManager(private val context: Context) {
         _updateState.value = UpdateState.Checking
 
         val currentVersion = getCurrentVersion()
-        UpdateCheckWorker.checkNow(context, currentVersion)
+        val selectedChannel = localUpdateManager.getSelectedChannel()
 
-        // Osserva il risultato del lavoro
-        workManager.getWorkInfosForUniqueWorkLiveData("update_check")
-            .observeForever { workInfos ->
-                workInfos?.firstOrNull()?.let { workInfo ->
-                    when (workInfo.state) {
-                        WorkInfo.State.SUCCEEDED -> {
-                            val hasUpdate = workInfo.outputData.getBoolean(UpdateCheckWorker.KEY_CHECK_RESULT, false)
-                            if (hasUpdate) {
-                                val newVersion = workInfo.outputData.getString(UpdateCheckWorker.KEY_NEW_VERSION)
-                                val downloadUrl = workInfo.outputData.getString(UpdateCheckWorker.KEY_DOWNLOAD_URL)
+        // Usa il nuovo sistema di controllo
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val result = localUpdateManager.checkForUpdate(selectedChannel, currentVersion)
 
-                                if (newVersion != null && downloadUrl != null) {
-                                    // Controlla se la versione è stata ignorata
-                                    if (preferences.getString(PREF_IGNORED_VERSION, "") != newVersion) {
-                                        _updateState.value = UpdateState.Available(
-                                            version = newVersion,
-                                            downloadUrl = downloadUrl,
-                                            releaseNotes = null // Potremmo aggiungere le note di rilascio più avanti
-                                        )
-                                    } else {
-                                        _updateState.value = UpdateState.Idle
-                                    }
-                                }
-                            } else {
-                                _updateState.value = UpdateState.Idle
-                            }
-                        }
-                        WorkInfo.State.FAILED -> {
-                            _updateState.value = UpdateState.Error("Controllo aggiornamenti fallito")
-                        }
-                        else -> {
-                            // Stato intermedio, non cambiare lo stato
+                when (result) {
+                    is LocalUpdateManager.UpdateCheckResult.UpdateAvailable -> {
+                        val updateInfo = result.updateInfo
+                        // Controlla se la versione è stata ignorata
+                        if (preferences.getString(PREF_IGNORED_VERSION, "") != updateInfo.latestVersion) {
+                            _updateState.postValue(UpdateState.Available(
+                                version = updateInfo.latestVersion,
+                                downloadUrl = updateInfo.downloadUrl,
+                                releaseNotes = updateInfo.releaseNotes
+                            ))
+                        } else {
+                            _updateState.postValue(UpdateState.Idle)
                         }
                     }
+                    is LocalUpdateManager.UpdateCheckResult.UpToDate -> {
+                        _updateState.postValue(UpdateState.Idle)
+                    }
+                    is LocalUpdateManager.UpdateCheckResult.Error -> {
+                        _updateState.postValue(UpdateState.Error(result.message))
+                    }
                 }
+
+                // Aggiorna il timestamp dell'ultimo controllo
+                updateLastCheckTime()
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Errore durante il controllo aggiornamenti", e)
+                _updateState.postValue(UpdateState.Error("Errore durante il controllo: ${e.message}"))
             }
+        }
     }
 
     /**
-     * Scarica l'aggiornamento
+     * Controlla gli aggiornamenti all'avvio dell'app (solo se necessario)
+     * Rispetta l'intervallo minimo tra controlli per evitare richieste eccessive
      */
+    fun checkForUpdatesOnStartup() {
+        if (shouldCheckForUpdatesOnStartup()) {
+            Log.d(TAG, "Controllo aggiornamenti all'avvio dell'app")
+            checkForUpdatesNow()
+        } else {
+            Log.d(TAG, "Controllo aggiornamenti saltato (troppo recente)")
+        }
+    }
+
+    /**
+     * Determina se è necessario controllare gli aggiornamenti all'avvio
+     * Controlla ogni 6 ore per evitare richieste eccessive
+     */
+    private fun shouldCheckForUpdatesOnStartup(): Boolean {
+        val lastCheckTime = preferences.getLong(PREF_LAST_CHECK, 0)
+        val currentTime = System.currentTimeMillis()
+        val sixHoursInMillis = 6 * 60 * 60 * 1000L // 6 ore
+
+        return (currentTime - lastCheckTime) > sixHoursInMillis
+    }
     fun downloadUpdate(version: String, downloadUrl: String) {
         _updateState.value = UpdateState.Downloading(0)
-        UpdateDownloadService.startDownload(context, downloadUrl, version)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val fileName = "update_$version.apk"
+                val result = downloadManager.downloadFile(
+                    url = downloadUrl,
+                    fileName = fileName,
+                    callback = object : DownloadManager.DownloadCallback {
+                        override fun onProgress(state: DownloadManager.DownloadState) {
+                            when (state) {
+                                is DownloadManager.DownloadState.Downloading -> {
+                                    _updateState.postValue(UpdateState.Downloading(state.progress))
+                                }
+                                is DownloadManager.DownloadState.Completed -> {
+                                    _updateState.postValue(UpdateState.Downloaded)
+                                }
+                                is DownloadManager.DownloadState.Error -> {
+                                    _updateState.postValue(UpdateState.Error(state.message))
+                                }
+                                else -> {}
+                            }
+                        }
+
+                        override fun onComplete(file: java.io.File) {
+                            _updateState.postValue(UpdateState.Downloaded)
+                        }
+
+                        override fun onError(message: String, canRetry: Boolean) {
+                            _updateState.postValue(UpdateState.Error(message))
+                        }
+                    }
+                )
+
+                when (result) {
+                    is DownloadManager.DownloadResult.Success -> {
+                        _updateState.postValue(UpdateState.Downloaded)
+                    }
+                    is DownloadManager.DownloadResult.Error -> {
+                        _updateState.postValue(UpdateState.Error(result.message))
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Errore durante il download", e)
+                _updateState.postValue(UpdateState.Error("Errore durante il download: ${e.message}"))
+            }
+        }
     }
 
     /**
@@ -173,18 +243,47 @@ class UpdateManager(private val context: Context) {
     }
 
     /**
-     * Controlla se l'app è aggiornata (versione attuale vs versione su GitHub)
+     * Ottiene il canale di rilascio selezionato
+     */
+    fun getSelectedChannel(): LocalUpdateManager.ReleaseChannel {
+        return localUpdateManager.getSelectedChannel()
+    }
+
+    /**
+     * Imposta il canale di rilascio selezionato
+     */
+    fun setSelectedChannel(channel: LocalUpdateManager.ReleaseChannel) {
+        localUpdateManager.setSelectedChannel(channel)
+    }
+
+    /**
+     * Controlla se il download automatico è abilitato
+     */
+    fun isAutoDownloadEnabled(): Boolean {
+        return preferences.getBoolean("auto_download_enabled", false)
+    }
+
+    /**
+     * Abilita/disabilita il download automatico degli aggiornamenti
+     */
+    fun setAutoDownloadEnabled(enabled: Boolean) {
+        preferences.edit().putBoolean("auto_download_enabled", enabled).apply()
+    }
+
+    /**
+     * Controlla se l'app è aggiornata (versione attuale vs versione dal canale selezionato)
      */
     suspend fun isAppUpToDate(): Boolean {
         return try {
-            val apiManager = GitHubApiManager()
-            val latestRelease = apiManager.getLatestRelease()
+            val selectedChannel = localUpdateManager.getSelectedChannel()
+            val currentVersion = getCurrentVersion()
 
-            if (latestRelease != null) {
-                val currentVersion = getCurrentVersion()
-                return !apiManager.isVersionNewer(latestRelease.tagName, currentVersion)
-            } else {
-                return true // Se non riusciamo a controllare, assumiamo che sia aggiornata
+            val result = localUpdateManager.checkForUpdate(selectedChannel, currentVersion)
+
+            return when (result) {
+                is LocalUpdateManager.UpdateCheckResult.UpdateAvailable -> false
+                is LocalUpdateManager.UpdateCheckResult.UpToDate -> true
+                is LocalUpdateManager.UpdateCheckResult.Error -> true // Se errore, assumiamo aggiornata
             }
         } catch (e: Exception) {
             Log.e(TAG, "Errore nel controllo versione", e)
