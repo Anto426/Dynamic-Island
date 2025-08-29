@@ -30,14 +30,16 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.anto426.dynamicisland.island.IslandSettings
+import com.anto426.dynamicisland.island.IslandSettings as IslandSettingsClass
 import com.anto426.dynamicisland.model.*
 import com.anto426.dynamicisland.navigation.*
 import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.ui.settings.settings
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anto426.dynamicisland.updater.UpdateManager
+import com.anto426.dynamicisland.updater.UpdateViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -69,12 +71,14 @@ class MainActivity : ComponentActivity() {
 			ExportedPlugins.setupPlugins(context)
 
 			Theme.instance.Init()
-			IslandSettings.instance.loadSettings(this)
+			IslandSettingsClass.instance.loadSettings(this)
 
 			// Inizializza il sistema di aggiornamenti
 			val updateManager = UpdateManager(this)
 			if (updateManager.isAutoUpdateEnabled()) {
 				updateManager.startPeriodicUpdateCheck()
+				// Controlla aggiornamenti all'avvio se necessario
+				updateManager.checkForUpdatesOnStartup()
 			}
 
 			val disclosureAccepted by remember {
@@ -96,6 +100,15 @@ class MainActivity : ComponentActivity() {
 					val currentDestination = currentBackStack?.destination
 					val settingsRoutes = settings.map { (it as IslandDestination).route }
 
+					// ViewModel per gli aggiornamenti
+					val updateViewModel: UpdateViewModel = viewModel()
+					val updateUiState by updateViewModel.uiState.collectAsState()
+
+					// Inizializza il viewModel degli aggiornamenti
+					LaunchedEffect(Unit) {
+						updateViewModel.initialize(this@MainActivity)
+					}
+
 					val currentScreen: IslandDestination =
 						(bottomDestinations.find { it.route == currentDestination?.route }
 							?: settings.find { (it as IslandDestination).route == currentDestination?.route }
@@ -109,7 +122,7 @@ class MainActivity : ComponentActivity() {
 						topBar = {
 							CenterAlignedTopAppBar(
 								scrollBehavior = scrollBehavior,
-								colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+								colors = TopAppBarDefaults.topAppBarColors(
 									containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp).copy(alpha = 0.95f),
 									titleContentColor = MaterialTheme.colorScheme.onSurface,
 									navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
@@ -193,16 +206,31 @@ class MainActivity : ComponentActivity() {
 
 											NavigationBarItem(
 												icon = {
-													Icon(
-														destination.icon,
-														contentDescription = null,
-														modifier = Modifier
-															.size(if (selected) 28.dp else 24.dp)
-															.graphicsLayer {
-																scaleX = scale
-																scaleY = scale
+													Box {
+														Icon(
+															destination.icon,
+															contentDescription = null,
+															modifier = Modifier
+																.size(if (selected) 28.dp else 24.dp)
+																.graphicsLayer {
+																	scaleX = scale
+																	scaleY = scale
+																}
+														)
+														// Badge per gli aggiornamenti disponibili
+														if (destination.route == IslandSettings.route &&
+															updateUiState.updateCheckState is UpdateViewModel.UpdateCheckState.UpdateAvailable) {
+															Badge(
+																containerColor = MaterialTheme.colorScheme.primary,
+																contentColor = MaterialTheme.colorScheme.onPrimary,
+																modifier = Modifier
+																	.align(Alignment.TopEnd)
+																	.offset(x = 6.dp, y = (-6).dp)
+															) {
+																Text("!", style = MaterialTheme.typography.labelSmall)
 															}
-													)
+														}
+													}
 												},
 												label = {
 													Text(
@@ -289,10 +317,16 @@ class MainActivity : ComponentActivity() {
 	 */
 	private fun showUpdateDialog(version: String, downloadUrl: String, releaseNotes: String?) {
 		// TODO: Implementare il dialog di aggiornamento
-		// Per ora mostriamo un toast
+		// Per ora mostriamo un toast con le informazioni disponibili
+		val message = if (releaseNotes != null) {
+			"Nuova versione disponibile: $version\n$releaseNotes"
+		} else {
+			"Nuova versione disponibile: $version"
+		}
+
 		android.widget.Toast.makeText(
 			this,
-			"Nuova versione disponibile: $version",
+			message,
 			android.widget.Toast.LENGTH_LONG
 		).show()
 	}
