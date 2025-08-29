@@ -1,43 +1,51 @@
 {
   "latest_version": "2.1.1",
-  "version_code": 9,
+  "version_code": 8,
   "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.1.1/app-debug.apk",
-  "release_notes": "Prima versione stabile dell'app Material You Dynamic Island",
-  "release_date": "2025-08-29",
-  "minimum_supported_version": "1.0.0",
+  "release_notes": "Versione stabile con interfaccia Material You 3 e tutte le funzionalità funzionanti",
+  "release_date": "2024-08-29",
+  "minimum_supported_version": "2.1.0",
   "force_update": false,
   "changelog": [
     {
       "version": "2.1.1",
-      "date": "2025-08-29",
+      "date": "2024-08-29",
       "changes": [
-        "Versione iniziale dell'app",
-        "Supporto per Dynamic Island",
-        "Sistema di notifiche integrato",
-        "Interfaccia Material You 3",
-        "Aggiornamenti automatici"
+        "Correzioni di bug e miglioramenti di stabilità",
+        "Ottimizzazioni delle prestazioni",
+        "Miglioramenti all'interfaccia utente",
+        "Fix per crash su dispositivi specifici"
       ]
     },
     {
-      "version": "2.1.0",
-      "date": "2025-08-29",
+      "version": "2.0.0",
+      "date": "2024-07-15",
       "changes": [
-        "Versione iniziale dell'app",
-        "Supporto per Dynamic Island",
-        "Sistema di notifiche integrato",
-        "Interfaccia Material You 3",
-        "Aggiornamenti automatici"
+        "Riscrittura completa dell'interfaccia utente",
+        "Implementazione Material Design 3",
+        "Nuovo sistema di impostazioni organizzato",
+        "Miglioramenti significativi alle prestazioni",
+        "Supporto completo per Dynamic Island"
       ]
     },
     {
-      "version": "2.1.0",
-      "date": "2025-08-29",
+      "version": "1.5.0",
+      "date": "2024-06-01",
       "changes": [
-        "Versione iniziale dell'app",
-        "Supporto per Dynamic Island",
-        "Sistema di notifiche integrato",
-        "Interfaccia Material You 3",
-        "Aggiornamenti automatici"
+        "Aggiunto supporto per notifiche personalizzate",
+        "Migliorato il sistema di overlay",
+        "Correzioni di bug minori",
+        "Ottimizzazioni per batteria"
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2024-05-01",
+      "changes": [
+        "Versione iniziale stabile",
+        "Implementazione base di Dynamic Island",
+        "Supporto per Android moderno",
+        "Interfaccia utente funzionale"
       ]
     }
   ]
