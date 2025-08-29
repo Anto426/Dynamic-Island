@@ -1,0 +1,24 @@
+{
+  "channel": "alpha",
+  "latest_version": "2.3.0-alpha.1",
+  "version_code": 11,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.3.0-alpha.1/app-debug.apk",
+  "release_notes": "Versione alpha con funzionalità cutting-edge",
+  "release_date": "2024-10-01",
+  "minimum_supported_version": "2.1.0",
+  "force_update": false,
+  "checksum": "sha256_alpha_hash_here",
+  "file_size": 48345123,
+  "changelog": [
+    {
+      "version": "2.3.0-alpha.1",
+      "date": "2024-10-01",
+      "changes": [
+        "Funzionalità sperimentali avanzate",
+        "Nuove API per Dynamic Island",
+        "Miglioramenti radicali all'interfaccia",
+        "Test di nuove tecnologie"
+      ]
+    }
+  ]
+}

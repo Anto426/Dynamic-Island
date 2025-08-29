@@ -1,0 +1,37 @@
+{
+  "channel": "stable",
+  "latest_version": "2.1.1",
+  "version_code": 9,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.1.1/app-debug.apk",
+  "release_notes": "Aggiornamento di manutenzione con correzioni critiche e miglioramenti di stabilità",
+  "release_date": "2024-08-29",
+  "minimum_supported_version": "2.1.0",
+  "force_update": false,
+  "checksum": "sha256_hash_here",
+  "file_size": 45234123,
+  "changelog": [
+    {
+      "version": "2.1.1",
+      "date": "2024-08-29",
+      "changes": [
+        "Sistema di aggiornamenti completamente riscritto basato su file JSON locali",
+        "Supporto per canali di rilascio (stable, beta, alpha)",
+        "Miglioramenti significativi alla gestione degli errori",
+        "Controlli avanzati per il download e validazione file",
+        "Ottimizzazioni delle prestazioni del sistema di aggiornamenti",
+        "Correzioni di bug minori e miglioramenti di stabilità"
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2024-07-15",
+      "changes": [
+        "Riscrittura completa dell'interfaccia utente",
+        "Implementazione Material Design 3",
+        "Nuovo sistema di impostazioni organizzato",
+        "Miglioramenti significativi alle prestazioni",
+        "Supporto completo per Dynamic Island"
+      ]
+    }
+  ]
+}
