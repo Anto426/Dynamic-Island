@@ -1,8 +1,8 @@
 {
   "latest_version": "2.1.1",
-  "version_code": 8,
+  "version_code": 9,
   "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.1.1/app-debug.apk",
-  "release_notes": "Versione stabile con interfaccia Material You 3 e tutte le funzionalità funzionanti",
+  "release_notes": "Aggiornamento di manutenzione con correzioni critiche e miglioramenti di stabilità",
   "release_date": "2024-08-29",
   "minimum_supported_version": "2.1.0",
   "force_update": false,
@@ -11,10 +11,12 @@
       "version": "2.1.1",
       "date": "2024-08-29",
       "changes": [
-        "Correzioni di bug e miglioramenti di stabilità",
-        "Ottimizzazioni delle prestazioni",
-        "Miglioramenti all'interfaccia utente",
-        "Fix per crash su dispositivi specifici"
+        "Sistema di aggiornamenti completamente riscritto",
+        "Lettura diretta da GitHub API invece che da file locali",
+        "Cronologia versioni dinamica da release GitHub",
+        "Miglioramenti alla gestione degli errori di rete",
+        "Ottimizzazioni delle prestazioni del sistema di aggiornamenti",
+        "Correzioni di bug minori e miglioramenti di stabilità"
       ]
     },
     {
@@ -26,26 +28,6 @@
         "Nuovo sistema di impostazioni organizzato",
         "Miglioramenti significativi alle prestazioni",
         "Supporto completo per Dynamic Island"
-      ]
-    },
-    {
-      "version": "1.5.0",
-      "date": "2024-06-01",
-      "changes": [
-        "Aggiunto supporto per notifiche personalizzate",
-        "Migliorato il sistema di overlay",
-        "Correzioni di bug minori",
-        "Ottimizzazioni per batteria"
-      ]
-    },
-    {
-      "version": "1.0.0",
-      "date": "2024-05-01",
-      "changes": [
-        "Versione iniziale stabile",
-        "Implementazione base di Dynamic Island",
-        "Supporto per Android moderno",
-        "Interfaccia utente funzionale"
       ]
     }
   ]

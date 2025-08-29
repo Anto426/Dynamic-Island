@@ -12,8 +12,8 @@ android {
         applicationId "com.anto426.dynamicisland"
         minSdk 34
         targetSdk 36
-        versionCode 8
-        versionName '2.1.0'
+        versionCode 9
+        versionName '2.1.1'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,15 +27,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_24
         targetCompatibility JavaVersion.VERSION_24
     }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        // kotlinCompilerExtensionVersion '1.4.3' // Rimosso perché gestito dal plugin org.jetbrains.kotlin.plugin.compose
     }
     packagingOptions {
         resources {
@@ -45,7 +47,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(24) // Specify the Java version here
+    jvmToolchain(24)
 }
 dependencies {
     // -------------------- Kotlin --------------------
@@ -105,7 +107,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2"
 
     // -------------------- WorkManager (per aggiornamenti automatici) --------------------
-    implementation "androidx.work:work-runtime-ktx:2.10.0"
+    implementation "androidx.work:work-runtime-ktx:2.10.3"
 
     // -------------------- Other --------------------
 
