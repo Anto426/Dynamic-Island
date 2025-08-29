@@ -1,25 +1,26 @@
 ﻿{
   "channel": "stable",
-  "latest_version": "2.1.1",
-  "version_code": 9,
-  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.1.1/app-debug.apk",
-  "release_notes": "Aggiornamento di manutenzione con correzioni critiche e miglioramenti di stabilità",
-  "release_date": "2024-08-29",
-  "minimum_supported_version": "2.1.0",
+  "latest_version": "2.1.0",
+  "version_code": 8,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/v1.2.0/MaterialYou-Dynamic-Island-v1.2.0-release-unsigned.apk",
+  "release_notes": "Rilascio completo del sistema di aggiornamenti automatici con interfaccia migliorata e notifiche visive. Include controllo automatico degli aggiornamenti all'avvio, stato persistente, e badge di notifica nella barra di navigazione.",
+  "release_date": "2025-08-29",
+  "minimum_supported_version": "2.0.0",
   "force_update": false,
-  "checksum": "sha256_hash_here",
-  "file_size": 45234123,
+  "checksum": "33FD8E4FFE8117374167D2AB7F418241CD217C90235E7EAA49217CEBCE2DDF5C",
+  "file_size": 64936710,
   "changelog": [
     {
-      "version": "2.1.1",
-      "date": "2024-08-29",
+      "version": "2.1.0",
+      "date": "2025-08-29",
       "changes": [
-        "Sistema di aggiornamenti completamente riscritto basato su file JSON locali",
-        "Supporto per canali di rilascio (stable, beta, alpha)",
-        "Miglioramenti significativi alla gestione degli errori",
-        "Controlli avanzati per il download e validazione file",
-        "Ottimizzazioni delle prestazioni del sistema di aggiornamenti",
-        "Correzioni di bug minori e miglioramenti di stabilità"
+        "Sistema di aggiornamenti completamente rinnovato",
+        "Controllo automatico degli aggiornamenti all'avvio",
+        "Badge di notifica nella barra di navigazione",
+        "Interfaccia utente migliorata con Material You",
+        "Gestione stato persistente degli aggiornamenti",
+        "Architettura MVVM per migliore gestione dello stato",
+        "Correzioni di errori e miglioramenti di performance"
       ]
     },
     {

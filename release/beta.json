@@ -1,23 +1,26 @@
 ﻿{
   "channel": "beta",
-  "latest_version": "2.2.0-beta",
-  "version_code": 10,
-  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.2.0-beta/app-debug.apk",
-  "release_notes": "Versione beta con nuove funzionalità sperimentali",
-  "release_date": "2024-08-29",
-  "minimum_supported_version": "2.1.0",
+  "latest_version": "2.1.0",
+  "version_code": 8,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/v1.2.0/MaterialYou-Dynamic-Island-v1.2.0-debug.apk",
+  "release_notes": "Versione beta del sistema di aggiornamenti automatici. Include tutte le funzionalità della versione stable con logging aggiuntivo per il debugging.",
+  "release_date": "2025-08-29",
+  "minimum_supported_version": "2.0.0",
   "force_update": false,
-  "checksum": "beta_sha256_hash_here",
-  "file_size": 45324123,
+  "checksum": "247C2D83E3FCCCD8DC1736134121AE504B31AFEC53B19FA926FA210BCF60072B",
+  "file_size": 84664909,
   "changelog": [
     {
-      "version": "2.2.0-beta",
-      "date": "2024-08-29",
+      "version": "2.1.0-beta",
+      "date": "2025-08-29",
       "changes": [
-        "Nuove funzionalità sperimentali per Dynamic Island",
-        "Miglioramenti alla gestione della batteria",
-        "Ottimizzazioni delle animazioni",
-        "Correzioni di bug dalla versione stable"
+        "Sistema di aggiornamenti completamente rinnovato (beta)",
+        "Controllo automatico degli aggiornamenti all'avvio",
+        "Badge di notifica nella barra di navigazione",
+        "Interfaccia utente migliorata con Material You",
+        "Logging esteso per debugging",
+        "Gestione stato persistente degli aggiornamenti",
+        "Architettura MVVM per migliore gestione dello stato"
       ]
     }
   ]

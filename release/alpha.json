@@ -1,23 +1,25 @@
 ﻿{
   "channel": "alpha",
-  "latest_version": "2.3.0-alpha",
-  "version_code": 11,
-  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/2.3.0-alpha/app-debug.apk",
-  "release_notes": "Versione alpha con funzionalità cutting-edge",
-  "release_date": "2024-08-29",
-  "minimum_supported_version": "2.1.0",
+  "latest_version": "2.1.0",
+  "version_code": 8,
+  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/v1.2.0/MaterialYou-Dynamic-Island-v1.2.0-debug.apk",
+  "release_notes": "Versione alpha del sistema di aggiornamenti. Include funzionalità sperimentali e logging estensivo. Non raccomandata per uso in produzione.",
+  "release_date": "2025-08-29",
+  "minimum_supported_version": "2.0.0",
   "force_update": false,
-  "checksum": "alpha_sha256_hash_here",
-  "file_size": 45424123,
+  "checksum": "247C2D83E3FCCCD8DC1736134121AE504B31AFEC53B19FA926FA210BCF60072B",
+  "file_size": 84664909,
   "changelog": [
     {
-      "version": "2.3.0-alpha",
-      "date": "2024-08-29",
+      "version": "2.1.0-alpha",
+      "date": "2025-08-29",
       "changes": [
-        "Funzionalità cutting-edge altamente sperimentali",
-        "Nuove API per sviluppatori",
-        "Miglioramenti radicali alle prestazioni",
-        "Interfaccia utente completamente ridisegnata",
+        "Sistema di aggiornamenti completamente rinnovato (alpha)",
+        "Controllo automatico degli aggiornamenti all'avvio",
+        "Badge di notifica nella barra di navigazione",
+        "Interfaccia utente migliorata con Material You",
+        "Logging estensivo per debugging avanzato",
+        "Funzionalità sperimentali abilitate",
         "Possibili instabilità - versione alpha"
       ]
     }
