@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Straighten
+import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Token
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -65,11 +66,19 @@ object DeveloperScreen : IslandDestination, SettingItem {
 	override val route: String = "Developer"
 }
 
+object UpdateSetting : IslandDestination, SettingItem {
+	override val title: String = "settings_item_updates"
+	override val subtitle: String = "settings_item_updates_subtitle"
+	override val icon: ImageVector = Icons.Default.SystemUpdate
+	override val route: String = "updates"
+}
+
 
 
 val settings = listOf(
 	ThemeSetting,
 	BehaviorSetting,
+	UpdateSetting,
 	AdvancedSetting,
 	PositionSizeSetting,
 	EnabledAppsSetting,

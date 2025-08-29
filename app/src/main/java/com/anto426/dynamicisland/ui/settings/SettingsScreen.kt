@@ -375,6 +375,8 @@ private fun getStringResourceId(stringName: String): Int {
         "settings_item_about_subtitle" -> R.string.settings_about_subtitle
         "settings_item_dev" -> R.string.settings_dev_title
         "settings_item_dev_subtitle" -> R.string.settings_dev_subtitle
+        "settings_item_updates" -> R.string.settings_item_updates
+        "settings_item_updates_subtitle" -> R.string.settings_item_updates_subtitle
         else -> R.string.app_name
     }
 }

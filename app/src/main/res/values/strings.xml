@@ -157,14 +157,99 @@
     <string name="settings_item_about_subtitle">Dettagli sull’app</string>
     <string name="settings_item_dev">Sviluppo</string>
     <string name="settings_item_dev_subtitle">Informazioni sullo sviluppatore</string>
+    <string name="settings_item_updates">Aggiornamenti</string>
+    <string name="settings_item_updates_subtitle">Controlla e scarica aggiornamenti</string>
 
     <!-- Disclosure Screen (pulsanti) -->
     <string name="disclosure_button_next">Continua</string>
     <string name="disclosure_button_previous">Indietro</string>
     <string name="disclosure_button_agree">Accetto</string>
+    <!-- Advanced Settings -->
+    <string name="advanced_settings_title">Impostazioni avanzate</string>
+    <string name="advanced_settings_description">Personalizza animazioni, feedback e comportamento</string>
+
+    <!-- Animations -->
+    <string name="advanced_settings_animations">Animazioni</string>
+    <string name="advanced_settings_enable_animations">Abilita animazioni</string>
+    <string name="advanced_settings_enable_animations_desc">Mostra animazioni fluide nelle transizioni</string>
+
+    <!-- Feedback -->
+    <string name="advanced_settings_feedback">Feedback</string>
+    <string name="advanced_settings_haptic">Feedback aptico</string>
+    <string name="advanced_settings_haptic_desc">Vibrazione leggera per le interazioni</string>
+    <string name="advanced_settings_sounds">Suoni</string>
+    <string name="advanced_settings_sounds_desc">Riproduci effetti sonori quando interagisci</string>
+
+    <!-- Behavior -->
+    <string name="advanced_settings_behavior">Comportamento</string>
+    <string name="advanced_settings_behavior_placeholder">Prossimamente potrai modificare il comportamento avanzato dell’isola</string>
+
+    <!-- Dynamic Theme -->
+    <string name="advanced_settings_dynamic_theme">Tema dinamico</string>
+    <string name="advanced_settings_dynamic_theme_title">Abilita tema dinamico</string>
+    <string name="advanced_settings_dynamic_theme_desc">Adatta automaticamente i colori in base al contesto</string>
 
     <!-- Animation Labels -->
     <string name="animation_click_label">clickAnimation</string>
     <string name="settings_dev_subtitle">Informazioni per sviluppatori e debug</string>
     <string name="plugin_icon_content_description">Icona del plugin</string>
+
+        <!-- Titoli schermata -->
+        <string name="update_title">Aggiornamenti</string>
+        <string name="update_settings_title">Impostazioni Aggiornamenti</string>
+        <string name="back">Indietro</string>
+
+        <!-- Sezioni -->
+        <string name="update_status_section">Stato Aggiornamento</string>
+        <string name="release_channel_section">Canale di Rilascio</string>
+        <string name="auto_controls_section">Controlli Automatici</string>
+        <string name="manual_actions_section">Azioni Manuali</string>
+        <string name="changelog_section">Changelog</string>
+        <string name="dynamic_theme_section">Tema Dinamico</string> <!-- se vuoi includere la sezione tema dinamico -->
+
+        <!-- Stato aggiornamento -->
+        <string name="app_up_to_date">App Aggiornata</string>
+        <string name="app_up_to_date_desc">La tua app è alla versione più recente</string>
+        <string name="checking_updates">Controllo Aggiornamenti...</string>
+        <string name="checking_updates_desc">Verifica disponibilità nuove versioni</string>
+        <string name="update_available">Aggiornamento Disponibile</string>
+        <string name="update_available_desc">Versione %1$s pronta per il download</string>
+        <string name="update_error">Errore Controllo</string>
+
+        <!-- Versione corrente -->
+        <string name="current_version">Versione Attuale</string>
+
+        <!-- Canali di rilascio -->
+        <string name="channel_stable">Stabile</string>
+        <string name="channel_stable_desc">Versioni stabili e testate</string>
+        <string name="channel_beta">Beta</string>
+        <string name="channel_beta_desc">Funzionalità nuove in test</string>
+        <string name="channel_alpha">Alpha</string>
+        <string name="channel_alpha_desc">Versioni sperimentali</string>
+
+        <!-- Aggiornamenti automatici -->
+        <string name="auto_update_title">Aggiornamenti Automatici</string>
+        <string name="auto_update_desc">Controlla automaticamente nuove versioni</string>
+        <string name="auto_download_title">Download Automatici</string>
+        <string name="auto_download_desc">Scarica automaticamente gli aggiornamenti</string>
+
+        <!-- Pulsanti manuali -->
+        <string name="check_updates_button">Controlla Aggiornamenti</string>
+        <string name="download_update_button">Scarica Aggiornamento</string>
+        <string name="downloading_progress">Scaricamento in corso...</string>
+
+        <!-- Changelog -->
+        <string name="changelog_version">Versione %1$s (%2$s)</string>
+
+        <!-- Copia negli appunti -->
+        <string name="copied_to_clipboard">%1$s copiato negli appunti!</string>
+        <string name="copy">Copia</string>
+
+        <!-- Altre stringhe -->
+        <string name="dynamic_theme_title">Tema Dinamico</string>
+        <string name="dynamic_theme_desc">Adatta i colori automaticamente</string>
+        <string name="downloading">Scaricamento</string>
+        <string name="update_settings_section">Impostazioni Aggiornamento</string>
+        <string name="show_advanced_settings">Mostra impostazioni avanzate</string>
+        <string name="hide_advanced_settings">Nascondi impostazioni avanzate</string>
 </resources>

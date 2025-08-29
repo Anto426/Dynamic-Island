@@ -127,6 +127,15 @@ fun IslandNavHost(
 			DeveloperScreen()
 		}
 		composable(
+			route = UpdateSetting.route,
+			enterTransition = { slideInFromEnd() },
+			exitTransition = { slideOutToStart() },
+			popEnterTransition = { slideInFromStart() },
+			popExitTransition = { slideOutToEnd() }
+		) {
+			UpdateSettingsScreen()
+		}
+		composable(
 			route = IslandAdvancedSettings.route,
 			enterTransition = { slideInFromEnd() },
 			exitTransition = { slideOutToStart() },

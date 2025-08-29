@@ -157,6 +157,8 @@
     <string name="settings_item_about_subtitle">Dettagli sull’app</string>
     <string name="settings_item_dev">Sviluppo</string>
     <string name="settings_item_dev_subtitle">Informazioni sullo sviluppatore</string>
+    <string name="settings_item_updates">Aggiornamenti</string>
+    <string name="settings_item_updates_subtitle">Controlla e scarica aggiornamenti</string>
 
     <!-- Disclosure Screen (pulsanti) -->
     <string name="disclosure_button_next">Continua</string>
