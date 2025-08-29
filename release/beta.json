@@ -2,7 +2,7 @@
   "channel": "beta",
   "latest_version": "2.1.1",
   "version_code": 9,
-  "download_url": "https://github.com/Anto426/Dynamic-Island/releases/download/v2.1.1/MaterialYou-Dynamic-Island-v2.1.1-debug.apk",
+  "download_url": "https://github.com/Anto426/Dynamic-Island/raw/refs/heads/main/release/MaterialYou-Dynamic-Island-v2.1.1-debug.apk",
   "release_notes": "Versione beta del sistema di aggiornamenti automatici. Include tutte le funzionalità della versione stable con logging aggiuntivo per il debugging.",
   "release_date": "2025-08-29",
   "minimum_supported_version": "2.1.0",
