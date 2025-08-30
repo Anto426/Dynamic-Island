@@ -42,6 +42,7 @@ import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import kotlinx.coroutines.delay
+import androidx.core.net.toUri
 
 data class PermissionItemData(
     val title: String,
@@ -235,23 +236,6 @@ private fun PermissionOnboardingScreen(
             }
         }
 
-        if (pendingPermissions.isNotEmpty()) {
-            val currentPermission = pendingPermissions.getOrNull(currentStep)
-            val isCurrentGranted = currentPermission?.let { grantedStatusMap[it.title] } ?: false
-            OnboardingActions(
-                isNextEnabled = isCurrentGranted || (currentPermission?.isRequired == false),
-                isBackVisible = currentStep > 0,
-                isFinalStep = currentStep == pendingPermissions.size - 1,
-                onNextClick = {
-                    if (currentStep < pendingPermissions.size - 1) {
-                        currentStep++
-                    } else {
-                        refreshPermissionsStatus()
-                    }
-                },
-                onBackClick = { if (currentStep > 0) currentStep-- }
-            )
-        }
     }
 }
 
@@ -289,7 +273,7 @@ private fun PermissionStepContent(
                     try {
                         val intent = Intent(permission.settingsAction).apply {
                             if (permission.settingsAction in listOf(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)) {
-                                data = Uri.parse("package:${appContext.packageName}")
+                                data = "package:${appContext.packageName}".toUri()
                             }
                         }
                         appContext.startActivity(intent)
@@ -336,29 +320,7 @@ private fun PermissionCard(permission: PermissionItemData, isGranted: Boolean, o
     }
 }
 
-@Composable
-private fun OnboardingActions(
-    isNextEnabled: Boolean, isBackVisible: Boolean, isFinalStep: Boolean,
-    onNextClick: () -> Unit, onBackClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (isBackVisible) {
-            OutlinedButton(onClick = onBackClick, modifier = Modifier.weight(1f).height(56.dp)) {
-                Text(stringResource(id = R.string.previous))
-            }
-        }
-        Button(
-            onClick = onNextClick, enabled = isNextEnabled,
-            modifier = Modifier.weight(if (isBackVisible) 1.5f else 1f).height(56.dp)
-        ) {
-            Text(text = if (isFinalStep) stringResource(id = R.string.onboarding_finish) else stringResource(id = R.string.onboarding_continue))
-        }
-    }
-}
+
 
 @Composable
 private fun CelebrationScreen() {
