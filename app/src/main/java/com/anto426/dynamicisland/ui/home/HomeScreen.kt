@@ -141,7 +141,7 @@ fun HomeScreen(
 					)
 
 					Icon(
-						painter = painterResource(R.drawable.ic_launcher),
+						painter = painterResource(R.drawable.icon),
 						contentDescription = null,
 						modifier = Modifier.size(48.dp)
 					)

@@ -116,7 +116,7 @@ private fun IntroScreen(onContinue: () -> Unit) {
                 modifier = Modifier.size(120.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_launcher),
+                    painter = painterResource(R.drawable.icon),
                     contentDescription = stringResource(id = R.string.about_app_icon_description),
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
