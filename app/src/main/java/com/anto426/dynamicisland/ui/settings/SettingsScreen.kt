@@ -38,6 +38,7 @@ import com.anto426.dynamicisland.R
 fun SettingsScreen(
     onSettingClicked: (SettingItem) -> Unit,
 ) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     val isSearching = searchQuery.text.isNotEmpty()
 
@@ -222,23 +223,6 @@ fun SettingsScreen(
                         }
                     }
                 }
-            }
-        }
-
-        // FAB per azioni rapide
-        if (!isSearching) {
-            FloatingActionButton(
-                onClick = { /* TODO: Implementare reset impostazioni */ },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(24.dp),
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            ) {
-                Icon(
-                    imageVector = Icons.Default.RestartAlt,
-                    contentDescription = stringResource(id = R.string.settings_reset_content_description)
-                )
             }
         }
     }
