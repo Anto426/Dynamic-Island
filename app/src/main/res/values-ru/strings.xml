@@ -200,6 +200,7 @@
     <string name="auto_download_desc">Автоматически загружать обновления</string>
     <string name="check_updates_button">Проверить обновления</string>
     <string name="download_update_button">Загрузить обновление</string>
+    <string name="install_update_button">Instalar Atualização</string>
     <string name="downloading_progress">Загрузка...</string>
     <string name="changelog_version">Версия %1$s (%2$s)</string>
     <string name="copied_to_clipboard">%1$s скопировано в буфер обмена!</string>

@@ -200,6 +200,7 @@
     <string name="auto_download_desc">Scarica automaticamente gli aggiornamenti</string>
     <string name="check_updates_button">Controlla Aggiornamenti</string>
     <string name="download_update_button">Scarica Aggiornamento</string>
+    <string name="install_update_button">Installa Aggiornamento</string>
     <string name="downloading_progress">Scaricamento in corso...</string>
     <string name="changelog_version">Versione %1$s (%2$s)</string>
     <string name="copied_to_clipboard">%1$s copiato negli appunti!</string>

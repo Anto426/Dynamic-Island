@@ -200,6 +200,7 @@
     <string name="auto_download_desc">アップデートを自動的にダウンロードします</string>
     <string name="check_updates_button">アップデートを確認</string>
     <string name="download_update_button">アップデートをダウンロード</string>
+    <string name="install_update_button">アップデートをインストール</string>
     <string name="downloading_progress">ダウンロード中...</string>
     <string name="changelog_version">バージョン %1$s (%2$s)</string>
     <string name="copied_to_clipboard">「%1$s」をクリップボードにコピーしました！</string>

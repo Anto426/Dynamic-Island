@@ -49,14 +49,127 @@
     <string name="developer">开发者</string>
     <string name="no_description">无可用描述。</string>
 
+    <string name="disclosure_welcome_title">欢迎使用灵动岛</string>
+    <string name="disclosure_welcome_description">与iOS类似，灵动岛会显示一个交互式凹口，可适应来电、通知、警报、音乐、导航等。轻点或长按岛屿可访问其他功能或打开应用。</string>
+    <string name="disclosure_accessibility_title">无障碍和悬浮窗权限的使用</string>
+    <string name="disclosure_accessibility_description">灵动岛仅使用无障碍服务来显示岛屿。它不需要不必要的权限，也不收集个人信息。您可以随时查看隐私政策。</string>
+    <string name="disclosure_plugin_title">插件权限</string>
+    <string name="disclosure_plugin_description">某些插件可能需要额外权限才能正常工作。灵动岛只会请求绝对必要的权限。</string>
+    <string name="disclosure_privacy_title">隐私</string>
+    <string name="disclosure_privacy_description">您的隐私很重要。灵动岛不收集或共享个人数据，不跟踪，也不出售任何信息。</string>
+    <string name="disclosure_privacy_link">阅读隐私政策</string>
+    <string name="disclosure_tos_title">服务条款</string>
+    <string name="disclosure_tos_description">使用灵动岛即表示您同意我们的服务条款。该应用按“原样”提供，不提供任何保证。我们对因使用该应用而造成的任何损害概不负责。</string>
+    <string name="disclosure_tos_link">阅读服务条款</string>
+
+    <string name="plugins_enabled_title">已启用的插件</string>
+    <string name="plugin_status_enabled">已启用</string>
+    <string name="plugin_status_disabled">已禁用</string>
+
+    <string name="about_app_icon_description">应用图标</string>
+    <string name="about_app_info_title">应用信息</string>
+    <string name="about_version">版本</string>
+    <string name="about_target_sdk">目标SDK</string>
+    <string name="about_min_sdk">最低SDK</string>
+    <string name="about_build_date">编译日期</string>
+    <string name="about_device_info_title">设备信息</string>
+    <string name="about_android_version">Android版本</string>
+    <string name="about_cpu_architecture">CPU架构</string>
+    <string name="about_useful_links_title">有用链接</string>
+    <string name="about_developer">开发者</string>
+    <string name="developer_name">Anto426</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_open_in_browser">在浏览器中打开</string>
+    <string name="about_copied_toast">已复制 %1$s！</string>
+
+    <string name="behavior_visual_title">视觉行为</string>
+    <string name="behavior_show_on_lockscreen_title">在锁定屏幕上显示</string>
+    <string name="behavior_show_on_lockscreen_description">在锁定屏幕和息屏显示上显示岛屿。</string>
+    <string name="behavior_show_in_landscape_title">在横向模式下显示</string>
+    <string name="behavior_show_in_landscape_description">在横向模式下也显示岛屿。</string>
+    <string name="behavior_autohide_title">自动隐藏</string>
+    <string name="behavior_autohide_opened_island_title">在此之后隐藏展开的岛屿</string>
+    <string name="seconds_suffix">秒</string>
+
+    <string name="position_title">位置</string>
+    <string name="position_island_gravity">岛屿对齐</string>
+    <string name="position_expand_icon_desc">展开</string>
+    <string name="position_x_title">X位置</string>
+    <string name="unit_dp">dp</string>
+    <string name="position_y_title">Y位置</string>
+    <string name="size_title">大小</string>
+    <string name="size_width">宽度</string>
+    <string name="size_height">高度</string>
+    <string name="corners_title">边角</string>
+    <string name="corners_radius">圆角半径</string>
+    <string name="reset_button">重置</string>
+    <string name="decrease_icon_desc">减少</string>
+    <string name="increase_icon_desc">增加</string>
+
+    <string name="theme_show_borders_title">显示边框</string>
+    <string name="theme_show_borders_description">在岛屿周围显示边框</string>
+    <string name="theme_preference_title">主题</string>
+    <string name="theme_option_system">系统</string>
+    <string name="theme_option_dark">深色</string>
+    <string name="theme_option_light">浅色</string>
+    <string name="theme_style_preference_title">样式</string>
+
+    <string name="enabled_apps_title">已启用的应用</string>
+    <string name="app_icon_content_description">应用图标：%1$s</string>
+
     <string name="settings_theme_title">主题</string>
     <string name="settings_theme_subtitle">更改应用主题</string>
     <string name="settings_position_size_title">位置和大小</string>
     <string name="settings_position_size_subtitle">修改岛屿的位置和大小</string>
+    <string name="settings_enabled_apps_subtitle">选择哪些应用可以显示在岛屿上</string>
     <string name="settings_behavior_title">行为</string>
     <string name="settings_behavior_subtitle">自定义岛屿的行为</string>
     <string name="settings_about_title">关于</string>
     <string name="settings_about_subtitle">关于应用的详细信息</string>
+    <string name="settings_dev_title">开发</string>
+
+    <string name="theme_style_material_you">Material You</string>
+    <string name="theme_style_black_white">黑白</string>
+    <string name="theme_style_quinacridone_magenta">品红</string>
+
+    <string name="settings_item_theme">主题</string>
+    <string name="settings_item_theme_subtitle">更改应用主题</string>
+    <string name="settings_item_position_size">位置和大小</string>
+    <string name="settings_item_position_size_subtitle">修改岛屿的位置和大小</string>
+    <string name="settings_item_enabled_apps">已启用的应用</string>
+    <string name="settings_item_enabled_apps_subtitle">选择哪些应用可以显示在岛屿上</string>
+    <string name="settings_item_behavior">行为</string>
+    <string name="settings_item_behavior_subtitle">自定义岛屿的行为</string>
+    <string name="settings_item_about">关于</string>
+    <string name="settings_item_about_subtitle">关于应用的详细信息</string>
+    <string name="settings_item_dev">开发</string>
+    <string name="settings_item_dev_subtitle">开发者信息</string>
+    <string name="settings_item_updates">更新</string>
+    <string name="settings_item_updates_subtitle">检查并下载更新</string>
+
+    <string name="disclosure_button_next">继续</string>
+    <string name="disclosure_button_previous">上一步</string>
+    <string name="disclosure_button_agree">我同意</string>
+
+    <string name="advanced_settings_title">高级设置</string>
+    <string name="advanced_settings_description">自定义动画、反馈和行为</string>
+    <string name="advanced_settings_animations">动画</string>
+    <string name="advanced_settings_enable_animations">启用动画</string>
+    <string name="advanced_settings_enable_animations_desc">在过渡中显示流畅的动画</string>
+    <string name="advanced_settings_feedback">反馈</string>
+    <string name="advanced_settings_haptic">触觉反馈</string>
+    <string name="advanced_settings_haptic_desc">交互时的轻微振动</string>
+    <string name="advanced_settings_sounds">声音</string>
+    <string name="advanced_settings_sounds_desc">交互时播放音效</string>
+    <string name="advanced_settings_behavior">行为</string>
+    <string name="advanced_settings_behavior_placeholder">您很快就能修改岛屿的高级行为</string>
+    <string name="advanced_settings_dynamic_theme">动态主题</string>
+    <string name="advanced_settings_dynamic_theme_title">启用动态主题</string>
+    <string name="advanced_settings_dynamic_theme_desc">根据上下文自动调整颜色</string>
+
+    <string name="animation_click_label">点击动画</string>
+    <string name="settings_dev_subtitle">开发者信息和调试</string>
+    <string name="plugin_icon_content_description">插件图标</string>
 
     <string name="update_title">更新</string>
     <string name="update_settings_title">更新设置</string>
@@ -66,6 +179,7 @@
     <string name="auto_controls_section">自动控制</string>
     <string name="manual_actions_section">手动操作</string>
     <string name="changelog_section">更新日志</string>
+    <string name="dynamic_theme_section">动态主题</string>
     <string name="app_up_to_date">应用已是最新版本</string>
     <string name="app_up_to_date_desc">您的应用已是最新版本</string>
     <string name="checking_updates">正在检查更新...</string>
@@ -90,4 +204,128 @@
     <string name="changelog_version">版本 %1$s (%2$s)</string>
     <string name="copied_to_clipboard">已将“%1$s”复制到剪贴板！</string>
     <string name="copy">复制</string>
+    <string name="dynamic_theme_title">动态主题</string>
+    <string name="dynamic_theme_desc">自动调整颜色</string>
+    <string name="downloading">下载中</string>
+    <string name="update_settings_section">更新设置</string>
+    <string name="show_advanced_settings">显示高级设置</string>
+    <string name="hide_advanced_settings">隐藏高级设置</string>
+    <string name="install_update_button">安装更新</string>
+
+    <string name="battery_charging_title">电池充电中</string>
+    <string name="temperature">温度</string>
+    <string name="power_source">电源</string>
+    <string name="health">健康状况</string>
+    <string name="battery_low_title">电池电量低</string>
+    <string name="battery_remaining_subtitle">剩余%1$d%%</string>
+    <string name="battery_saver">省电模式</string>
+    <string name="power_saver_active_desc">功能可能受限</string>
+    <string name="charging">充电中</string>
+    <string name="low_battery">电量低</string>
+    <string name="power_saver">省电模式</string>
+
+    <string name="configured">已配置</string>
+    <string name="app_configured_ready">应用已配置并准备就绪！</string>
+    <string name="update_card_title">有可用更新</string>
+    <string name="download">下载</string>
+    <string name="permissions_required">需要权限</string>
+    <string name="configure_permissions_start">配置所需权限以开始。</string>
+
+    <string name="onboarding_welcome_title">欢迎使用灵动岛</string>
+    <string name="onboarding_welcome_description">让我们设置必要的权限，以确保一切正常运行。</string>
+    <string name="permission_accessibility_title">无障碍服务</string>
+    <string name="permission_accessibility_desc">需要在其他应用上显示灵动岛并检测交互。</string>
+    <string name="permission_category_system">系统</string>
+    <string name="permission_overlay_title">在其他应用上层显示</string>
+    <string name="permission_overlay_desc">允许灵动岛显示在您当前屏幕的顶部。</string>
+    <string name="permission_battery_title">电池优化</string>
+    <string name="permission_battery_desc">禁用此功能可确保应用在后台流畅运行而不会被关闭。</string>
+    <string name="permission_notification_listener_title">通知访问权限</string>
+    <string name="permission_notification_listener_desc">需要此权限才能在灵动岛上显示来自您应用的通知。</string>
+    <string name="permission_category_notifications">通知</string>
+    <string name="permission_post_notifications_title">发布通知</string>
+    <string name="permission_post_notifications_desc">允许应用向您显示重要的更新和警报。</string>
+    <string name="permission_vibrate_title">振动</string>
+    <string name="permission_vibrate_desc">提供触觉反馈，以获得更具交互性的体验。</string>
+    <string name="permission_storage_legacy_title">旧版存储</string>
+    <string name="permission_storage_legacy_desc">旧版Android需要此权限才能访问文件。</string>
+    <string name="permission_category_storage">存储</string>
+    <string name="permission_media_images_title">访问媒体和照片</string>
+    <string name="permission_media_images_desc">允许插件显示图像和媒体内容。</string>
+    <string name="permission_media_video_title">访问视频</string>
+    <string name="permission_media_video_desc">允许插件显示视频内容。</string>
+    <string name="permission_media_audio_title">访问音频</string>
+    <string name="permission_media_audio_desc">允许插件与音频文件进行交互。</string>
+    <string name="permission_unknown_sources_title">安装未知应用</string>
+    <string name="permission_unknown_sources_desc">需要此权限才能安装从应用内下载的应用更新。</string>
+    <string name="permission_category_updates">更新</string>
+    <string name="onboarding_step_counter">第 %1$d 步，共 %2$d 步</string>
+    <string name="onboarding_permission_granted">权限已授予</string>
+    <string name="permission_granted_label">已授予</string>
+    <string name="enable_in_settings">在设置中启用</string>
+    <string name="onboarding_finish">完成</string>
+    <string name="onboarding_continue">继续</string>
+    <string name="onboarding_setup_complete_title">设置完成！</string>
+    <string name="onboarding_setup_complete_desc">一切就绪。灵动岛现已激活。</string>
+    <string name="plugins_enabled_count">%1$d 个已启用</string>
+    <string name="go_to_details">转到详情</string>
+
+    <string name="search">搜索</string>
+    <string name="search_settings_placeholder">搜索设置...</string>
+    <string name="clear_search">清除搜索</string>
+    <string name="no_results_found">未找到结果。</string>
+    <string name="try_different_keywords">尝试使用不同的关键字。</string>
+    <string name="reset_settings">重置设置</string>
+    <string name="behavior_visibility_section">可见性</string>
+    <string name="behavior_autohide_section">自动隐藏</string>
+    <string name="behavior_animations_feedback_section">动画和反馈</string>
+
+    <string name="dev_error_connection">连接错误。</string>
+    <string name="dev_error_not_found">未找到。</string>
+    <string name="dev_error_unknown">发生未知错误。</string>
+    <string name="dev_loading_title">加载中...</string>
+    <string name="dev_loading_subtitle">请稍候...</string>
+    <string name="error">错误</string>
+    <string name="dev_error_title">出错了</string>
+    <string name="retry">重试</string>
+    <string name="dev_profile_title">个人资料</string>
+    <string name="dev_updated_from_github">已从GitHub更新</string>
+    <string name="dev_public_repos_title">公共代码仓库</string>
+    <string name="dev_no_public_repos_title">没有公共代码仓库</string>
+    <string name="dev_no_public_repos_desc">此用户没有公共代码仓库。</string>
+    <string name="avatar_of">%1$s的头像</string>
+    <string name="open_profile">打开个人资料</string>
+    <string name="copy_username">复制用户名</string>
+    <string name="stars">星标</string>
+    <string name="open_repository">打开代码仓库</string>
+
+    <string name="enabled_apps_summary">选择哪些应用可以使用灵动岛。</string>
+    <string name="style_title">样式</string>
+    <string name="update_available_prompt">有可用更新！</string>
+    <string name="update_channel_description">选择应用更新的发布渠道。</string>
+    <string name="permission_required_title">需要权限</string>
+    <string name="permission_required_text">此功能需要尚未授予的权限。</string>
+    <string name="update_notification_title">有可用更新</string>
+    <string name="update_preparing_download">准备下载...</string>
+    <string name="update_download_channel_description">应用更新下载通知。</string>
+    <string name="settings_item_advanced">高级</string>
+    <string name="settings_item_advanced_subtitle">自定义动画、反馈等</string>
+
+    <string name="destination_plugin_settings">插件设置</string>
+    <string name="destination_advanced">高级设置</string>
+    <string name="destination_settings">设置</string>
+    <string name="destination_home">主页</string>
+    <string name="destination_plugins">插件</string>
+    
+    <string name="settings_reset_content_description">将设置重置为默认值</string>
+    <string name="settings_no_results_subtitle">尝试搜索其他内容</string>
+    <string name="settings_no_results_title">未找到结果</string>
+    <string name="settings_clear_search_content_description">清除搜索查询</string>
+    <string name="settings_search_placeholder">搜索设置</string>
+    <string name="settings_search_content_description">设置搜索图标</string>
+    <string name="settings_section_information">信息</string>
+    <string name="settings_section_other">其他</string>
+    <string name="settings_section_appearance">外观</string>
+    <string name="settings_search_results">搜索结果</string>
+    <string name="settings_section_behavior">行为</string>
 </resources>

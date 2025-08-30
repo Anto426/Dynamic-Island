@@ -200,6 +200,7 @@
     <string name="auto_download_desc">Télécharger automatiquement les mises à jour</string>
     <string name="check_updates_button">Vérifier les mises à jour</string>
     <string name="download_update_button">Télécharger la mise à jour</string>
+    <string name="install_update_button">Installer la mise à jour</string>
     <string name="downloading_progress">Téléchargement en cours...</string>
     <string name="changelog_version">Version %1$s (%2$s)</string>
     <string name="copied_to_clipboard">%1$s copié dans le presse-papiers !</string>

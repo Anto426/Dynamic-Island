@@ -200,6 +200,7 @@
     <string name="auto_download_desc">Αυτόματη λήψη ενημερώσεων</string>
     <string name="check_updates_button">Έλεγχος για Ενημερώσεις</string>
     <string name="download_update_button">Λήψη Ενημέρωσης</string>
+    <string name="install_update_button">Εγκατάσταση Ενημέρωσης</string>
     <string name="downloading_progress">Γίνεται λήψη...</string>
     <string name="changelog_version">Έκδοση %1$s (%2$s)</string>
     <string name="copied_to_clipboard">Το %1$s αντιγράφηκε στο πρόχειρο!</string>
