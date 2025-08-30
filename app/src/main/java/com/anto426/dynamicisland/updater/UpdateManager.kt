@@ -87,11 +87,21 @@ class UpdateManager(private val context: Context) {
                         val updateInfo = result.updateInfo
                         // Controlla se la versione è stata ignorata
                         if (preferences.getString(PREF_IGNORED_VERSION, "") != updateInfo.latestVersion) {
-                            _updateState.postValue(UpdateState.Available(
+                            _updateState.postValue(
+                                UpdateState.Available(
+                                    version = updateInfo.latestVersion,
+                                    downloadUrl = updateInfo.downloadUrl,
+                                    releaseNotes = updateInfo.releaseNotes
+                                )
+                            )
+
+                            // Notifica aggiornamento disponibile
+                            UpdateNotifications.showUpdateAvailableNotification(
+                                context = context,
                                 version = updateInfo.latestVersion,
                                 downloadUrl = updateInfo.downloadUrl,
                                 releaseNotes = updateInfo.releaseNotes
-                            ))
+                            )
                         } else {
                             _updateState.postValue(UpdateState.Idle)
                         }

@@ -66,7 +66,7 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
 
     override fun onCreate() {
         super.onCreate()
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createInitialNotification())
     }
@@ -227,8 +227,8 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Permesso Richiesto")
-            .setContentText("Concedi il permesso per installare aggiornamenti")
+            .setContentTitle(getString(R.string.permission_required_title))
+            .setContentText(getString(R.string.permission_required_text))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -243,8 +243,8 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
     private fun createInitialNotification(): Notification {
         notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Aggiornamento")
-            .setContentText("Preparazione download...")
+            .setContentTitle(getString(R.string.update_notification_title))
+            .setContentText(getString(R.string.update_preparing_download))
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
 
@@ -277,7 +277,7 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
                 "Download Aggiornamenti",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Notifiche per il download degli aggiornamenti"
+                description = getString(R.string.update_download_channel_description)
             }
 
             notificationManager.createNotificationChannel(channel)

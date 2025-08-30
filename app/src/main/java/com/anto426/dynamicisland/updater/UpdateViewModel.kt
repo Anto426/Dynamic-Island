@@ -172,10 +172,22 @@ class UpdateViewModel : ViewModel() {
             // Salva lo stato se c'è un aggiornamento disponibile
             if (result is UpdateCheckResult.UpdateAvailable) {
                 saveUpdateState(context, result.updateInfo)
+                // Invia una notifica per informare l'utente
+                UpdateNotifications.showUpdateAvailableNotification(
+                    context = context,
+                    version = result.updateInfo.latestVersion,
+                    downloadUrl = result.updateInfo.downloadUrl,
+                    releaseNotes = result.updateInfo.releaseNotes
+                )
             } else if (result is UpdateCheckResult.UpToDate) {
                 saveUpdateState(context, null)
             }
         }
+    }
+
+    fun ignoreCurrentUpdate(context: Context) {
+        _uiState.value = _uiState.value.copy(updateCheckState = UpdateCheckState.Idle)
+        saveUpdateState(context, null)
     }
 
     @Suppress("UNUSED_PARAMETER")

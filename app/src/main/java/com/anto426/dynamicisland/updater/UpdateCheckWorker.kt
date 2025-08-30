@@ -162,17 +162,17 @@ class UpdateCheckWorker(
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Aggiornamento Disponibile")
-            .setContentText("Nuova versione ${release.tagName} pronta per il download")
+            .setContentTitle(applicationContext.getString(R.string.update_available))
+            .setContentText(applicationContext.getString(R.string.update_available_desc, release.tagName))
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("È disponibile una nuova versione dell'app (${release.tagName}). " +
-                        "Vuoi scaricarla e installarla ora?\n\n${release.body ?: "Nessuna nota di rilascio"}"))
+                .bigText(applicationContext.getString(R.string.update_available_desc, release.tagName) + ". " +
+                        applicationContext.getString(R.string.update_available_prompt, release.tagName) + "\n\n" + (release.body ?: applicationContext.getString(R.string.no_description))))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .addAction(
                 R.drawable.ic_launcher_foreground,
-                "Scarica",
+                applicationContext.getString(R.string.download),
                 createDownloadPendingIntent(downloadUrl, release.tagName)
             )
             .build()
@@ -209,7 +209,7 @@ class UpdateCheckWorker(
                 "Aggiornamenti App",
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notifiche per nuovi aggiornamenti dell'app"
+                description = applicationContext.getString(R.string.update_channel_description)
                 enableVibration(true)
                 enableLights(true)
             }
