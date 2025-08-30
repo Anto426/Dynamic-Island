@@ -61,14 +61,14 @@ class UpdateViewModel : ViewModel() {
             isAutoDownloadEnabled = getAutoDownloadEnabled(context)
         )
 
-        // Carica lo stato dell'ultimo controllo aggiornamenti
-        loadSavedUpdateState(context)
+    // 1) Ottieni subito la versione attuale (serve per validare gli stati salvati)
+    getCurrentVersion(context)
 
-        // Carica lo stato del download se presente
-        loadSavedDownloadState(context)
+    // 2) Ripristina stato download con la versione corretta disponibile
+    loadSavedDownloadState(context)
 
-        // Ottiene versione attuale
-        getCurrentVersion(context)
+    // 3) Ripristina stato aggiornamento solo se davvero più nuovo della versione installata
+    loadSavedUpdateState(context)
     }
 
     private fun loadSavedUpdateState(context: Context) {
@@ -90,6 +90,13 @@ class UpdateViewModel : ViewModel() {
             val updateForceUpdate = prefs.getBoolean("update_force_update", false)
 
             if (updateVersion != null && updateUrl != null) {
+                // Se la versione salvata non è più recente di quella installata, pulisci lo stato e non mostrare l'update
+                val cmp = compareVersions(_uiState.value.currentVersion, updateVersion)
+                if (cmp >= 0) {
+                    saveUpdateState(context, null)
+                    _uiState.value = _uiState.value.copy(updateCheckState = UpdateCheckState.Idle)
+                    return
+                }
                 val updateInfo = LocalUpdateManager.UpdateInfo(
                     channel = updateChannel,
                     latestVersion = updateVersion,
