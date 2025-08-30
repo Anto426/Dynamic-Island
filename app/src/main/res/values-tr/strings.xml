@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dynamic Island</string>
+
+    <string name="overlay_service_label">Dynamic Island</string>
+    <string name="plugin_author_prefix">tarafından </string>
+    <string name="plugin_enable_title">Eklentiyi etkinleştir</string>
+    <string name="plugin_enable_description_generic">Bu eklentiyi etkinleştir veya devre dışı bırak</string>
+    <string name="plugin_enable_description_needs_permissions">Etkinleştirmek için izinleri ver</string>
+    <string name="plugin_info_title">Eklenti bilgileri</string>
+    <string name="plugin_version_title">Sürüm</string>
+    <string name="plugin_identifier_title">Tanımlayıcı</string>
+    <string name="plugin_source_code_title">Kaynak kodu</string>
+    <string name="plugin_view_on_web">Web\'de görüntüle</string>
+    <string name="plugin_permissions_required_title">Gerekli izinler</string>
+    <string name="plugin_permissions_granted_toast">İzinler verildi! Artık eklentiyi etkinleştirebilirsiniz.</string>
+    <string name="plugin_settings_title">Eklenti ayarları</string>
+    <string name="overlay_service_description">Dynamic Island için erişilebilirlik servisi</string>
+
+    <string name="notification_service_label">Bildirim Servisi</string>
+    <string name="settings_preferences">Tercihler</string>
+
+    <string name="title_activity_disclosure">Açıklama</string>
+    <string name="welcome_title">Dynamic Island\'e hoş geldiniz</string>
+    <string name="welcome_description">Bildirimler, müzik, aramalar vb. almak için dinamik adanızı ayarlayın.</string>
+    <string name="i_agree">Kabul ediyorum ve devam et</string>
+    <string name="previous">Önceki</string>
+    <string name="disable_optimization">Optimizasyonu devre dışı bırak</string>
+    <string name="ignore">Yoksay</string>
+    <string name="battery_optimization_description">Dynamic Island\'in arka planda düzgün çalışması için uygulama için pil optimizasyonlarını devre dışı bırakın.</string>
+    <string name="battery_optimization_title">Pil Optimizasyonu</string>
+    <string name="tap_to_disable">Devre dışı bırakmak için dokun</string>
+    <string name="service_active">Servis aktif</string>
+    <string name="get_started">Başla</string>
+    <string name="no_plugins_description">Şu anda hiçbir eklenti etkin değil. Yeni özellikleri açığa çıkarmak için eklenti ayarlarına gidin ve onları etkinleştirin.</string>
+    <string name="no_active_plugins">Aktif eklenti yok</string>
+    <string name="understood">Anlaşıldı</string>
+    <string name="read">Oku</string>
+    <string name="informativa_description">Devam etmeden önce lütfen gizlilik politikamızı ve hizmet şartlarımızı okuyun ve kabul edin.</string>
+    <string name="informativa">Açıklama</string>
+    <string name="accessibility_permission_description">Dynamic Island, ada ve özelliklerini görüntülemek için erişilebilirlik iznine ihtiyaç duyar.</string>
+    <string name="accessibility_permission_title">Erişilebilirlik İzni</string>
+    <string name="next">Sonraki</string>
+    <string name="overlay_permission_title">Kaplama İzni</string>
+    <string name="overlay_permission_description">Dynamic Island, diğer uygulamaların üzerinde görüntülenmek için kaplama iznine ihtiyaç duyar.</string>
+    <string name="tap_to_enable">Etkinleştirmek için dokun</string>
+    <string name="service_disabled">Servis devre dışı</string>
+    <string name="repositories">Depolar</string>
+    <string name="developer">Geliştirici</string>
+    <string name="no_description">Açıklama mevcut değil.</string>
+
+    <string name="disclosure_welcome_title">Dynamic Island\'e hoş geldiniz</string>
+    <string name="disclosure_welcome_description">iOS\'ta olduğu gibi, Dynamic Island gelen aramalar, bildirimler, uyarılar, müzik, navigasyon vb. için uyarlanan etkileşimli bir çentik görüntüler. Ek özelliklere erişmek veya uygulamaları açmak için adaya dokunun veya uzun basın.</string>
+    <string name="disclosure_accessibility_title">Erişilebilirlik ve Kaplama İzinlerinin Kullanımı</string>
+    <string name="disclosure_accessibility_description">Dynamic Island, adayı görüntülemek için yalnızca erişilebilirlik servislerini kullanır. Gereksiz izinler istemez veya kişisel bilgi toplamaz. Gizlilik politikasını istediğiniz zaman inceleyebilirsiniz.</string>
+    <string name="disclosure_plugin_title">Eklenti İzinleri</string>
+    <string name="disclosure_plugin_description">Bazı eklentiler düzgün çalışmak için ek izinlere ihtiyaç duyabilir. Dynamic Island yalnızca kesinlikle gerekli izinleri isteyecektir.</string>
+    <string name="disclosure_privacy_title">Gizlilik</string>
+    <string name="disclosure_privacy_description">Gizliğiniz önemlidir. Dynamic Island kişisel veri toplamaz veya paylaşmaz, izlemez ve hiçbir bilgi satmaz.</string>
+    <string name="disclosure_privacy_link">Gizlilik politikasını oku</string>
+    <string name="disclosure_tos_title">Hizmet Şartları</string>
+    <string name="disclosure_tos_description">Dynamic Island\'i kullanarak hizmet şartlarımızı kabul etmiş olursunuz. Uygulama "olduğu gibi" sağlanır, garantisiz. Kullanımından kaynaklanan herhangi bir zarardan sorumlu değiliz.</string>
+    <string name="disclosure_tos_link">Hizmet şartlarını oku</string>
+
+    <string name="plugins_enabled_title">Etkin Eklentiler</string>
+    <string name="plugin_status_enabled">Etkin</string>
+    <string name="plugin_status_disabled">Devre dışı</string>
+
+    <string name="about_app_icon_description">Uygulama simgesi</string>
+    <string name="about_app_info_title">Uygulama bilgileri</string>
+    <string name="about_version">Sürüm</string>
+    <string name="about_target_sdk">Hedef SDK</string>
+    <string name="about_min_sdk">Minimum SDK</string>
+    <string name="about_build_date">Yapım tarihi</string>
+    <string name="about_device_info_title">Cihaz bilgileri</string>
+    <string name="about_android_version">Android sürümü</string>
+    <string name="about_cpu_architecture">CPU mimarisi</string>
+    <string name="about_useful_links_title">Faydalı bağlantılar</string>
+    <string name="about_developer">Geliştirici</string>
+    <string name="developer_name">Anto426</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_open_in_browser">Tarayıcıda aç</string>
+    <string name="about_copied_toast">%1$s kopyalandı!</string>
+
+    <string name="behavior_visual_title">Görsel Davranış</string>
+    <string name="behavior_show_on_lockscreen_title">Kilit ekranında göster</string>
+    <string name="behavior_show_on_lockscreen_description">Kilit ekranında ve her zaman açık ekranda adayı göster.</string>
+    <string name="behavior_show_in_landscape_title">Yatay modda göster</string>
+    <string name="behavior_show_in_landscape_description">Yatay modda da adayı göster.</string>
+    <string name="behavior_autohide_title">Otomatik gizle</string>
+    <string name="behavior_autohide_opened_island_title">Genişletilmiş adayı gizle</string>
+    <string name="seconds_suffix">sn</string>
+
+    <string name="position_title">Konum</string>
+    <string name="position_island_gravity">Ada hizalama</string>
+    <string name="position_expand_icon_desc">Genişlet</string>
+    <string name="position_x_title">Konum X</string>
+    <string name="unit_dp">dp</string>
+    <string name="position_y_title">Konum Y</string>
+    <string name="size_title">Boyut</string>
+    <string name="size_width">Genişlik</string>
+    <string name="size_height">Yükseklik</string>
+    <string name="corners_title">Köşeler</string>
+    <string name="corners_radius">Köşe yarıçapı</string>
+    <string name="reset_button">Sıfırla</string>
+    <string name="decrease_icon_desc">Azalt</string>
+    <string name="increase_icon_desc">Artır</string>
+
+    <string name="theme_show_borders_title">Kenarları göster</string>
+    <string name="theme_show_borders_description">Adanın etrafında kenar göster</string>
+    <string name="theme_preference_title">Tema</string>
+    <string name="theme_option_system">Sistem</string>
+    <string name="theme_option_dark">Koyu</string>
+    <string name="theme_option_light">Açık</string>
+    <string name="theme_style_preference_title">Stil</string>
+
+    <string name="enabled_apps_title">Etkin Uygulamalar</string>
+    <string name="app_icon_content_description">Uygulama simgesi: %1$s</string>
+
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_subtitle">Uygulama temasını değiştir</string>
+    <string name="settings_position_size_title">Konum ve boyut</string>
+    <string name="settings_position_size_subtitle">Adanın konumunu ve boyutunu değiştir</string>
+    <string name="settings_enabled_apps_subtitle">Adada görünecek uygulamaları seç</string>
+    <string name="settings_behavior_title">Davranış</string>
+    <string name="settings_behavior_subtitle">Adanın davranışını özelleştir</string>
+    <string name="settings_about_title">Hakkında</string>
+    <string name="settings_about_subtitle">Uygulama hakkında ayrıntılar</string>
+    <string name="settings_dev_title">Geliştirme</string>
+
+    <string name="theme_style_material_you">Material You</string>
+    <string name="theme_style_black_white">Siyah &amp; Beyaz</string>
+    <string name="theme_style_quinacridone_magenta">Kuinakridon Magenta</string>
+
+    <string name="settings_item_theme">Tema</string>
+    <string name="settings_item_theme_subtitle">Uygulama temasını değiştir</string>
+    <string name="settings_item_position_size">Konum ve boyut</string>
+    <string name="settings_item_position_size_subtitle">Adanın konumunu ve boyutunu değiştir</string>
+    <string name="settings_item_enabled_apps">Etkin uygulamalar</string>
+    <string name="settings_item_enabled_apps_subtitle">Adada görünecek uygulamaları seç</string>
+    <string name="settings_item_behavior">Davranış</string>
+    <string name="settings_item_behavior_subtitle">Adanın davranışını özelleştir</string>
+    <string name="settings_item_about">Hakkında</string>
+    <string name="settings_item_about_subtitle">Uygulama hakkında ayrıntılar</string>
+    <string name="settings_item_dev">Geliştirme</string>
+    <string name="settings_item_dev_subtitle">Geliştirici bilgileri</string>
+    <string name="settings_item_updates">Güncellemeler</string>
+    <string name="settings_item_updates_subtitle">Güncellemeleri kontrol et ve indir</string>
+
+    <string name="disclosure_button_next">Devam et</string>
+    <string name="disclosure_button_previous">Önceki</string>
+    <string name="disclosure_button_agree">Kabul ediyorum</string>
+
+    <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
+    <string name="advanced_settings_description">Animasyonları, geri bildirimi ve davranışı özelleştir</string>
+
+    <string name="advanced_settings_animations">Animasyonlar</string>
+    <string name="advanced_settings_enable_animations">Animasyonları etkinleştir</string>
+    <string name="advanced_settings_enable_animations_desc">Geçişlerde yumuşak animasyonlar göster</string>
+
+    <string name="advanced_settings_feedback">Geri bildirim</string>
+    <string name="advanced_settings_haptic">Dokunsal geri bildirim</string>
+    <string name="advanced_settings_haptic_desc">Etkileşimler için hafif titreşim</string>
+    <string name="advanced_settings_sounds">Sesler</string>
+    <string name="advanced_settings_sounds_desc">Etkileşim sırasında ses efektleri çal</string>
+
+    <string name="advanced_settings_behavior">Davranış</string>
+    <string name="advanced_settings_behavior_placeholder">Yakında adanın gelişmiş davranışını değiştirebileceksiniz</string>
+
+    <string name="advanced_settings_dynamic_theme">Dinamik Tema</string>
+    <string name="advanced_settings_dynamic_theme_title">Dinamik temayı etkinleştir</string>
+    <string name="advanced_settings_dynamic_theme_desc">Renkleri bağlama göre otomatik olarak uyarla</string>
+
+    <string name="animation_click_label">clickAnimation</string>
+    <string name="settings_dev_subtitle">Geliştiriciler ve hata ayıklama için bilgiler</string>
+    <string name="plugin_icon_content_description">Eklenti simgesi</string>
+
+    <string name="update_title">Güncellemeler</string>
+    <string name="update_settings_title">Güncelleme Ayarları</string>
+    <string name="back">Geri</string>
+
+    <string name="update_status_section">Güncelleme Durumu</string>
+    <string name="release_channel_section">Yayın Kanalı</string>
+    <string name="auto_controls_section">Otomatik Kontroller</string>
+    <string name="manual_actions_section">Manuel İşlemler</string>
+    <string name="changelog_section">Değişiklik günlüğü</string>
+    <string name="dynamic_theme_section">Dinamik Tema</string>
+
+    <string name="app_up_to_date">Uygulama Güncel</string>
+    <string name="app_up_to_date_desc">Uygulamanız en son sürümde</string>
+    <string name="checking_updates">Güncellemeler kontrol ediliyor...</string>
+    <string name="checking_updates_desc">Yeni sürümler kontrol ediliyor</string>
+    <string name="update_available">Güncelleme Mevcut</string>
+    <string name="update_available_desc">Sürüm %1$s indirmeye hazır</string>
+    <string name="update_error">Kontrol Hatası</string>
+
+    <string name="current_version">Mevcut Sürüm</string>
+
+    <string name="channel_stable">Kararlı</string>
+    <string name="channel_stable_desc">Kararlı ve test edilmiş sürümler</string>
+    <string name="channel_beta">Beta</string>
+    <string name="channel_beta_desc">Test edilen yeni özellikler</string>
+    <string name="channel_alpha">Alfa</string>
+    <string name="channel_alpha_desc">Deneysel sürümler</string>
+
+    <string name="auto_update_title">Otomatik Güncellemeler</string>
+    <string name="auto_update_desc">Yeni sürümleri otomatik olarak kontrol et</string>
+    <string name="auto_download_title">Otomatik İndirmeler</string>
+    <string name="auto_download_desc">Güncellemeleri otomatik olarak indir</string>
+
+    <string name="check_updates_button">Güncellemeleri Kontrol Et</string>
+    <string name="download_update_button">Güncellemeyi İndir</string>
+    <string name="install_update_button">Güncellemeyi Yükle</string>
+    <string name="downloading_progress">İndiriliyor...</string>
+
+    <string name="changelog_version">Sürüm %1$s (%2$s)</string>
+
+    <string name="copied_to_clipboard">%1$s panoya kopyalandı!</string>
+    <string name="copy">Kopyala</string>
+
+    <string name="dynamic_theme_title">Dinamik Tema</string>
+    <string name="dynamic_theme_desc">Renkleri otomatik olarak uyarla</string>
+    <string name="downloading">İndiriliyor</string>
+    <string name="update_settings_section">Güncelleme Ayarları</string>
+    <string name="show_advanced_settings">Gelişmiş ayarları göster</string>
+    <string name="hide_advanced_settings">Gelişmiş ayarları gizle</string>
+    <string name="battery_charging_title">Pil Şarjı</string>
+    <string name="temperature">Sıcaklık</string>
+    <string name="power_source">Güç Kaynağı</string>
+    <string name="health">Sağlık</string>
+    <string name="battery_low_title">Pil Düşük</string>
+    <string name="battery_remaining_subtitle">%1$d%% kaldı</string>
+    <string name="battery_saver">Pil Tasarrufu</string>
+    <string name="power_saver_active_desc">İşlevsellik sınırlı olabilir</string>
+    <string name="charging">Şarj oluyor</string>
+    <string name="low_battery">Düşük Pil</string>
+    <string name="power_saver">Güç Tasarrufu</string>
+    <string name="configured">Yapılandırıldı</string>
+    <string name="app_configured_ready">Uygulama yapılandırıldı ve hazır!</string>
+    <string name="update_card_title">Güncelleme Mevcut</string>
+    <string name="download">İndir</string>
+    <string name="permissions_required">İzinler Gerekli</string>
+    <string name="configure_permissions_start">Başlamak için gerekli izinleri yapılandırın.</string>
+
+    <string name="onboarding_welcome_title">Dynamic Island\'e hoş geldiniz</string>
+    <string name="onboarding_welcome_description">Her şeyin mükemmel çalışması için gerekli izinleri ayarlayalım.</string>
+    <string name="permission_accessibility_title">Erişilebilirlik Servisi</string>
+    <string name="permission_accessibility_desc">Dynamic Island\'i diğer uygulamaların üzerinde görüntülemek ve etkileşimleri algılamak için gerekli.</string>
+    <string name="permission_category_system">Sistem</string>
+    <string name="permission_overlay_title">Diğer Uygulamaların Üzerinde Görüntüle</string>
+    <string name="permission_overlay_desc">Dynamic Island\'in mevcut ekranınızın üzerinde görünmesine izin verir.</string>
+    <string name="permission_battery_title">Pil Optimizasyonu</string>
+    <string name="permission_battery_desc">Devre dışı bırakmak uygulamanın arka planda düzgün çalışmasını ve kapanmamasını sağlar.</string>
+    <string name="permission_notification_listener_title">Bildirim Erişimi</string>
+    <string name="permission_notification_listener_desc">Uygulamalarınızın bildirimlerini Dynamic Island\'de göstermek için gerekli.</string>
+    <string name="permission_category_notifications">Bildirimler</string>
+    <string name="permission_post_notifications_title">Bildirimleri Gönder</string>
+    <string name="permission_post_notifications_desc">Uygulamanın size önemli güncellemeler ve uyarılar göstermesine izin verir.</string>
+    <string name="permission_vibrate_title">Titreşim</string>
+    <string name="permission_vibrate_desc">Daha etkileşimli bir deneyim için dokunsal geri bildirim sağlar.</string>
+    <string name="permission_storage_legacy_title">Eski Depolama</string>
+    <string name="permission_storage_legacy_desc">Dosyalara erişim için eski Android sürümleri için gerekli.</string>
+    <string name="permission_category_storage">Depolama</string>
+    <string name="permission_media_images_title">Medya ve Fotoğraflara Erişim</string>
+    <string name="permission_media_images_desc">Eklentilerin görüntü ve medya içeriği görüntülemesine izin verir.</string>
+    <string name="permission_media_video_title">Videolara Erişim</string>
+    <string name="permission_media_video_desc">Eklentilerin video içeriği görüntülemesine izin verir.</string>
+    <string name="permission_media_audio_title">Sese Erişim</string>
+    <string name="permission_media_audio_desc">Eklentilerin ses dosyalarıyla etkileşim kurmasına izin verir.</string>
+    <string name="permission_unknown_sources_title">Bilinmeyen Uygulamaları Yükle</string>
+    <string name="permission_unknown_sources_desc">Uygulama içinden indirilen uygulama güncellemelerini yüklemek için gerekli.</string>
+    <string name="permission_category_updates">Güncellemeler</string>
+    <string name="onboarding_step_counter">Adım %1$d / %2$d</string>
+    <string name="onboarding_permission_granted">İzin Verildi</string>
+    <string name="permission_granted_label">Verildi</string>
+    <string name="enable_in_settings">Ayarlarda Etkinleştir</string>
+    <string name="onboarding_finish">Bitir</string>
+    <string name="onboarding_continue">Devam et</string>
+    <string name="onboarding_setup_complete_title">Kurulum Tamamlandı!</string>
+    <string name="onboarding_setup_complete_desc">Her şey hazır. Dynamic Island artık aktif.</string>
+    <string name="plugins_enabled_count">%1$d etkin</string>
+    <string name="go_to_details">Ayrıntılara git</string>
+    <string name="search">Ara</string>
+    <string name="search_settings_placeholder">Ayarları ara...</string>
+    <string name="clear_search">Aramayı temizle</string>
+    <string name="no_results_found">Sonuç bulunamadı.</string>
+    <string name="try_different_keywords">Farklı anahtar kelimeler deneyin.</string>
+    <string name="reset_settings">Ayarları sıfırla</string>
+    <string name="behavior_visibility_section">Görünürlük</string>
+    <string name="behavior_autohide_section">Otomatik gizle</string>
+    <string name="behavior_animations_feedback_section">Animasyonlar ve Geri Bildirim</string>
+    <string name="dev_error_connection">Bağlantı hatası.</string>
+    <string name="dev_error_not_found">Bulunamadı.</string>
+    <string name="dev_error_unknown">Bilinmeyen bir hata oluştu.</string>
+    <string name="dev_loading_title">Yükleniyor...</string>
+    <string name="dev_loading_subtitle">Lütfen bekleyin...</string>
+    <string name="error">Hata</string>
+    <string name="dev_error_title">Bir Şeyler Yanlış Gitti</string>
+    <string name="retry">Tekrar dene</string>
+    <string name="dev_profile_title">Profil</string>
+    <string name="dev_updated_from_github">GitHub\'dan güncellendi</string>
+    <string name="dev_public_repos_title">Genel Depolar</string>
+    <string name="dev_no_public_repos_title">Genel Depo Yok</string>
+    <string name="dev_no_public_repos_desc">Bu kullanıcının genel deposu yok.</string>
+    <string name="avatar_of">%1$s\'ın avatarı</string>
+    <string name="open_profile">Profili Aç</string>
+    <string name="copy_username">Kullanıcı Adını Kopyala</string>
+    <string name="stars">Yıldızlar</string>
+    <string name="open_repository">Depoyu Aç</string>
+    <string name="enabled_apps_summary">Dynamic Island\'i kullanabilecek uygulamaları seçin.</string>
+    <string name="style_title">Stil</string>
+    <string name="update_available_prompt">Bir güncelleme mevcut!</string>
+    <string name="update_channel_description">Uygulama güncellemeleri için yayın kanalını seçin.</string>
+    <string name="permission_required_title">İzin Gerekli</string>
+    <string name="permission_required_text">Bu özellik henüz verilmemiş bir izne ihtiyaç duyar.</string>
+    <string name="update_notification_title">Güncelleme Mevcut</string>
+    <string name="update_preparing_download">İndirme hazırlanıyor...</string>
+    <string name="update_download_channel_description">Uygulama güncelleme indirmeleri için bildirimler.</string>
+    <string name="settings_item_advanced">Gelişmiş</string>
+    <string name="settings_item_advanced_subtitle">Animasyonları, geri bildirimi vb. özelleştir</string>
+    <string name="destination_plugin_settings">Eklenti Ayarları</string>
+    <string name="destination_advanced">Gelişmiş Ayarlar</string>
+    <string name="destination_settings">Ayarlar</string>
+    <string name="destination_home">Ana Sayfa</string>
+    <string name="destination_plugins">Eklentiler</string>
+    <string name="settings_reset_content_description">Ayarları varsayılana sıfırla</string>
+    <string name="settings_no_results_subtitle">Başka bir şey aramayı deneyin</string>
+    <string name="settings_no_results_title">Sonuç bulunamadı</string>
+    <string name="settings_clear_search_content_description">Arama sorgusunu temizle</string>
+    <string name="settings_search_placeholder">Ayarları ara</string>
+    <string name="settings_search_content_description">Ayarları ara simgesi</string>
+    <string name="settings_section_information">Bilgi</string>
+    <string name="settings_section_other">Diğer</string>
+    <string name="settings_section_appearance">Görünüm</string>
+    <string name="settings_search_results">Arama Sonuçları</string>
+    <string name="settings_section_behavior">Davranış</string>
+</resources>

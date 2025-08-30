@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dynamic Island</string>
+
+    <string name="overlay_service_label">Dynamic Island</string>
+    <string name="plugin_author_prefix">द्वारा </string>
+    <string name="plugin_enable_title">प्लगइन सक्षम करें</string>
+    <string name="plugin_enable_description_generic">इस प्लगइन को सक्षम या अक्षम करें</string>
+    <string name="plugin_enable_description_needs_permissions">इसे सक्षम करने के लिए अनुमतियाँ प्रदान करें</string>
+    <string name="plugin_info_title">प्लगइन जानकारी</string>
+    <string name="plugin_version_title">संस्करण</string>
+    <string name="plugin_identifier_title">पहचानकर्ता</string>
+    <string name="plugin_source_code_title">स्रोत कोड</string>
+    <string name="plugin_view_on_web">वेब पर देखें</string>
+    <string name="plugin_permissions_required_title">आवश्यक अनुमतियाँ</string>
+    <string name="plugin_permissions_granted_toast">अनुमतियाँ प्रदान की गईं! अब आप प्लगइन सक्षम कर सकते हैं।</string>
+    <string name="plugin_settings_title">प्लगइन सेटिंग्स</string>
+    <string name="overlay_service_description">Dynamic Island के लिए एक्सेसिबिलिटी सेवा</string>
+
+    <string name="notification_service_label">सूचना सेवा</string>
+    <string name="settings_preferences">प्राथमिकताएँ</string>
+
+    <string name="title_activity_disclosure">खुलासा</string>
+    <string name="welcome_title">Dynamic Island में आपका स्वागत है</string>
+    <string name="welcome_description">अपने डायनामिक आइलैंड को सूचनाएँ, संगीत, कॉल आदि प्राप्त करने के लिए सेटअप करें।</string>
+    <string name="i_agree">मैं सहमत हूँ और जारी रखें</string>
+    <string name="previous">पिछला</string>
+    <string name="disable_optimization">अनुकूलन अक्षम करें</string>
+    <string name="ignore">अनदेखा करें</string>
+    <string name="battery_optimization_description">Dynamic Island को बैकग्राउंड में सही ढंग से काम करने के लिए, ऐप के लिए बैटरी ऑप्टिमाइज़ेशन अक्षम करें।</string>
+    <string name="battery_optimization_title">बैटरी ऑप्टिमाइज़ेशन</string>
+    <string name="tap_to_disable">अक्षम करने के लिए टैप करें</string>
+    <string name="service_active">सेवा सक्रिय</string>
+    <string name="get_started">शुरू करें</string>
+    <string name="no_plugins_description">वर्तमान में कोई प्लगइन सक्षम नहीं हैं। नई सुविधाओं को अनलॉक करने के लिए प्लगइन सेटिंग्स में जाएँ और उन्हें सक्षम करें।</string>
+    <string name="no_active_plugins">कोई सक्रिय प्लगइन नहीं</string>
+    <string name="understood">समझ गया</string>
+    <string name="read">पढ़ें</string>
+    <string name="informativa_description">जारी रखने से पहले, कृपया हमारी गोपनीयता नीति और सेवा की शर्तों को पढ़ें और स्वीकार करें।</string>
+    <string name="informativa">खुलासा</string>
+    <string name="accessibility_permission_description">Dynamic Island को आइलैंड और उसकी सुविधाओं को प्रदर्शित करने के लिए एक्सेसिबिलिटी अनुमति की आवश्यकता है।</string>
+    <string name="accessibility_permission_title">एक्सेसिबिलिटी अनुमति</string>
+    <string name="next">अगला</string>
+    <string name="overlay_permission_title">ओवरले अनुमति</string>
+    <string name="overlay_permission_description">Dynamic Island को अन्य ऐप्स पर प्रदर्शित करने के लिए ओवरले अनुमति की आवश्यकता है।</string>
+    <string name="tap_to_enable">सक्षम करने के लिए टैप करें</string>
+    <string name="service_disabled">सेवा अक्षम</string>
+    <string name="repositories">रिपॉजिटरी</string>
+    <string name="developer">डेवलपर</string>
+    <string name="no_description">कोई विवरण उपलब्ध नहीं।</string>
+
+    <string name="disclosure_welcome_title">Dynamic Island में आपका स्वागत है</string>
+    <string name="disclosure_welcome_description">iOS पर जैसे, Dynamic Island आने वाली कॉल, सूचनाएँ, अलर्ट, संगीत, नेविगेशन आदि के अनुकूल एक इंटरैक्टिव नॉच प्रदर्शित करता है। अतिरिक्त सुविधाओं तक पहुँचने या ऐप्स खोलने के लिए आइलैंड को टैप या लॉन्ग-प्रेस करें।</string>
+    <string name="disclosure_accessibility_title">एक्सेसिबिलिटी और ओवरले अनुमतियों का उपयोग</string>
+    <string name="disclosure_accessibility_description">Dynamic Island आइलैंड को प्रदर्शित करने के लिए केवल एक्सेसिबिलिटी सेवाओं का उपयोग करता है। यह अनावश्यक अनुमतियाँ नहीं माँगता या व्यक्तिगत जानकारी एकत्र नहीं करता। आप कभी भी गोपनीयता नीति की समीक्षा कर सकते हैं।</string>
+    <string name="disclosure_plugin_title">प्लगइन अनुमतियाँ</string>
+    <string name="disclosure_plugin_description">कुछ प्लगइन्स को सही ढंग से काम करने के लिए अतिरिक्त अनुमतियों की आवश्यकता हो सकती है। Dynamic Island केवल सख्ती से आवश्यक अनुमतियाँ माँगेगा।</string>
+    <string name="disclosure_privacy_title">गोपनीयता</string>
+    <string name="disclosure_privacy_description">आपकी गोपनीयता महत्वपूर्ण है। Dynamic Island व्यक्तिगत डेटा एकत्र या साझा नहीं करता, ट्रैक नहीं करता, और कोई भी जानकारी बेचता नहीं।</string>
+    <string name="disclosure_privacy_link">गोपनीयता नीति पढ़ें</string>
+    <string name="disclosure_tos_title">सेवा की शर्तें</string>
+    <string name="disclosure_tos_description">Dynamic Island का उपयोग करके, आप हमारी सेवा की शर्तों से सहमत हैं। ऐप "जैसा है" प्रदान किया जाता है, बिना किसी वारंटी के। हम इसके उपयोग से उत्पन्न होने वाले किसी भी नुकसान के लिए जिम्मेदार नहीं हैं।</string>
+    <string name="disclosure_tos_link">सेवा की शर्तें पढ़ें</string>
+
+    <string name="plugins_enabled_title">सक्षम प्लगइन्स</string>
+    <string name="plugin_status_enabled">सक्षम</string>
+    <string name="plugin_status_disabled">अक्षम</string>
+
+    <string name="about_app_icon_description">ऐप आइकन</string>
+    <string name="about_app_info_title">ऐप जानकारी</string>
+    <string name="about_version">संस्करण</string>
+    <string name="about_target_sdk">लक्ष्य SDK</string>
+    <string name="about_min_sdk">न्यूनतम SDK</string>
+    <string name="about_build_date">बिल्ड तिथि</string>
+    <string name="about_device_info_title">डिवाइस जानकारी</string>
+    <string name="about_android_version">Android संस्करण</string>
+    <string name="about_cpu_architecture">CPU आर्किटेक्चर</string>
+    <string name="about_useful_links_title">उपयोगी लिंक्स</string>
+    <string name="about_developer">डेवलपर</string>
+    <string name="developer_name">Anto426</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_open_in_browser">ब्राउज़र में खोलें</string>
+    <string name="about_copied_toast">%1$s कॉपी किया गया!</string>
+
+    <string name="behavior_visual_title">दृश्य व्यवहार</string>
+    <string name="behavior_show_on_lockscreen_title">लॉक स्क्रीन पर दिखाएँ</string>
+    <string name="behavior_show_on_lockscreen_description">लॉक स्क्रीन और हमेशा ऑन डिस्प्ले पर आइलैंड दिखाएँ।</string>
+    <string name="behavior_show_in_landscape_title">लैंडस्केप में दिखाएँ</string>
+    <string name="behavior_show_in_landscape_description">लैंडस्केप मोड में भी आइलैंड दिखाएँ।</string>
+    <string name="behavior_autohide_title">ऑटोहाइड</string>
+    <string name="behavior_autohide_opened_island_title">विस्तारित आइलैंड छुपाएँ</string>
+    <string name="seconds_suffix">सेकंड</string>
+
+    <string name="position_title">स्थिति</string>
+    <string name="position_island_gravity">आइलैंड संरेखण</string>
+    <string name="position_expand_icon_desc">विस्तार करें</string>
+    <string name="position_x_title">स्थिति X</string>
+    <string name="unit_dp">dp</string>
+    <string name="position_y_title">स्थिति Y</string>
+    <string name="size_title">आकार</string>
+    <string name="size_width">चौड़ाई</string>
+    <string name="size_height">ऊँचाई</string>
+    <string name="corners_title">कोने</string>
+    <string name="corners_radius">कोने की त्रिज्या</string>
+    <string name="reset_button">रीसेट</string>
+    <string name="decrease_icon_desc">कम करें</string>
+    <string name="increase_icon_desc">बढ़ाएँ</string>
+
+    <string name="theme_show_borders_title">सीमाएँ दिखाएँ</string>
+    <string name="theme_show_borders_description">आइलैंड के चारों ओर सीमा दिखाएँ</string>
+    <string name="theme_preference_title">थीम</string>
+    <string name="theme_option_system">सिस्टम</string>
+    <string name="theme_option_dark">डार्क</string>
+    <string name="theme_option_light">लाइट</string>
+    <string name="theme_style_preference_title">स्टाइल</string>
+
+    <string name="enabled_apps_title">सक्षम ऐप्स</string>
+    <string name="app_icon_content_description">ऐप आइकन: %1$s</string>
+
+    <string name="settings_theme_title">थीम</string>
+    <string name="settings_theme_subtitle">ऐप थीम बदलें</string>
+    <string name="settings_position_size_title">स्थिति और आकार</string>
+    <string name="settings_position_size_subtitle">आइलैंड की स्थिति और आकार संशोधित करें</string>
+    <string name="settings_enabled_apps_subtitle">आइलैंड पर दिखाई देने वाले ऐप्स चुनें</string>
+    <string name="settings_behavior_title">व्यवहार</string>
+    <string name="settings_behavior_subtitle">आइलैंड के व्यवहार को कस्टमाइज़ करें</string>
+    <string name="settings_about_title">बारे में</string>
+    <string name="settings_about_subtitle">ऐप के बारे में विवरण</string>
+    <string name="settings_dev_title">विकास</string>
+
+    <string name="theme_style_material_you">Material You</string>
+    <string name="theme_style_black_white">काला और सफेद</string>
+    <string name="theme_style_quinacridone_magenta">क्विनाक्रिडोन मैजेंटा</string>
+
+    <string name="settings_item_theme">थीम</string>
+    <string name="settings_item_theme_subtitle">ऐप थीम बदलें</string>
+    <string name="settings_item_position_size">स्थिति और आकार</string>
+    <string name="settings_item_position_size_subtitle">आइलैंड की स्थिति और आकार संशोधित करें</string>
+    <string name="settings_item_enabled_apps">सक्षम ऐप्स</string>
+    <string name="settings_item_enabled_apps_subtitle">आइलैंड पर दिखाई देने वाले ऐप्स चुनें</string>
+    <string name="settings_item_behavior">व्यवहार</string>
+    <string name="settings_item_behavior_subtitle">आइलैंड के व्यवहार को कस्टमाइज़ करें</string>
+    <string name="settings_item_about">बारे में</string>
+    <string name="settings_item_about_subtitle">ऐप के बारे में विवरण</string>
+    <string name="settings_item_dev">विकास</string>
+    <string name="settings_item_dev_subtitle">डेवलपर जानकारी</string>
+    <string name="settings_item_updates">अपडेट</string>
+    <string name="settings_item_updates_subtitle">अपडेट जांचें और डाउनलोड करें</string>
+
+    <string name="disclosure_button_next">जारी रखें</string>
+    <string name="disclosure_button_previous">पिछला</string>
+    <string name="disclosure_button_agree">मैं सहमत हूँ</string>
+
+    <string name="advanced_settings_title">उन्नत सेटिंग्स</string>
+    <string name="advanced_settings_description">एनीमेशन, फीडबैक और व्यवहार कस्टमाइज़ करें</string>
+
+    <string name="advanced_settings_animations">एनीमेशन</string>
+    <string name="advanced_settings_enable_animations">एनीमेशन सक्षम करें</string>
+    <string name="advanced_settings_enable_animations_desc">ट्रांज़िशन में स्मूथ एनीमेशन दिखाएँ</string>
+
+    <string name="advanced_settings_feedback">फीडबैक</string>
+    <string name="advanced_settings_haptic">हैप्टिक फीडबैक</string>
+    <string name="advanced_settings_haptic_desc">इंटरैक्शन के लिए हल्की वाइब्रेशन</string>
+    <string name="advanced_settings_sounds">ध्वनियाँ</string>
+    <string name="advanced_settings_sounds_desc">इंटरैक्ट करते समय ध्वनि प्रभाव चलाएँ</string>
+
+    <string name="advanced_settings_behavior">व्यवहार</string>
+    <string name="advanced_settings_behavior_placeholder">आप जल्द ही आइलैंड के उन्नत व्यवहार को संशोधित कर सकेंगे</string>
+
+    <string name="advanced_settings_dynamic_theme">डायनामिक थीम</string>
+    <string name="advanced_settings_dynamic_theme_title">डायनामिक थीम सक्षम करें</string>
+    <string name="advanced_settings_dynamic_theme_desc">संदर्भ के अनुसार रंग स्वचालित रूप से अनुकूलित करें</string>
+
+    <string name="animation_click_label">clickAnimation</string>
+    <string name="settings_dev_subtitle">डेवलपर्स और डिबगिंग के लिए जानकारी</string>
+    <string name="plugin_icon_content_description">प्लगइन आइकन</string>
+
+    <string name="update_title">अपडेट</string>
+    <string name="update_settings_title">अपडेट सेटिंग्स</string>
+    <string name="back">वापस</string>
+
+    <string name="update_status_section">अपडेट स्थिति</string>
+    <string name="release_channel_section">रिलीज़ चैनल</string>
+    <string name="auto_controls_section">स्वचालित नियंत्रण</string>
+    <string name="manual_actions_section">मैनुअल कार्य</string>
+    <string name="changelog_section">चेंजलॉग</string>
+    <string name="dynamic_theme_section">डायनामिक थीम</string>
+
+    <string name="app_up_to_date">ऐप अप टू डेट</string>
+    <string name="app_up_to_date_desc">आपका ऐप नवीनतम संस्करण पर है</string>
+    <string name="checking_updates">अपडेट जांच रहे हैं...</string>
+    <string name="checking_updates_desc">नए संस्करणों की जांच</string>
+    <string name="update_available">अपडेट उपलब्ध</string>
+    <string name="update_available_desc">संस्करण %1$s डाउनलोड के लिए तैयार है</string>
+    <string name="update_error">जांच त्रुटि</string>
+
+    <string name="current_version">वर्तमान संस्करण</string>
+
+    <string name="channel_stable">स्थिर</string>
+    <string name="channel_stable_desc">स्थिर और परीक्षण किए गए संस्करण</string>
+    <string name="channel_beta">बीटा</string>
+    <string name="channel_beta_desc">परीक्षण में नई सुविधाएँ</string>
+    <string name="channel_alpha">अल्फा</string>
+    <string name="channel_alpha_desc">प्रायोगिक संस्करण</string>
+
+    <string name="auto_update_title">स्वचालित अपडेट</string>
+    <string name="auto_update_desc">नए संस्करणों को स्वचालित रूप से जांचें</string>
+    <string name="auto_download_title">स्वचालित डाउनलोड</string>
+    <string name="auto_download_desc">अपडेट स्वचालित रूप से डाउनलोड करें</string>
+
+    <string name="check_updates_button">अपडेट जांचें</string>
+    <string name="download_update_button">अपडेट डाउनलोड करें</string>
+    <string name="install_update_button">अपडेट इंस्टॉल करें</string>
+    <string name="downloading_progress">डाउनलोड हो रहा है...</string>
+
+    <string name="changelog_version">संस्करण %1$s (%2$s)</string>
+
+    <string name="copied_to_clipboard">%1$s क्लिपबोर्ड पर कॉपी किया गया!</string>
+    <string name="copy">कॉपी</string>
+
+    <string name="dynamic_theme_title">डायनामिक थीम</string>
+    <string name="dynamic_theme_desc">रंग स्वचालित रूप से अनुकूलित करें</string>
+    <string name="downloading">डाउनलोड हो रहा है</string>
+    <string name="update_settings_section">अपडेट सेटिंग्स</string>
+    <string name="show_advanced_settings">उन्नत सेटिंग्स दिखाएँ</string>
+    <string name="hide_advanced_settings">उन्नत सेटिंग्स छुपाएँ</string>
+    <string name="battery_charging_title">बैटरी चार्जिंग</string>
+    <string name="temperature">तापमान</string>
+    <string name="power_source">पावर स्रोत</string>
+    <string name="health">स्वास्थ्य</string>
+    <string name="battery_low_title">बैटरी कम</string>
+    <string name="battery_remaining_subtitle">%1$d%% शेष</string>
+    <string name="battery_saver">बैटरी सेवर</string>
+    <string name="power_saver_active_desc">कार्यक्षमता सीमित हो सकती है</string>
+    <string name="charging">चार्ज हो रहा है</string>
+    <string name="low_battery">कम बैटरी</string>
+    <string name="power_saver">पावर सेवर</string>
+    <string name="configured">कॉन्फ़िगर किया गया</string>
+    <string name="app_configured_ready">ऐप कॉन्फ़िगर किया गया है और तैयार है!</string>
+    <string name="update_card_title">अपडेट उपलब्ध</string>
+    <string name="download">डाउनलोड</string>
+    <string name="permissions_required">अनुमतियाँ आवश्यक</string>
+    <string name="configure_permissions_start">शुरू करने के लिए आवश्यक अनुमतियाँ कॉन्फ़िगर करें।</string>
+
+    <string name="onboarding_welcome_title">Dynamic Island में आपका स्वागत है</string>
+    <string name="onboarding_welcome_description">आवश्यक अनुमतियाँ सेटअप करें ताकि सब कुछ पूरी तरह से काम करे।</string>
+    <string name="permission_accessibility_title">एक्सेसिबिलिटी सेवा</string>
+    <string name="permission_accessibility_desc">Dynamic Island को अन्य ऐप्स पर प्रदर्शित करने और इंटरैक्शन का पता लगाने के लिए आवश्यक।</string>
+    <string name="permission_category_system">सिस्टम</string>
+    <string name="permission_overlay_title">अन्य ऐप्स पर प्रदर्शित करें</string>
+    <string name="permission_overlay_desc">Dynamic Island को आपकी वर्तमान स्क्रीन पर दिखाई देने की अनुमति देता है।</string>
+    <string name="permission_battery_title">बैटरी ऑप्टिमाइज़ेशन</string>
+    <string name="permission_battery_desc">अक्षम करने से ऐप बैकग्राउंड में सुचारू रूप से चलता है और बंद नहीं होता।</string>
+    <string name="permission_notification_listener_title">सूचना एक्सेस</string>
+    <string name="permission_notification_listener_desc">आपके ऐप्स की सूचनाओं को Dynamic Island पर दिखाने के लिए आवश्यक।</string>
+    <string name="permission_category_notifications">सूचनाएँ</string>
+    <string name="permission_post_notifications_title">सूचनाएँ पोस्ट करें</string>
+    <string name="permission_post_notifications_desc">ऐप को आपको महत्वपूर्ण अपडेट और अलर्ट दिखाने की अनुमति देता है।</string>
+    <string name="permission_vibrate_title">वाइब्रेट</string>
+    <string name="permission_vibrate_desc">अधिक इंटरैक्टिव अनुभव के लिए हैप्टिक फीडबैक प्रदान करता है।</string>
+    <string name="permission_storage_legacy_title">लेगेसी स्टोरेज</string>
+    <string name="permission_storage_legacy_desc">फाइलों तक पहुँच के लिए पुराने Android संस्करणों के लिए आवश्यक।</string>
+    <string name="permission_category_storage">स्टोरेज</string>
+    <string name="permission_media_images_title">मीडिया और फ़ोटो एक्सेस</string>
+    <string name="permission_media_images_desc">प्लगइन्स को छवि और मीडिया सामग्री प्रदर्शित करने की अनुमति देता है।</string>
+    <string name="permission_media_video_title">वीडियो एक्सेस</string>
+    <string name="permission_media_video_desc">प्लगइन्स को वीडियो सामग्री प्रदर्शित करने की अनुमति देता है।</string>
+    <string name="permission_media_audio_title">ऑडियो एक्सेस</string>
+    <string name="permission_media_audio_desc">प्लगइन्स को ऑडियो फाइलों के साथ इंटरैक्ट करने की अनुमति देता है।</string>
+    <string name="permission_unknown_sources_title">अज्ञात ऐप्स इंस्टॉल करें</string>
+    <string name="permission_unknown_sources_desc">ऐप के भीतर से डाउनलोड किए गए ऐप अपडेट को इंस्टॉल करने के लिए आवश्यक।</string>
+    <string name="permission_category_updates">अपडेट</string>
+    <string name="onboarding_step_counter">चरण %1$d / %2$d</string>
+    <string name="onboarding_permission_granted">अनुमति प्रदान की गई</string>
+    <string name="permission_granted_label">प्रदान की गई</string>
+    <string name="enable_in_settings">सेटिंग्स में सक्षम करें</string>
+    <string name="onboarding_finish">समाप्त</string>
+    <string name="onboarding_continue">जारी रखें</string>
+    <string name="onboarding_setup_complete_title">सेटअप पूरा!</string>
+    <string name="onboarding_setup_complete_desc">सब कुछ तैयार है। Dynamic Island अब सक्रिय है।</string>
+    <string name="plugins_enabled_count">%1$d सक्षम</string>
+    <string name="go_to_details">विवरण में जाएँ</string>
+    <string name="search">खोज</string>
+    <string name="search_settings_placeholder">सेटिंग्स खोजें...</string>
+    <string name="clear_search">खोज साफ़ करें</string>
+    <string name="no_results_found">कोई परिणाम नहीं मिला।</string>
+    <string name="try_different_keywords">विभिन्न कीवर्ड आज़माएँ।</string>
+    <string name="reset_settings">सेटिंग्स रीसेट करें</string>
+    <string name="behavior_visibility_section">दृश्यता</string>
+    <string name="behavior_autohide_section">ऑटोहाइड</string>
+    <string name="behavior_animations_feedback_section">एनीमेशन और फीडबैक</string>
+    <string name="dev_error_connection">कनेक्शन त्रुटि।</string>
+    <string name="dev_error_not_found">नहीं मिला।</string>
+    <string name="dev_error_unknown">एक अज्ञात त्रुटि हुई।</string>
+    <string name="dev_loading_title">लोड हो रहा है...</string>
+    <string name="dev_loading_subtitle">कृपया प्रतीक्षा करें...</string>
+    <string name="error">त्रुटि</string>
+    <string name="dev_error_title">कुछ गलत हो गया</string>
+    <string name="retry">पुनः प्रयास</string>
+    <string name="dev_profile_title">प्रोफ़ाइल</string>
+    <string name="dev_updated_from_github">GitHub से अपडेट किया गया</string>
+    <string name="dev_public_repos_title">सार्वजनिक रिपॉजिटरी</string>
+    <string name="dev_no_public_repos_title">कोई सार्वजनिक रिपॉजिटरी नहीं</string>
+    <string name="dev_no_public_repos_desc">इस उपयोगकर्ता के पास कोई सार्वजनिक रिपॉजिटरी नहीं है।</string>
+    <string name="avatar_of">%1$s का अवतार</string>
+    <string name="open_profile">प्रोफ़ाइल खोलें</string>
+    <string name="copy_username">उपयोगकर्ता नाम कॉपी करें</string>
+    <string name="stars">स्टार</string>
+    <string name="open_repository">रिपॉजिटरी खोलें</string>
+    <string name="enabled_apps_summary">Dynamic Island का उपयोग करने में सक्षम ऐप्स चुनें।</string>
+    <string name="style_title">स्टाइल</string>
+    <string name="update_available_prompt">एक अपडेट उपलब्ध है!</string>
+    <string name="update_channel_description">ऐप अपडेट के लिए रिलीज़ चैनल चुनें।</string>
+    <string name="permission_required_title">अनुमति आवश्यक</string>
+    <string name="permission_required_text">इस सुविधा के लिए एक अनुमति की आवश्यकता है जो अभी तक प्रदान नहीं की गई है।</string>
+    <string name="update_notification_title">अपडेट उपलब्ध</string>
+    <string name="update_preparing_download">डाउनलोड तैयार कर रहा है...</string>
+    <string name="update_download_channel_description">ऐप अपडेट डाउनलोड के लिए सूचनाएँ।</string>
+    <string name="settings_item_advanced">उन्नत</string>
+    <string name="settings_item_advanced_subtitle">एनीमेशन, फीडबैक आदि कस्टमाइज़ करें</string>
+    <string name="destination_plugin_settings">प्लगइन सेटिंग्स</string>
+    <string name="destination_advanced">उन्नत सेटिंग्स</string>
+    <string name="destination_settings">सेटिंग्स</string>
+    <string name="destination_home">होम</string>
+    <string name="destination_plugins">प्लगइन्स</string>
+    <string name="settings_reset_content_description">सेटिंग्स को डिफ़ॉल्ट पर रीसेट करें</string>
+    <string name="settings_no_results_subtitle">कुछ और खोजने का प्रयास करें</string>
+    <string name="settings_no_results_title">कोई परिणाम नहीं मिला</string>
+    <string name="settings_clear_search_content_description">खोज क्वेरी साफ़ करें</string>
+    <string name="settings_search_placeholder">सेटिंग्स खोजें</string>
+    <string name="settings_search_content_description">सेटिंग्स खोज आइकन</string>
+    <string name="settings_section_information">जानकारी</string>
+    <string name="settings_section_other">अन्य</string>
+    <string name="settings_section_appearance">दिखावट</string>
+    <string name="settings_search_results">खोज परिणाम</string>
+    <string name="settings_section_behavior">व्यवहार</string>
+</resources>

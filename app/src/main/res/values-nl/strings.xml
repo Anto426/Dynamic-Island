@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dynamic Island</string>
+
+    <string name="overlay_service_label">Dynamic Island</string>
+    <string name="plugin_author_prefix">door </string>
+    <string name="plugin_enable_title">Plugin inschakelen</string>
+    <string name="plugin_enable_description_generic">Deze plugin in- of uitschakelen</string>
+    <string name="plugin_enable_description_needs_permissions">Geef toestemming om in te schakelen</string>
+    <string name="plugin_info_title">Plugin informatie</string>
+    <string name="plugin_version_title">Versie</string>
+    <string name="plugin_identifier_title">Identificatie</string>
+    <string name="plugin_source_code_title">Broncode</string>
+    <string name="plugin_view_on_web">Bekijk op web</string>
+    <string name="plugin_permissions_required_title">Vereiste toestemmingen</string>
+    <string name="plugin_permissions_granted_toast">Toestemmingen verleend! U kunt de plugin nu inschakelen.</string>
+    <string name="plugin_settings_title">Plugin instellingen</string>
+    <string name="overlay_service_description">Toegankelijkheidsservice voor Dynamic Island</string>
+
+    <string name="notification_service_label">Meldingen Service</string>
+    <string name="settings_preferences">Voorkeuren</string>
+
+    <string name="title_activity_disclosure">Openbaarmaking</string>
+    <string name="welcome_title">Welkom bij Dynamic Island</string>
+    <string name="welcome_description">Stel uw dynamische eiland in om meldingen, muziek, oproepen enz. te ontvangen.</string>
+    <string name="i_agree">Ik ga akkoord en ga verder</string>
+    <string name="previous">Vorige</string>
+    <string name="disable_optimization">Optimalisatie uitschakelen</string>
+    <string name="ignore">Negeren</string>
+    <string name="battery_optimization_description">Schakel batterijoptimalisaties uit voor de app zodat Dynamic Island correct werkt op de achtergrond.</string>
+    <string name="battery_optimization_title">Batterijoptimalisatie</string>
+    <string name="tap_to_disable">Tik om uit te schakelen</string>
+    <string name="service_active">Service actief</string>
+    <string name="get_started">Aan de slag</string>
+    <string name="no_plugins_description">Er zijn momenteel geen plugins actief. Ga naar plugin instellingen en schakel ze in om nieuwe functies te ontgrendelen.</string>
+    <string name="no_active_plugins">Geen actieve plugins</string>
+    <string name="understood">Begrepen</string>
+    <string name="read">Lezen</string>
+    <string name="informativa_description">Lees en accepteer alstublieft ons privacybeleid en servicevoorwaarden voordat u doorgaat.</string>
+    <string name="informativa">Openbaarmaking</string>
+    <string name="accessibility_permission_description">Dynamic Island heeft toegankelijkheidstoestemming nodig om het eiland en zijn functies weer te geven.</string>
+    <string name="accessibility_permission_title">Toegankelijkheidstoestemming</string>
+    <string name="next">Volgende</string>
+    <string name="overlay_permission_title">Overlay Toestemming</string>
+    <string name="overlay_permission_description">Dynamic Island heeft overlay toestemming nodig om boven andere apps weer te geven.</string>
+    <string name="tap_to_enable">Tik om in te schakelen</string>
+    <string name="service_disabled">Service uitgeschakeld</string>
+    <string name="repositories">Opslagplaatsen</string>
+    <string name="developer">Ontwikkelaar</string>
+    <string name="no_description">Geen beschrijving beschikbaar.</string>
+
+    <string name="disclosure_welcome_title">Welkom bij Dynamic Island</string>
+    <string name="disclosure_welcome_description">Net als op iOS toont Dynamic Island een interactieve notch die zich aanpast aan inkomende oproepen, meldingen, waarschuwingen, muziek, navigatie enz. Tik of houd ingedrukt op het eiland om toegang te krijgen tot extra functies of apps te openen.</string>
+    <string name="disclosure_accessibility_title">Gebruik van Toegankelijkheid en Overlay Toestemmingen</string>
+    <string name="disclosure_accessibility_description">Dynamic Island gebruikt alleen toegankelijkheidsservices om het eiland weer te geven. Het vraagt geen onnodige toestemmingen of verzamelt persoonlijke informatie. U kunt ons privacybeleid op elk moment bekijken.</string>
+    <string name="disclosure_plugin_title">Plugin Toestemmingen</string>
+    <string name="disclosure_plugin_description">Sommige plugins kunnen extra toestemmingen nodig hebben om correct te werken. Dynamic Island zal alleen absoluut noodzakelijke toestemmingen vragen.</string>
+    <string name="disclosure_privacy_title">Privacy</string>
+    <string name="disclosure_privacy_description">Uw privacy is belangrijk. Dynamic Island verzamelt of deelt geen persoonlijke gegevens, volgt niet en verkoopt geen informatie.</string>
+    <string name="disclosure_privacy_link">Lees privacybeleid</string>
+    <string name="disclosure_tos_title">Servicevoorwaarden</string>
+    <string name="disclosure_tos_description">Door Dynamic Island te gebruiken, gaat u akkoord met onze servicevoorwaarden. De app wordt geleverd "zoals het is" zonder garanties. We zijn niet verantwoordelijk voor enige schade die voortvloeit uit het gebruik ervan.</string>
+    <string name="disclosure_tos_link">Lees servicevoorwaarden</string>
+
+    <string name="plugins_enabled_title">Ingeschakelde Plugins</string>
+    <string name="plugin_status_enabled">Ingeschakeld</string>
+    <string name="plugin_status_disabled">Uitgeschakeld</string>
+
+    <string name="about_app_icon_description">App icoon</string>
+    <string name="about_app_info_title">App informatie</string>
+    <string name="about_version">Versie</string>
+    <string name="about_target_sdk">Doel SDK</string>
+    <string name="about_min_sdk">Minimale SDK</string>
+    <string name="about_build_date">Bouwdatum</string>
+    <string name="about_device_info_title">Apparaat informatie</string>
+    <string name="about_android_version">Android versie</string>
+    <string name="about_cpu_architecture">CPU architectuur</string>
+    <string name="about_useful_links_title">Nuttige links</string>
+    <string name="about_developer">Ontwikkelaar</string>
+    <string name="developer_name">Anto426</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_open_in_browser">Open in browser</string>
+    <string name="about_copied_toast">%1$s gekopieerd!</string>
+
+    <string name="behavior_visual_title">Visueel Gedrag</string>
+    <string name="behavior_show_on_lockscreen_title">Toon op vergrendelscherm</string>
+    <string name="behavior_show_on_lockscreen_description">Toon het eiland op het vergrendelscherm en altijd-aan scherm.</string>
+    <string name="behavior_show_in_landscape_title">Toon in liggende modus</string>
+    <string name="behavior_show_in_landscape_description">Toon het eiland ook in liggende modus.</string>
+    <string name="behavior_autohide_title">Automatisch verbergen</string>
+    <string name="behavior_autohide_opened_island_title">Verberg uitgebreid eiland</string>
+    <string name="seconds_suffix">s</string>
+
+    <string name="position_title">Positie</string>
+    <string name="position_island_gravity">Eiland uitlijning</string>
+    <string name="position_expand_icon_desc">Uitbreiden</string>
+    <string name="position_x_title">Positie X</string>
+    <string name="unit_dp">dp</string>
+    <string name="position_y_title">Positie Y</string>
+    <string name="size_title">Grootte</string>
+    <string name="size_width">Breedte</string>
+    <string name="size_height">Hoogte</string>
+    <string name="corners_title">Hoeken</string>
+    <string name="corners_radius">Hoekstraal</string>
+    <string name="reset_button">Reset</string>
+    <string name="decrease_icon_desc">Verminderen</string>
+    <string name="increase_icon_desc">Vermeerderen</string>
+
+    <string name="theme_show_borders_title">Toon randen</string>
+    <string name="theme_show_borders_description">Toon randen rond het eiland</string>
+    <string name="theme_preference_title">Thema</string>
+    <string name="theme_option_system">Systeem</string>
+    <string name="theme_option_dark">Donker</string>
+    <string name="theme_option_light">Licht</string>
+    <string name="theme_style_preference_title">Stijl</string>
+
+    <string name="enabled_apps_title">Ingeschakelde Apps</string>
+    <string name="app_icon_content_description">App icoon: %1$s</string>
+
+    <string name="settings_theme_title">Thema</string>
+    <string name="settings_theme_subtitle">Wijzig app thema</string>
+    <string name="settings_position_size_title">Positie en grootte</string>
+    <string name="settings_position_size_subtitle">Wijzig positie en grootte van het eiland</string>
+    <string name="settings_enabled_apps_subtitle">Selecteer apps die op het eiland verschijnen</string>
+    <string name="settings_behavior_title">Gedrag</string>
+    <string name="settings_behavior_subtitle">Pas eiland gedrag aan</string>
+    <string name="settings_about_title">Over</string>
+    <string name="settings_about_subtitle">App details</string>
+    <string name="settings_dev_title">Ontwikkeling</string>
+
+    <string name="theme_style_material_you">Material You</string>
+    <string name="theme_style_black_white">Zwart &amp; Wit</string>
+    <string name="theme_style_quinacridone_magenta">Quinacridone Magenta</string>
+
+    <string name="settings_item_theme">Thema</string>
+    <string name="settings_item_theme_subtitle">Wijzig app thema</string>
+    <string name="settings_item_position_size">Positie en grootte</string>
+    <string name="settings_item_position_size_subtitle">Wijzig positie en grootte van het eiland</string>
+    <string name="settings_item_enabled_apps">Ingeschakelde apps</string>
+    <string name="settings_item_enabled_apps_subtitle">Selecteer apps die op het eiland verschijnen</string>
+    <string name="settings_item_behavior">Gedrag</string>
+    <string name="settings_item_behavior_subtitle">Pas eiland gedrag aan</string>
+    <string name="settings_item_about">Over</string>
+    <string name="settings_item_about_subtitle">App details</string>
+    <string name="settings_item_dev">Ontwikkeling</string>
+    <string name="settings_item_dev_subtitle">Ontwikkelaar informatie</string>
+    <string name="settings_item_updates">Updates</string>
+    <string name="settings_item_updates_subtitle">Controleer en download updates</string>
+
+    <string name="disclosure_button_next">Doorgaan</string>
+    <string name="disclosure_button_previous">Vorige</string>
+    <string name="disclosure_button_agree">Ik ga akkoord</string>
+
+    <string name="advanced_settings_title">Geavanceerde Instellingen</string>
+    <string name="advanced_settings_description">Pas animaties, feedback en gedrag aan</string>
+
+    <string name="advanced_settings_animations">Animaties</string>
+    <string name="advanced_settings_enable_animations">Animaties inschakelen</string>
+    <string name="advanced_settings_enable_animations_desc">Toon vloeiende animaties bij overgangen</string>
+
+    <string name="advanced_settings_feedback">Feedback</string>
+    <string name="advanced_settings_haptic">Haptische feedback</string>
+    <string name="advanced_settings_haptic_desc">Lichte trilling bij interacties</string>
+    <string name="advanced_settings_sounds">Geluiden</string>
+    <string name="advanced_settings_sounds_desc">Speel geluidseffecten af tijdens interacties</string>
+
+    <string name="advanced_settings_behavior">Gedrag</string>
+    <string name="advanced_settings_behavior_placeholder">Binnenkort kunt u het geavanceerde gedrag van het eiland wijzigen</string>
+
+    <string name="advanced_settings_dynamic_theme">Dynamisch Thema</string>
+    <string name="advanced_settings_dynamic_theme_title">Dynamisch thema inschakelen</string>
+    <string name="advanced_settings_dynamic_theme_desc">Pas kleuren automatisch aan op basis van context</string>
+
+    <string name="animation_click_label">clickAnimation</string>
+    <string name="settings_dev_subtitle">Informatie voor ontwikkelaars en debugging</string>
+    <string name="plugin_icon_content_description">Plugin icoon</string>
+
+    <string name="update_title">Updates</string>
+    <string name="update_settings_title">Update Instellingen</string>
+    <string name="back">Terug</string>
+
+    <string name="update_status_section">Update Status</string>
+    <string name="release_channel_section">Release Kanaal</string>
+    <string name="auto_controls_section">Automatische Controles</string>
+    <string name="manual_actions_section">Handmatige Acties</string>
+    <string name="changelog_section">Wijzigingslog</string>
+    <string name="dynamic_theme_section">Dynamisch Thema</string>
+
+    <string name="app_up_to_date">App is bijgewerkt</string>
+    <string name="app_up_to_date_desc">Uw app is op de nieuwste versie</string>
+    <string name="checking_updates">Updates controleren...</string>
+    <string name="checking_updates_desc">Controleren op nieuwe versies</string>
+    <string name="update_available">Update Beschikbaar</string>
+    <string name="update_available_desc">Versie %1$s klaar om te downloaden</string>
+    <string name="update_error">Controle Fout</string>
+
+    <string name="current_version">Huidige Versie</string>
+
+    <string name="channel_stable">Stabiel</string>
+    <string name="channel_stable_desc">Stabiele en geteste versies</string>
+    <string name="channel_beta">Beta</string>
+    <string name="channel_beta_desc">Geteste nieuwe functies</string>
+    <string name="channel_alpha">Alpha</string>
+    <string name="channel_alpha_desc">Experimentele versies</string>
+
+    <string name="auto_update_title">Automatische Updates</string>
+    <string name="auto_update_desc">Controleer automatisch op nieuwe versies</string>
+    <string name="auto_download_title">Automatische Downloads</string>
+    <string name="auto_download_desc">Download updates automatisch</string>
+
+    <string name="check_updates_button">Controleer Updates</string>
+    <string name="download_update_button">Download Update</string>
+    <string name="install_update_button">Installeer Update</string>
+    <string name="downloading_progress">Downloaden...</string>
+
+    <string name="changelog_version">Versie %1$s (%2$s)</string>
+
+    <string name="copied_to_clipboard">%1$s gekopieerd naar klembord!</string>
+    <string name="copy">Kopiëren</string>
+
+    <string name="dynamic_theme_title">Dynamisch Thema</string>
+    <string name="dynamic_theme_desc">Pas kleuren automatisch aan</string>
+    <string name="downloading">Downloaden</string>
+    <string name="update_settings_section">Update Instellingen</string>
+    <string name="show_advanced_settings">Toon geavanceerde instellingen</string>
+    <string name="hide_advanced_settings">Verberg geavanceerde instellingen</string>
+    <string name="battery_charging_title">Batterij Opladen</string>
+    <string name="temperature">Temperatuur</string>
+    <string name="power_source">Energiebron</string>
+    <string name="health">Gezondheid</string>
+    <string name="battery_low_title">Batterij Laag</string>
+    <string name="battery_remaining_subtitle">%1$d%% over</string>
+    <string name="battery_saver">Batterijbesparing</string>
+    <string name="power_saver_active_desc">Functionaliteit kan beperkt zijn</string>
+    <string name="charging">Opladen</string>
+    <string name="low_battery">Lage Batterij</string>
+    <string name="power_saver">Energiebesparing</string>
+    <string name="configured">Geconfigureerd</string>
+    <string name="app_configured_ready">App geconfigureerd en klaar!</string>
+    <string name="update_card_title">Update Beschikbaar</string>
+    <string name="download">Download</string>
+    <string name="permissions_required">Toestemmingen Vereist</string>
+    <string name="configure_permissions_start">Configureer de vereiste toestemmingen om te beginnen.</string>
+
+    <string name="onboarding_welcome_title">Welkom bij Dynamic Island</string>
+    <string name="onboarding_welcome_description">Laten we de vereiste toestemmingen instellen zodat alles perfect werkt.</string>
+    <string name="permission_accessibility_title">Toegankelijkheidsservice</string>
+    <string name="permission_accessibility_desc">Vereist om Dynamic Island boven andere apps weer te geven en interacties te detecteren.</string>
+    <string name="permission_category_system">Systeem</string>
+    <string name="permission_overlay_title">Weergeven boven andere apps</string>
+    <string name="permission_overlay_desc">Staat Dynamic Island toe om bovenop uw huidige scherm weer te geven.</string>
+    <string name="permission_battery_title">Batterijoptimalisatie</string>
+    <string name="permission_battery_desc">Uitschakelen zorgt ervoor dat de app correct werkt op de achtergrond en niet wordt afgesloten.</string>
+    <string name="permission_notification_listener_title">Meldingen Toegang</string>
+    <string name="permission_notification_listener_desc">Vereist om meldingen van uw apps weer te geven in Dynamic Island.</string>
+    <string name="permission_category_notifications">Meldingen</string>
+    <string name="permission_post_notifications_title">Meldingen Versturen</string>
+    <string name="permission_post_notifications_desc">Staat de app toe om u belangrijke updates en waarschuwingen te tonen.</string>
+    <string name="permission_vibrate_title">Trillen</string>
+    <string name="permission_vibrate_desc">Biedt haptische feedback voor een meer interactieve ervaring.</string>
+    <string name="permission_storage_legacy_title">Legacy Opslag</string>
+    <string name="permission_storage_legacy_desc">Vereist voor toegang tot bestanden op oudere Android versies.</string>
+    <string name="permission_category_storage">Opslag</string>
+    <string name="permission_media_images_title">Toegang tot Media en Foto\'s</string>
+    <string name="permission_media_images_desc">Staat plugins toe om afbeeldingen en media inhoud weer te geven.</string>
+    <string name="permission_media_video_title">Toegang tot Video\'s</string>
+    <string name="permission_media_video_desc">Staat plugins toe om video inhoud weer te geven.</string>
+    <string name="permission_media_audio_title">Toegang tot Audio</string>
+    <string name="permission_media_audio_desc">Staat plugins toe om te interageren met audio bestanden.</string>
+    <string name="permission_unknown_sources_title">Installeer Onbekende Apps</string>
+    <string name="permission_unknown_sources_desc">Vereist om app updates te installeren die binnen de app zijn gedownload.</string>
+    <string name="permission_category_updates">Updates</string>
+    <string name="onboarding_step_counter">Stap %1$d / %2$d</string>
+    <string name="onboarding_permission_granted">Toestemming Verleend</string>
+    <string name="permission_granted_label">Verleend</string>
+    <string name="enable_in_settings">Inschakelen in Instellingen</string>
+    <string name="onboarding_finish">Voltooien</string>
+    <string name="onboarding_continue">Doorgaan</string>
+    <string name="onboarding_setup_complete_title">Setup Voltooid!</string>
+    <string name="onboarding_setup_complete_desc">Alles is klaar. Dynamic Island is nu actief.</string>
+    <string name="plugins_enabled_count">%1$d ingeschakeld</string>
+    <string name="go_to_details">Ga naar details</string>
+    <string name="search">Zoeken</string>
+    <string name="search_settings_placeholder">Instellingen zoeken...</string>
+    <string name="clear_search">Zoekopdracht wissen</string>
+    <string name="no_results_found">Geen resultaten gevonden.</string>
+    <string name="try_different_keywords">Probeer andere zoekwoorden.</string>
+    <string name="reset_settings">Instellingen resetten</string>
+    <string name="behavior_visibility_section">Zichtbaarheid</string>
+    <string name="behavior_autohide_section">Automatisch verbergen</string>
+    <string name="behavior_animations_feedback_section">Animaties en Feedback</string>
+    <string name="dev_error_connection">Verbindingsfout.</string>
+    <string name="dev_error_not_found">Niet gevonden.</string>
+    <string name="dev_error_unknown">Er is een onbekende fout opgetreden.</string>
+    <string name="dev_loading_title">Laden...</string>
+    <string name="dev_loading_subtitle">Even geduld...</string>
+    <string name="error">Fout</string>
+    <string name="dev_error_title">Er is iets misgegaan</string>
+    <string name="retry">Opnieuw proberen</string>
+    <string name="dev_profile_title">Profiel</string>
+    <string name="dev_updated_from_github">Bijgewerkt van GitHub</string>
+    <string name="dev_public_repos_title">Openbare Opslagplaatsen</string>
+    <string name="dev_no_public_repos_title">Geen Openbare Opslagplaats</string>
+    <string name="dev_no_public_repos_desc">Deze gebruiker heeft geen openbare opslagplaats.</string>
+    <string name="avatar_of">Avatar van %1$s</string>
+    <string name="open_profile">Profiel openen</string>
+    <string name="copy_username">Gebruikersnaam kopiëren</string>
+    <string name="stars">Sterren</string>
+    <string name="open_repository">Opslagplaats openen</string>
+    <string name="enabled_apps_summary">Selecteer apps die Dynamic Island kunnen gebruiken.</string>
+    <string name="style_title">Stijl</string>
+    <string name="update_available_prompt">Een update is beschikbaar!</string>
+    <string name="update_channel_description">Selecteer het release kanaal voor app updates.</string>
+    <string name="permission_required_title">Toestemming Vereist</string>
+    <string name="permission_required_text">Deze functie heeft een toestemming nodig die nog niet is verleend.</string>
+    <string name="update_notification_title">Update Beschikbaar</string>
+    <string name="update_preparing_download">Download voorbereiden...</string>
+    <string name="update_download_channel_description">Meldingen voor app update downloads.</string>
+    <string name="settings_item_advanced">Geavanceerd</string>
+    <string name="settings_item_advanced_subtitle">Pas animaties, feedback etc. aan</string>
+    <string name="destination_plugin_settings">Plugin Instellingen</string>
+    <string name="destination_advanced">Geavanceerde Instellingen</string>
+    <string name="destination_settings">Instellingen</string>
+    <string name="destination_home">Home</string>
+    <string name="destination_plugins">Plugins</string>
+    <string name="settings_reset_content_description">Instellingen terugzetten naar standaard</string>
+    <string name="settings_no_results_subtitle">Probeer iets anders te zoeken</string>
+    <string name="settings_no_results_title">Geen resultaten gevonden</string>
+    <string name="settings_clear_search_content_description">Zoekopdracht wissen</string>
+    <string name="settings_search_placeholder">Instellingen zoeken</string>
+    <string name="settings_search_content_description">Instellingen zoeken icoon</string>
+    <string name="settings_section_information">Informatie</string>
+    <string name="settings_section_other">Andere</string>
+    <string name="settings_section_appearance">Uiterlijk</string>
+    <string name="settings_search_results">Zoekresultaten</string>
+    <string name="settings_section_behavior">Gedrag</string>
+</resources>

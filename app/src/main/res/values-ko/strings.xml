@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dynamic Island</string>
+
+    <string name="overlay_service_label">Dynamic Island</string>
+    <string name="plugin_author_prefix">by </string>
+    <string name="plugin_enable_title">플러그인 활성화</string>
+    <string name="plugin_enable_description_generic">이 플러그인을 활성화 또는 비활성화</string>
+    <string name="plugin_enable_description_needs_permissions">활성화하려면 권한을 부여하세요</string>
+    <string name="plugin_info_title">플러그인 정보</string>
+    <string name="plugin_version_title">버전</string>
+    <string name="plugin_identifier_title">식별자</string>
+    <string name="plugin_source_code_title">소스 코드</string>
+    <string name="plugin_view_on_web">웹에서 보기</string>
+    <string name="plugin_permissions_required_title">필요한 권한</string>
+    <string name="plugin_permissions_granted_toast">권한이 부여되었습니다! 이제 플러그인을 활성화할 수 있습니다.</string>
+    <string name="plugin_settings_title">플러그인 설정</string>
+    <string name="overlay_service_description">Dynamic Island용 접근성 서비스</string>
+
+    <string name="notification_service_label">알림 서비스</string>
+    <string name="settings_preferences">환경 설정</string>
+
+    <string name="title_activity_disclosure">공개</string>
+    <string name="welcome_title">Dynamic Island에 오신 것을 환영합니다</string>
+    <string name="welcome_description">알림, 음악, 전화 등을 받을 수 있도록 동적 섬을 설정하세요.</string>
+    <string name="i_agree">동의하고 계속</string>
+    <string name="previous">이전</string>
+    <string name="disable_optimization">최적화 비활성화</string>
+    <string name="ignore">무시</string>
+    <string name="battery_optimization_description">Dynamic Island이 백그라운드에서 올바르게 작동하도록 하려면 앱의 배터리 최적화를 비활성화하세요.</string>
+    <string name="battery_optimization_title">배터리 최적화</string>
+    <string name="tap_to_disable">탭하여 비활성화</string>
+    <string name="service_active">서비스 활성</string>
+    <string name="get_started">시작하기</string>
+    <string name="no_plugins_description">현재 활성화된 플러그인이 없습니다. 플러그인 설정으로 이동하여 활성화하고 새 기능을 잠금 해제하세요.</string>
+    <string name="no_active_plugins">활성 플러그인 없음</string>
+    <string name="understood">이해했습니다</string>
+    <string name="read">읽기</string>
+    <string name="informativa_description">계속하기 전에 개인정보 보호정책과 서비스 약관을 읽고 동의하세요.</string>
+    <string name="informativa">공개</string>
+    <string name="accessibility_permission_description">Dynamic Island은 섬과 그 기능을 표시하기 위해 접근성 권한이 필요합니다.</string>
+    <string name="accessibility_permission_title">접근성 권한</string>
+    <string name="next">다음</string>
+    <string name="overlay_permission_title">오버레이 권한</string>
+    <string name="overlay_permission_description">Dynamic Island은 다른 앱 위에 표시하기 위해 오버레이 권한이 필요합니다.</string>
+    <string name="tap_to_enable">탭하여 활성화</string>
+    <string name="service_disabled">서비스 비활성화</string>
+    <string name="repositories">저장소</string>
+    <string name="developer">개발자</string>
+    <string name="no_description">사용 가능한 설명이 없습니다.</string>
+
+    <string name="disclosure_welcome_title">Dynamic Island에 오신 것을 환영합니다</string>
+    <string name="disclosure_welcome_description">iOS에서처럼 Dynamic Island은 수신 전화, 알림, 경고, 음악, 내비게이션 등에 적응하는 대화형 노치를 표시합니다. 섬을 탭하거나 길게 눌러 추가 기능에 액세스하거나 앱을 엽니다.</string>
+    <string name="disclosure_accessibility_title">접근성 및 오버레이 권한 사용</string>
+    <string name="disclosure_accessibility_description">Dynamic Island은 섬을 표시하기 위해 접근성 서비스만 사용합니다. 불필요한 권한을 요구하거나 개인 정보를 수집하지 않습니다. 언제든지 개인정보 보호정책을 검토할 수 있습니다.</string>
+    <string name="disclosure_plugin_title">플러그인 권한</string>
+    <string name="disclosure_plugin_description">일부 플러그인은 올바르게 작동하기 위해 추가 권한이 필요할 수 있습니다. Dynamic Island은 엄격히 필요한 권한만 요청합니다.</string>
+    <string name="disclosure_privacy_title">개인정보 보호</string>
+    <string name="disclosure_privacy_description">귀하의 개인정보 보호가 중요합니다. Dynamic Island은 개인 데이터를 수집하거나 공유하지 않으며, 추적하거나 어떠한 정보도 판매하지 않습니다.</string>
+    <string name="disclosure_privacy_link">개인정보 보호정책 읽기</string>
+    <string name="disclosure_tos_title">서비스 약관</string>
+    <string name="disclosure_tos_description">Dynamic Island을 사용하면 서비스 약관에 동의하는 것입니다. 앱은 "있는 그대로" 제공되며 보증이 없습니다. 사용으로 인해 발생하는 어떠한 손해에 대해서도 책임을 지지 않습니다.</string>
+    <string name="disclosure_tos_link">서비스 약관 읽기</string>
+
+    <string name="plugins_enabled_title">활성화된 플러그인</string>
+    <string name="plugin_status_enabled">활성화됨</string>
+    <string name="plugin_status_disabled">비활성화됨</string>
+
+    <string name="about_app_icon_description">앱 아이콘</string>
+    <string name="about_app_info_title">앱 정보</string>
+    <string name="about_version">버전</string>
+    <string name="about_target_sdk">대상 SDK</string>
+    <string name="about_min_sdk">최소 SDK</string>
+    <string name="about_build_date">빌드 날짜</string>
+    <string name="about_device_info_title">장치 정보</string>
+    <string name="about_android_version">Android 버전</string>
+    <string name="about_cpu_architecture">CPU 아키텍처</string>
+    <string name="about_useful_links_title">유용한 링크</string>
+    <string name="about_developer">개발자</string>
+    <string name="developer_name">Anto426</string>
+    <string name="about_github">GitHub</string>
+    <string name="about_open_in_browser">브라우저에서 열기</string>
+    <string name="about_copied_toast">%1$s 복사됨!</string>
+
+    <string name="behavior_visual_title">시각적 동작</string>
+    <string name="behavior_show_on_lockscreen_title">잠금 화면에 표시</string>
+    <string name="behavior_show_on_lockscreen_description">잠금 화면과 항상 켜짐 디스플레이에 섬을 표시합니다.</string>
+    <string name="behavior_show_in_landscape_title">가로 모드에서 표시</string>
+    <string name="behavior_show_in_landscape_description">가로 모드에서도 섬을 표시합니다.</string>
+    <string name="behavior_autohide_title">자동 숨김</string>
+    <string name="behavior_autohide_opened_island_title">확장된 섬 숨기기 후</string>
+    <string name="seconds_suffix">초</string>
+
+    <string name="position_title">위치</string>
+    <string name="position_island_gravity">섬 정렬</string>
+    <string name="position_expand_icon_desc">확장</string>
+    <string name="position_x_title">위치 X</string>
+    <string name="unit_dp">dp</string>
+    <string name="position_y_title">위치 Y</string>
+    <string name="size_title">크기</string>
+    <string name="size_width">너비</string>
+    <string name="size_height">높이</string>
+    <string name="corners_title">모서리</string>
+    <string name="corners_radius">모서리 반경</string>
+    <string name="reset_button">재설정</string>
+    <string name="decrease_icon_desc">감소</string>
+    <string name="increase_icon_desc">증가</string>
+
+    <string name="theme_show_borders_title">테두리 표시</string>
+    <string name="theme_show_borders_description">섬 주위에 테두리 표시</string>
+    <string name="theme_preference_title">테마</string>
+    <string name="theme_option_system">시스템</string>
+    <string name="theme_option_dark">어두운</string>
+    <string name="theme_option_light">밝은</string>
+    <string name="theme_style_preference_title">스타일</string>
+
+    <string name="enabled_apps_title">활성화된 앱</string>
+    <string name="app_icon_content_description">앱 아이콘: %1$s</string>
+
+    <string name="settings_theme_title">테마</string>
+    <string name="settings_theme_subtitle">앱 테마 변경</string>
+    <string name="settings_position_size_title">위치 및 크기</string>
+    <string name="settings_position_size_subtitle">섬의 위치 및 크기 수정</string>
+    <string name="settings_enabled_apps_subtitle">섬에 표시할 앱 선택</string>
+    <string name="settings_behavior_title">동작</string>
+    <string name="settings_behavior_subtitle">섬의 동작 사용자 정의</string>
+    <string name="settings_about_title">정보</string>
+    <string name="settings_about_subtitle">앱에 대한 세부 정보</string>
+    <string name="settings_dev_title">개발</string>
+
+    <string name="theme_style_material_you">Material You</string>
+    <string name="theme_style_black_white">흑백</string>
+    <string name="theme_style_quinacridone_magenta">퀴나크리돈 마젠타</string>
+
+    <string name="settings_item_theme">테마</string>
+    <string name="settings_item_theme_subtitle">앱 테마 변경</string>
+    <string name="settings_item_position_size">위치 및 크기</string>
+    <string name="settings_item_position_size_subtitle">섬의 위치 및 크기 수정</string>
+    <string name="settings_item_enabled_apps">활성화된 앱</string>
+    <string name="settings_item_enabled_apps_subtitle">섬에 표시할 앱 선택</string>
+    <string name="settings_item_behavior">동작</string>
+    <string name="settings_item_behavior_subtitle">섬의 동작 사용자 정의</string>
+    <string name="settings_item_about">정보</string>
+    <string name="settings_item_about_subtitle">앱에 대한 세부 정보</string>
+    <string name="settings_item_dev">개발</string>
+    <string name="settings_item_dev_subtitle">개발자 정보</string>
+    <string name="settings_item_updates">업데이트</string>
+    <string name="settings_item_updates_subtitle">업데이트 확인 및 다운로드</string>
+
+    <string name="disclosure_button_next">계속</string>
+    <string name="disclosure_button_previous">이전</string>
+    <string name="disclosure_button_agree">동의합니다</string>
+
+    <string name="advanced_settings_title">고급 설정</string>
+    <string name="advanced_settings_description">애니메이션, 피드백 및 동작 사용자 정의</string>
+
+    <string name="advanced_settings_animations">애니메이션</string>
+    <string name="advanced_settings_enable_animations">애니메이션 활성화</string>
+    <string name="advanced_settings_enable_animations_desc">전환에서 부드러운 애니메이션 표시</string>
+
+    <string name="advanced_settings_feedback">피드백</string>
+    <string name="advanced_settings_haptic">햅틱 피드백</string>
+    <string name="advanced_settings_haptic_desc">상호작용을 위한 가벼운 진동</string>
+    <string name="advanced_settings_sounds">사운드</string>
+    <string name="advanced_settings_sounds_desc">상호작용 시 사운드 효과 재생</string>
+
+    <string name="advanced_settings_behavior">동작</string>
+    <string name="advanced_settings_behavior_placeholder">곧 섬의 고급 동작을 수정할 수 있습니다</string>
+
+    <string name="advanced_settings_dynamic_theme">동적 테마</string>
+    <string name="advanced_settings_dynamic_theme_title">동적 테마 활성화</string>
+    <string name="advanced_settings_dynamic_theme_desc">컨텍스트에 따라 색상 자동 조정</string>
+
+    <string name="animation_click_label">clickAnimation</string>
+    <string name="settings_dev_subtitle">개발자 및 디버깅 정보</string>
+    <string name="plugin_icon_content_description">플러그인 아이콘</string>
+
+    <string name="update_title">업데이트</string>
+    <string name="update_settings_title">업데이트 설정</string>
+    <string name="back">뒤로</string>
+
+    <string name="update_status_section">업데이트 상태</string>
+    <string name="release_channel_section">릴리스 채널</string>
+    <string name="auto_controls_section">자동 제어</string>
+    <string name="manual_actions_section">수동 작업</string>
+    <string name="changelog_section">변경 로그</string>
+    <string name="dynamic_theme_section">동적 테마</string>
+
+    <string name="app_up_to_date">앱 최신</string>
+    <string name="app_up_to_date_desc">귀하의 앱은 최신 버전입니다</string>
+    <string name="checking_updates">업데이트 확인 중...</string>
+    <string name="checking_updates_desc">새 버전 확인</string>
+    <string name="update_available">업데이트 사용 가능</string>
+    <string name="update_available_desc">버전 %1$s 다운로드 준비됨</string>
+    <string name="update_error">확인 오류</string>
+
+    <string name="current_version">현재 버전</string>
+
+    <string name="channel_stable">안정</string>
+    <string name="channel_stable_desc">안정적이고 테스트된 버전</string>
+    <string name="channel_beta">베타</string>
+    <string name="channel_beta_desc">테스트 중인 새 기능</string>
+    <string name="channel_alpha">알파</string>
+    <string name="channel_alpha_desc">실험적 버전</string>
+
+    <string name="auto_update_title">자동 업데이트</string>
+    <string name="auto_update_desc">새 버전을 자동으로 확인</string>
+    <string name="auto_download_title">자동 다운로드</string>
+    <string name="auto_download_desc">업데이트 자동 다운로드</string>
+
+    <string name="check_updates_button">업데이트 확인</string>
+    <string name="download_update_button">업데이트 다운로드</string>
+    <string name="install_update_button">업데이트 설치</string>
+    <string name="downloading_progress">다운로드 중...</string>
+
+    <string name="changelog_version">버전 %1$s (%2$s)</string>
+
+    <string name="copied_to_clipboard">%1$s 클립보드에 복사됨!</string>
+    <string name="copy">복사</string>
+
+    <string name="dynamic_theme_title">동적 테마</string>
+    <string name="dynamic_theme_desc">색상 자동 조정</string>
+    <string name="downloading">다운로드 중</string>
+    <string name="update_settings_section">업데이트 설정</string>
+    <string name="show_advanced_settings">고급 설정 표시</string>
+    <string name="hide_advanced_settings">고급 설정 숨기기</string>
+    <string name="battery_charging_title">배터리 충전</string>
+    <string name="temperature">온도</string>
+    <string name="power_source">전원</string>
+    <string name="health">건강</string>
+    <string name="battery_low_title">배터리 부족</string>
+    <string name="battery_remaining_subtitle">%1$d%% 남음</string>
+    <string name="battery_saver">배터리 절약</string>
+    <string name="power_saver_active_desc">기능이 제한될 수 있음</string>
+    <string name="charging">충전 중</string>
+    <string name="low_battery">배터리 부족</string>
+    <string name="power_saver">전원 절약</string>
+    <string name="configured">구성됨</string>
+    <string name="app_configured_ready">앱이 구성되고 준비되었습니다!</string>
+    <string name="update_card_title">업데이트 사용 가능</string>
+    <string name="download">다운로드</string>
+    <string name="permissions_required">권한 필요</string>
+    <string name="configure_permissions_start">시작하려면 필요한 권한을 구성하세요.</string>
+
+    <string name="onboarding_welcome_title">Dynamic Island에 오신 것을 환영합니다</string>
+    <string name="onboarding_welcome_description">필요한 권한을 설정하여 모든 것이 완벽하게 작동하도록 합시다.</string>
+    <string name="permission_accessibility_title">접근성 서비스</string>
+    <string name="permission_accessibility_desc">Dynamic Island을 다른 앱 위에 표시하고 상호작용을 감지하는 데 필요합니다.</string>
+    <string name="permission_category_system">시스템</string>
+    <string name="permission_overlay_title">다른 앱 위에 표시</string>
+    <string name="permission_overlay_desc">Dynamic Island이 현재 화면 위에 나타나도록 허용합니다.</string>
+    <string name="permission_battery_title">배터리 최적화</string>
+    <string name="permission_battery_desc">비활성화하면 앱이 백그라운드에서 원활하게 실행되고 종료되지 않습니다.</string>
+    <string name="permission_notification_listener_title">알림 액세스</string>
+    <string name="permission_notification_listener_desc">앱의 알림을 Dynamic Island에 표시하는 데 필요합니다.</string>
+    <string name="permission_category_notifications">알림</string>
+    <string name="permission_post_notifications_title">알림 게시</string>
+    <string name="permission_post_notifications_desc">앱이 중요한 업데이트와 경고를 표시하도록 허용합니다.</string>
+    <string name="permission_vibrate_title">진동</string>
+    <string name="permission_vibrate_desc">더 상호작용적인 경험을 위한 햅틱 피드백을 제공합니다.</string>
+    <string name="permission_storage_legacy_title">레거시 저장소</string>
+    <string name="permission_storage_legacy_desc">파일 액세스를 위해 이전 Android 버전에 필요합니다.</string>
+    <string name="permission_category_storage">저장소</string>
+    <string name="permission_media_images_title">미디어 및 사진 액세스</string>
+    <string name="permission_media_images_desc">플러그인이 이미지 및 미디어 콘텐츠를 표시하도록 허용합니다.</string>
+    <string name="permission_media_video_title">비디오 액세스</string>
+    <string name="permission_media_video_desc">플러그인이 비디오 콘텐츠를 표시하도록 허용합니다.</string>
+    <string name="permission_media_audio_title">오디오 액세스</string>
+    <string name="permission_media_audio_desc">플러그인이 오디오 파일과 상호작용하도록 허용합니다.</string>
+    <string name="permission_unknown_sources_title">알 수 없는 앱 설치</string>
+    <string name="permission_unknown_sources_desc">앱 내에서 다운로드한 앱 업데이트를 설치하는 데 필요합니다.</string>
+    <string name="permission_category_updates">업데이트</string>
+    <string name="onboarding_step_counter">단계 %1$d / %2$d</string>
+    <string name="onboarding_permission_granted">권한 부여됨</string>
+    <string name="permission_granted_label">부여됨</string>
+    <string name="enable_in_settings">설정에서 활성화</string>
+    <string name="onboarding_finish">완료</string>
+    <string name="onboarding_continue">계속</string>
+    <string name="onboarding_setup_complete_title">설정 완료!</string>
+    <string name="onboarding_setup_complete_desc">모든 준비가 되었습니다. Dynamic Island이 이제 활성화되었습니다.</string>
+    <string name="plugins_enabled_count">%1$d 활성화됨</string>
+    <string name="go_to_details">세부 정보로 이동</string>
+    <string name="search">검색</string>
+    <string name="search_settings_placeholder">설정 검색...</string>
+    <string name="clear_search">검색 지우기</string>
+    <string name="no_results_found">결과를 찾을 수 없습니다.</string>
+    <string name="try_different_keywords">다른 키워드를 시도하세요.</string>
+    <string name="reset_settings">설정 재설정</string>
+    <string name="behavior_visibility_section">가시성</string>
+    <string name="behavior_autohide_section">자동 숨김</string>
+    <string name="behavior_animations_feedback_section">애니메이션 및 피드백</string>
+    <string name="dev_error_connection">연결 오류.</string>
+    <string name="dev_error_not_found">찾을 수 없음.</string>
+    <string name="dev_error_unknown">알 수 없는 오류가 발생했습니다.</string>
+    <string name="dev_loading_title">로딩 중...</string>
+    <string name="dev_loading_subtitle">잠시 기다려 주세요...</string>
+    <string name="error">오류</string>
+    <string name="dev_error_title">문제가 발생했습니다</string>
+    <string name="retry">재시도</string>
+    <string name="dev_profile_title">프로필</string>
+    <string name="dev_updated_from_github">GitHub에서 업데이트됨</string>
+    <string name="dev_public_repos_title">공개 저장소</string>
+    <string name="dev_no_public_repos_title">공개 저장소 없음</string>
+    <string name="dev_no_public_repos_desc">이 사용자는 공개 저장소가 없습니다.</string>
+    <string name="avatar_of">%1$s의 아바타</string>
+    <string name="open_profile">프로필 열기</string>
+    <string name="copy_username">사용자 이름 복사</string>
+    <string name="stars">별</string>
+    <string name="open_repository">저장소 열기</string>
+    <string name="enabled_apps_summary">Dynamic Island을 사용할 수 있는 앱을 선택하세요.</string>
+    <string name="style_title">스타일</string>
+    <string name="update_available_prompt">업데이트가 있습니다!</string>
+    <string name="update_channel_description">앱 업데이트의 릴리스 채널을 선택하세요.</string>
+    <string name="permission_required_title">권한 필요</string>
+    <string name="permission_required_text">이 기능에는 아직 부여되지 않은 권한이 필요합니다.</string>
+    <string name="update_notification_title">업데이트 사용 가능</string>
+    <string name="update_preparing_download">다운로드 준비 중...</string>
+    <string name="update_download_channel_description">앱 업데이트 다운로드에 대한 알림.</string>
+    <string name="settings_item_advanced">고급</string>
+    <string name="settings_item_advanced_subtitle">애니메이션, 피드백 등을 사용자 정의</string>
+    <string name="destination_plugin_settings">플러그인 설정</string>
+    <string name="destination_advanced">고급 설정</string>
+    <string name="destination_settings">설정</string>
+    <string name="destination_home">홈</string>
+    <string name="destination_plugins">플러그인</string>
+    <string name="settings_reset_content_description">설정을 기본값으로 재설정</string>
+    <string name="settings_no_results_subtitle">다른 것을 검색해 보세요</string>
+    <string name="settings_no_results_title">결과를 찾을 수 없음</string>
+    <string name="settings_clear_search_content_description">검색 쿼리 지우기</string>
+    <string name="settings_search_placeholder">설정 검색</string>
+    <string name="settings_search_content_description">설정 검색 아이콘</string>
+    <string name="settings_section_information">정보</string>
+    <string name="settings_section_other">기타</string>
+    <string name="settings_section_appearance">외관</string>
+    <string name="settings_search_results">검색 결과</string>
+    <string name="settings_section_behavior">동작</string>
+</resources>
