@@ -154,16 +154,11 @@ class DownloadManager(private val context: Context) {
                     return DownloadResult.Error(error, true)
                 }
 
-                // Verifica dimensione attesa se fornita (con tolleranza per download da GitHub)
+                // Verifica dimensione attesa: non bloccare il download, solo warning
                 if (expectedSize != null && contentLength > 0) {
                     val sizeDifference = Math.abs(contentLength - expectedSize)
-                    if (sizeDifference > 1024) { // Tolleranza di 1KB
-                        val error = "Dimensione file non corrispondente. Attesa: $expectedSize, Ricevuta: $contentLength (differenza: ${sizeDifference} bytes)"
-                        Log.e(TAG, error)
-                        callback?.onError(error, false)
-                        return DownloadResult.Error(error, false)
-                    } else if (sizeDifference > 0) {
-                        Log.w(TAG, "Dimensione file leggermente diversa. Attesa: $expectedSize, Ricevuta: $contentLength (differenza: ${sizeDifference} bytes) - Procedo comunque")
+                    if (sizeDifference > 0) {
+                        Log.w(TAG, "Dimensione file diversa dall'attesa di ${sizeDifference} bytes (attesa: $expectedSize, ricevuta: $contentLength). Procedo basandomi su checksum/validazioni finali")
                     }
                 }
 
@@ -269,18 +264,12 @@ class DownloadManager(private val context: Context) {
                         Log.d(TAG, "Nessun checksum fornito, salto verifica")
                     }
 
-                    // Verifica dimensione se attesa è nota (con tolleranza)
+                    // Verifica dimensione finale: solo warning, non bloccare
                     if (expectedSize != null) {
                         val sizeDifference = Math.abs(finalSize - expectedSize)
                         Log.d(TAG, "Verifica dimensione finale - Differenza: ${sizeDifference} bytes")
-                        if (sizeDifference > 1024) { // Tolleranza di 1KB
-                            val error = "Dimensione finale non corrispondente. Attesa: $expectedSize, Finale: $finalSize (differenza: ${sizeDifference} bytes)"
-                            Log.e(TAG, error)
-                            outputFile.delete()
-                            callback?.onError(error, true)
-                            return DownloadResult.Error(error, true)
-                        } else if (sizeDifference > 0) {
-                            Log.w(TAG, "Dimensione finale leggermente diversa. Attesa: $expectedSize, Finale: $finalSize (differenza: ${sizeDifference} bytes) - Procedo comunque")
+                        if (sizeDifference > 0) {
+                            Log.w(TAG, "Dimensione finale diversa dall'attesa (attesa: $expectedSize, finale: $finalSize). Procedo comunque")
                         } else {
                             Log.d(TAG, "Dimensione finale verificata con successo")
                         }
