@@ -351,4 +351,15 @@
         <string name="destination_settings" />
         <string name="destination_home" />
         <string name="destination_plugins" />
+    <string name="settings_reset_content_description" />
+    <string name="settings_no_results_subtitle" />
+    <string name="settings_no_results_title" />
+    <string name="settings_clear_search_content_description" />
+    <string name="settings_search_placeholder" />
+    <string name="settings_search_content_description" />
+    <string name="settings_section_information" />
+    <string name="settings_section_other" />
+    <string name="settings_section_appearance" />
+    <string name="settings_search_results" />
+    <string name="settings_section_behavior" />
 </resources>

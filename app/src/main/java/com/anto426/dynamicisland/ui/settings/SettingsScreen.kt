@@ -64,16 +64,22 @@ fun SettingsScreen(
         }
     }
 
+    val searchResultsString = stringResource(id = R.string.settings_search_results)
+    val appearanceString = stringResource(id = R.string.settings_section_appearance)
+    val behaviorString = stringResource(id = R.string.settings_section_behavior)
+    val informationString = stringResource(id = R.string.settings_section_information)
+    val otherString = stringResource(id = R.string.settings_section_other)
+
     val groupedSettings = remember(filteredSettings, isSearching) {
         if (isSearching) {
-            mapOf("Risultati ricerca" to filteredSettings)
+            mapOf(searchResultsString to filteredSettings)
         } else {
             filteredSettings.groupBy { setting ->
                 when (setting) {
-                    ThemeSetting, PositionSizeSetting -> "Aspetto"
-                    BehaviorSetting, EnabledAppsSetting -> "Comportamento"
-                    AboutSetting, DeveloperScreen, UpdateSetting -> "Informazioni"
-                    else -> "Altro"
+                    ThemeSetting, PositionSizeSetting -> appearanceString
+                    BehaviorSetting, EnabledAppsSetting -> behaviorString
+                    AboutSetting, DeveloperScreen, UpdateSetting -> informationString
+                    else -> otherString
                 }
             }
         }
@@ -102,7 +108,7 @@ fun SettingsScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Cerca",
+                        contentDescription = stringResource(id = R.string.settings_search_content_description),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
@@ -120,7 +126,7 @@ fun SettingsScreen(
                         decorationBox = { innerTextField ->
                             if (searchQuery.text.isEmpty()) {
                                 Text(
-                                    text = "Cerca impostazioni...",
+                                    text = stringResource(id = R.string.settings_search_placeholder),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -137,7 +143,7 @@ fun SettingsScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Cancella ricerca",
+                                contentDescription = stringResource(id = R.string.settings_clear_search_content_description),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -168,8 +174,6 @@ fun SettingsScreen(
                     items(sectionSettings, key = { setting -> (setting as SettingItem).route }) { setting ->
                         val settingsItem = setting as SettingItem
 
-                        // FIX: Directly use the Int resource IDs from the settingsItem.
-                        // The getStringResourceId helper function was removed as it was causing the error.
                         EnhancedSettingsItem(
                             title = stringResource(id = settingsItem.title),
                             subtitle = stringResource(id = settingsItem.subtitle),
@@ -204,14 +208,14 @@ fun SettingsScreen(
                             )
 
                             Text(
-                                text = "Nessun risultato trovato",
+                                text = stringResource(id = R.string.settings_no_results_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center
                             )
 
                             Text(
-                                text = "Prova con parole chiave diverse",
+                                text = stringResource(id = R.string.settings_no_results_subtitle),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center
@@ -234,7 +238,7 @@ fun SettingsScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.RestartAlt,
-                    contentDescription = "Reset impostazioni"
+                    contentDescription = stringResource(id = R.string.settings_reset_content_description)
                 )
             }
         }
@@ -360,3 +364,4 @@ private fun SettingsSectionHeader(title: String) {
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
     )
 }
+
