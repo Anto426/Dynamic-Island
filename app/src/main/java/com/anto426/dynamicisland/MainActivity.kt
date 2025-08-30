@@ -38,8 +38,10 @@ import com.anto426.dynamicisland.ui.settings.settings
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.anto426.dynamicisland.updater.UpdateManager
 import com.anto426.dynamicisland.updater.UpdateViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.LaunchedEffect
 
 class MainActivity : ComponentActivity() {
 
@@ -63,6 +65,15 @@ class MainActivity : ComponentActivity() {
 
 		handleUpdateIntent(intent)
 
+		// Controlla se la disclosure è stata accettata
+		val disclosureAccepted = settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false)
+		if (!disclosureAccepted) {
+			// Avvia DisclosureActivity se non è stata ancora accettata
+			startActivity(Intent(this, DisclosureActivity::class.java))
+			finish()
+			return
+		}
+
 		setContent {
 			val context = LocalContext.current
 
@@ -71,21 +82,6 @@ class MainActivity : ComponentActivity() {
 
 			Theme.instance.Init()
 			IslandSettingsClass.instance.loadSettings(this)
-
-			val updateManager = UpdateManager(this)
-			if (updateManager.isAutoUpdateEnabled()) {
-				updateManager.startPeriodicUpdateCheck()
-				updateManager.checkForUpdatesOnStartup()
-			}
-
-			val disclosureAccepted by remember {
-				mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false))
-			}
-
-			if (!disclosureAccepted) {
-				startActivity(Intent(this, DisclosureActivity::class.java))
-				finish()
-			}
 
 			DynamicIslandTheme(darkTheme = Theme.instance.isDarkTheme) {
 				Surface(
@@ -103,6 +99,14 @@ class MainActivity : ComponentActivity() {
 
 					LaunchedEffect(Unit) {
 						updateViewModel.initialize(this@MainActivity)
+
+						// Controlla aggiornamenti all'avvio se auto-update è abilitato
+						if (updateViewModel.uiState.value.isAutoUpdateEnabled) {
+							launch {
+								delay(3000) // Delay di 3 secondi per permettere all'UI di caricarsi
+								updateViewModel.checkForUpdates(this@MainActivity)
+							}
+						}
 					}
 
 					val currentScreen: IslandDestination =
@@ -293,7 +297,7 @@ class MainActivity : ComponentActivity() {
 				val releaseNotes = it.getStringExtra("release_notes")
 
 				if (newVersion != null && downloadUrl != null) {
-					showUpdateDialog(newVersion, downloadUrl, releaseNotes)
+					showUpdateDialog(newVersion, releaseNotes)
 				}
 			}
 		}
@@ -304,7 +308,7 @@ class MainActivity : ComponentActivity() {
 		handleUpdateIntent(intent)
 	}
 
-	private fun showUpdateDialog(version: String, downloadUrl: String, releaseNotes: String?) {
+	private fun showUpdateDialog(version: String, releaseNotes: String?) {
 		val message = if (releaseNotes != null) {
 			"Update available: $version\n$releaseNotes"
 		} else {

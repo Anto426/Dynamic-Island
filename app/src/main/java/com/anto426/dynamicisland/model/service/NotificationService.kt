@@ -9,6 +9,7 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.core.content.ContextCompat
 import com.anto426.dynamicisland.model.ACTION_CLOSE
 import com.anto426.dynamicisland.model.ACTION_OPEN_CLOSE
 import com.anto426.dynamicisland.model.NOTIFICATION_POSTED
@@ -37,11 +38,7 @@ class NotificationService : NotificationListenerService() {
 
 			if (intent.action == ACTION_OPEN_CLOSE) {
 				// Logic to remove notification
-				if (notification.deleteIntent != null) {
-					// Delete notification
-					notification.deleteIntent.send()
-				} else {
-					// If notification is not deletable, cancel it
+				runCatching { notification.deleteIntent?.send() }.onFailure {
 					cancelNotification(statusBarNotification.key)
 				}
 
@@ -50,9 +47,7 @@ class NotificationService : NotificationListenerService() {
 			}
 			if (intent.action == ACTION_CLOSE) {
 				// Logic to remove notification
-				if (notification.deleteIntent != null) {
-					notification.deleteIntent.send()
-				} else {
+				runCatching { notification.deleteIntent?.send() }.onFailure {
 					cancelNotification(statusBarNotification.key)
 				}
 			}
@@ -64,21 +59,22 @@ class NotificationService : NotificationListenerService() {
 		instance = this
 		Log.d("NotificationService", "onCreate: ")
 
-		// Register broadcast receiver
-		registerReceiver(
+		// Register broadcast receiver (compat)
+		ContextCompat.registerReceiver(
+			this,
 			mBroadcastReceiver,
 			IntentFilter().apply {
 				addAction(ACTION_OPEN_CLOSE)
 				addAction(ACTION_CLOSE)
 			},
-			RECEIVER_NOT_EXPORTED
+			ContextCompat.RECEIVER_NOT_EXPORTED
 		)
 	}
 
 	override fun onNotificationPosted(statusBarNotification: StatusBarNotification) {
 		super.onNotificationPosted(statusBarNotification)
 
-		val notification = statusBarNotification.notification
+	val notification = statusBarNotification.notification
 
 		// Check if notification is in the enabled apps list
 		if ((statusBarNotification.packageName !in IslandSettings.instance.enabledApps) && !IslandSettings.instance.enabledApps.isEmpty()) return
@@ -92,8 +88,13 @@ class NotificationService : NotificationListenerService() {
 			-> return
 		}
 
-		// Add notification to list
-		notifications.add(statusBarNotification)
+		// Avoid duplicates by key
+		if (notifications.none { it.key == statusBarNotification.key }) {
+			notifications.add(statusBarNotification)
+		} else {
+			// Replace updated instance
+			notifications.replaceAll { if (it.key == statusBarNotification.key) statusBarNotification else it }
+		}
 		Log.d("NotificationService", "Posted: $notifications")
 		Log.d("NotificationService", "Posted: ${notifications.size}")
 
@@ -103,18 +104,22 @@ class NotificationService : NotificationListenerService() {
 			putExtra("category", notification.category)
 
 			putExtra("time", statusBarNotification.postTime)
-			putExtra("icon_large", notification.getLargeIcon())
-			putExtra("icon_small", notification.smallIcon)
+			// Do not pass large/small icons via broadcast to avoid binder limits; plugins can fetch from SBN
 
-			putExtra("title", notification.extras.getString("android.title") ?: "Empty title")
-			putExtra("body", notification.extras.getString("android.text") ?: "Empty body")
+			val title = notification.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString() ?: ""
+			val body = (
+				notification.extras.getCharSequence(Notification.EXTRA_TEXT)
+					?: notification.extras.getCharSequence(Notification.EXTRA_BIG_TEXT)
+			)?.toString() ?: ""
+			putExtra("title", title)
+			putExtra("body", body)
 		})
 	}
 
 	override fun onNotificationRemoved(statusBarNotification: StatusBarNotification) {
 
-		// Remove notification from list
-		notifications.removeIf { it.id == statusBarNotification.id }
+	// Remove notification from list by key for safety
+	notifications.removeIf { it.key == statusBarNotification.key }
 		Log.d("NotificationService", "Removed: $notifications")
 		Log.d("NotificationService", "Latest notification: ${notifications.firstOrNull()}")
 
