@@ -94,13 +94,13 @@ fun PositionSizeSettingsScreen() {
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Configura l'aspetto dell'isola",
+                                text = stringResource(id = R.string.settings_position_size_subtitle),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Text(
-                                text = "Personalizza posizione, dimensioni e forma",
+                                text = stringResource(id = R.string.settings_position_size_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                             )
@@ -113,7 +113,7 @@ fun PositionSizeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Posizione",
+                        text = stringResource(id = R.string.position_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -169,7 +169,7 @@ fun PositionSizeSettingsScreen() {
                                         onDismissRequest = { expanded = false },
                                         modifier = Modifier.fillMaxWidth(0.9f)
                                     ) {
-                                        IslandGravity.entries.forEach { islandGravity ->
+                                        listOf(IslandGravity.Left, IslandGravity.Center, IslandGravity.Right).forEach { islandGravity ->
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
@@ -231,7 +231,7 @@ fun PositionSizeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Dimensioni",
+                        text = stringResource(id = R.string.size_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -290,7 +290,7 @@ fun PositionSizeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Stile",
+                        text = stringResource(id = R.string.style_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface

@@ -56,11 +56,60 @@ fun UpdateSettingsScreen(viewModel: UpdateViewModel = viewModel()) {
 
     LaunchedEffect(Unit) { viewModel.initialize(context) }
 
-    LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
-    ) {
+        LazyColumn(
+                        modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(vertical = 16.dp)
+        ) {
+                // Header
+                item {
+                        Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                                ),
+                                shape = MaterialTheme.shapes.extraLarge
+                        ) {
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(20.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                ) {
+                                        Surface(
+                                                modifier = Modifier.size(48.dp),
+                                                shape = CircleShape,
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f)
+                                        ) {
+                                                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                                                        Icon(
+                                                                imageVector = Icons.Default.SystemUpdate,
+                                                                contentDescription = null,
+                                                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                                modifier = Modifier.size(24.dp)
+                                                        )
+                                                }
+                                        }
+
+                                        Column(modifier = Modifier.weight(1f)) {
+                                                Text(
+                                                        text = stringResource(R.string.settings_item_updates),
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                                Text(
+                                                        text = stringResource(R.string.settings_item_updates_subtitle),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                                                )
+                                        }
+                                }
+                        }
+                }
 
                 item {
             AnimatedVisibility(

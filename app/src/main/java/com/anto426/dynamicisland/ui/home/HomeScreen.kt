@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,6 +51,8 @@ import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.R
 import androidx.core.net.toUri
 import androidx.core.content.edit
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.anto426.dynamicisland.updater.UpdateViewModel
 
 @Composable
 fun HomeScreen(
@@ -58,6 +61,11 @@ fun HomeScreen(
 ) {
 	val context = LocalContext.current
 	val settingsPreferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+
+	// Updates: init ViewModel and observe state
+	val updateViewModel: UpdateViewModel = viewModel()
+	LaunchedEffect(Unit) { updateViewModel.initialize(context) }
+	val updateUiState by updateViewModel.uiState.collectAsState()
 
 	var optimizationDismissed by remember { mutableStateOf(settingsPreferences.getBoolean(BATTERY_OPTIMIZATION_DISMISSED, false)) }
 	var disclosureAccepted by remember { mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false)) }
@@ -107,18 +115,15 @@ fun HomeScreen(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp)
 	) {
-		// Header con stato dell'app
 		item {
 			Column(
 				horizontalAlignment = Alignment.CenterHorizontally,
 				verticalArrangement = Arrangement.spacedBy(16.dp)
 			) {
-				// Icona dell'app - Isola Dinamica
 				Box(
 					contentAlignment = Alignment.Center,
 					modifier = Modifier.size(100.dp)
 				) {
-					// Sfondo circolare con gradiente
 					Box(
 						modifier = Modifier
 							.size(80.dp)
@@ -135,20 +140,17 @@ fun HomeScreen(
 							.align(Alignment.Center)
 					)
 
-					// Icona principale
 					Icon(
-						imageVector = Icons.Rounded.Widgets,
+						painter = painterResource(R.drawable.ic_launcher),
 						contentDescription = null,
-						modifier = Modifier.size(48.dp),
-						tint = MaterialTheme.colorScheme.primary
+						modifier = Modifier.size(48.dp)
 					)
 
-					// Badge di stato sovrapposto
 					val allPermissionsGranted = isAccessibilityGranted && isOverlayGranted
 					if (allPermissionsGranted) {
 						Icon(
 							imageVector = Icons.Default.CheckCircle,
-							contentDescription = "Configurato",
+							contentDescription = stringResource(R.string.configured),
 							modifier = Modifier
 								.size(28.dp)
 								.align(Alignment.BottomEnd),
@@ -165,13 +167,12 @@ fun HomeScreen(
 				)
 
 				Text(
-					text = if (allPermissionsGranted) "App configurata e pronta!" else "Configura i permessi per iniziare",
+					text = if (allPermissionsGranted) stringResource(R.string.app_configured_ready) else stringResource(R.string.configure_permissions_start),
 					style = MaterialTheme.typography.bodyLarge,
 					color = MaterialTheme.colorScheme.onSurfaceVariant,
 					textAlign = TextAlign.Center
 				)
 
-				// Indicatore di progresso
 				if (!allPermissionsGranted) {
 					LinearProgressIndicator(
 					progress = { ((if (isOverlayGranted) 1 else 0) + (if (isAccessibilityGranted) 1 else 0)) / 2f },
@@ -187,7 +188,48 @@ fun HomeScreen(
 			}
 		}
 
-		// Card principale dei permessi con design migliorato
+		// Update available card on Home
+		item {
+			val state = updateUiState.updateCheckState
+			if (state is UpdateViewModel.UpdateCheckState.UpdateAvailable) {
+				val updateInfo = state.updateInfo
+				Card(
+					modifier = Modifier.fillMaxWidth(),
+					colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+					elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+					shape = MaterialTheme.shapes.extraLarge
+				) {
+					Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+						Row(verticalAlignment = Alignment.CenterVertically) {
+							Icon(Icons.Rounded.SystemUpdate, contentDescription = null, modifier = Modifier.size(24.dp))
+							Spacer(Modifier.width(12.dp))
+							Text(
+								text = stringResource(id = R.string.update_card_title, updateInfo.latestVersion),
+								style = MaterialTheme.typography.titleMedium,
+								fontWeight = FontWeight.SemiBold
+							)
+						}
+						if (!updateInfo.releaseNotes.isNullOrBlank()) {
+							Text(
+								text = updateInfo.releaseNotes,
+								style = MaterialTheme.typography.bodyMedium,
+								color = MaterialTheme.colorScheme.onSurfaceVariant,
+								lineHeight = 18.sp
+							)
+						}
+						Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+							Button(onClick = { updateViewModel.downloadUpdate(context, updateInfo) }) {
+								Text(stringResource(id = R.string.download))
+							}
+							OutlinedButton(onClick = { updateViewModel.ignoreCurrentUpdate(context) }) {
+								Text(stringResource(id = R.string.ignore))
+							}
+						}
+					}
+				}
+			}
+		}
+
 		item {
 			Card(
 				modifier = Modifier.fillMaxWidth(),
@@ -204,7 +246,7 @@ fun HomeScreen(
 					verticalArrangement = Arrangement.spacedBy(24.dp)
 				) {
 					Text(
-						text = "Permessi richiesti",
+						text = stringResource(R.string.permissions_required),
 						style = MaterialTheme.typography.titleLarge,
 						fontWeight = FontWeight.SemiBold,
 						color = MaterialTheme.colorScheme.onSurface
@@ -245,7 +287,6 @@ fun HomeScreen(
 			}
 		}
 
-		// Altre schede
 		item {
 			AnimatedVisibility(
 				visible = !disclosureAccepted,

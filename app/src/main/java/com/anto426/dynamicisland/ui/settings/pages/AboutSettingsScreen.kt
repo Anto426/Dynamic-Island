@@ -1,5 +1,6 @@
 package com.anto426.dynamicisland.ui.settings.pages
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -18,7 +19,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,13 +35,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.R
 import com.skydoves.landscapist.rememberDrawablePainter
 import java.text.SimpleDateFormat
 import java.util.*
 
-import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutSettingsScreen() {
@@ -326,7 +326,7 @@ fun EnhancedInfoItem(
         when {
             isCopyable && clipboardManager != null -> {
                 clipboardManager.setPrimaryClip(ClipData.newPlainText(title, value))
-                Toast.makeText(context, context?.getString(R.string.about_copied_toast, title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.about_copied_toast, title), Toast.LENGTH_SHORT).show()
             }
             onClick != null -> onClick.invoke()
         }
@@ -383,10 +383,9 @@ fun EnhancedInfoItem(
             )
         }
 
-        // Icona azione
         if (isClickable) {
             Icon(
-                imageVector = if (isCopyable) Icons.Default.ContentCopy else Icons.Default.OpenInNew,
+                imageVector = if (isCopyable) Icons.Default.ContentCopy else Icons.AutoMirrored.Filled.OpenInNew,
                 contentDescription = if (isCopyable) "Copia" else "Apri",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)

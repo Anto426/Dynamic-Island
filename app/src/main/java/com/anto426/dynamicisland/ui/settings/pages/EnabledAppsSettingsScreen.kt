@@ -114,13 +114,13 @@ fun EnabledAppsSettingsScreen() {
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Seleziona le app",
+                            text = stringResource(id = R.string.enabled_apps_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
-                            text = "${IslandSettings.instance.enabledApps.size} app abilitate su ${apps.size} totali",
+                            text = stringResource(id = R.string.enabled_apps_summary, IslandSettings.instance.enabledApps.size, apps.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
@@ -145,7 +145,7 @@ fun EnabledAppsSettingsScreen() {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Cerca",
+                        contentDescription = stringResource(id = R.string.search),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
@@ -158,7 +158,7 @@ fun EnabledAppsSettingsScreen() {
                         modifier = Modifier.weight(1f),
                         placeholder = {
                             Text(
-                                text = "Cerca app...",
+                                text = stringResource(id = R.string.search_settings_placeholder),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -180,7 +180,7 @@ fun EnabledAppsSettingsScreen() {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Cancella ricerca",
+                                contentDescription = stringResource(id = R.string.clear_search),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
@@ -228,14 +228,14 @@ fun EnabledAppsSettingsScreen() {
                             )
 
                             Text(
-                                text = "Nessuna app trovata",
+                                text = stringResource(id = R.string.no_results_found),
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center
                             )
 
                             Text(
-                                text = "Prova con parole chiave diverse",
+                                text = stringResource(id = R.string.try_different_keywords),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center
@@ -304,7 +304,7 @@ fun EnhancedAppSettingItem(
             ) {
                 Image(
                     painter = rememberDrawablePainter(app.applicationInfo?.loadIcon(context.packageManager)),
-                    contentDescription = "Icona dell'app: ${app.applicationInfo?.loadLabel(context.packageManager).toString()}",
+                    contentDescription = stringResource(id = R.string.app_icon_content_description, app.applicationInfo?.loadLabel(context.packageManager).toString()),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)

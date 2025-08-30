@@ -44,6 +44,7 @@ import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.ui.settings.radioOptions
 import com.anto426.dynamicisland.ui.theme.Theme
 import androidx.core.content.edit
+import androidx.compose.material.icons.filled.BatteryFull
 
 /**
  * Schermata delle impostazioni del tema completamente ridisegnata con Material 3
@@ -103,13 +104,13 @@ fun ThemeSettingsScreen() {
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Personalizza l'aspetto",
+                                text = stringResource(id = R.string.settings_theme_subtitle),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Text(
-                                text = "Scegli il tema e lo stile che preferisci",
+                                text = stringResource(id = R.string.theme_preference_title),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                             )
@@ -122,7 +123,7 @@ fun ThemeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Impostazioni Generali",
+                        text = stringResource(id = R.string.settings_preferences),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -138,6 +139,32 @@ fun ThemeSettingsScreen() {
                             IslandSettings.instance.applySettings(context)
                         }
                     )
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.dynamic_theme_title),
+                                description = stringResource(id = R.string.dynamic_theme_desc),
+                                icon = Icons.Default.BatteryFull,
+                                checked = IslandSettings.instance.dynamicThemeEnabled,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.dynamicThemeEnabled = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+                        }
+                    }
                 }
             }
 
@@ -145,7 +172,7 @@ fun ThemeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Preferenze Tema",
+                        text = stringResource(id = R.string.theme_preference_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -207,7 +234,7 @@ fun ThemeSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Stile dell'App",
+                        text = stringResource(id = R.string.theme_style_preference_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -233,8 +260,9 @@ fun ThemeSettingsScreen() {
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
+                            @OptIn(kotlin.ExperimentalStdlibApi::class)
                             Column(Modifier.selectableGroup()) {
-                                Theme.ThemeStyle.entries.forEach { themeStyle ->
+                                Theme.ThemeStyle.values().forEach { themeStyle ->
                                     EnhancedStyleRadioButton(
                                         themeStyle = themeStyle,
                                         selected = (themeStyle == styleSelectedOption),
@@ -399,7 +427,6 @@ fun EnhancedStyleRadioButton(
                     Theme.ThemeStyle.MaterialYou -> "Utilizza i colori del tuo dispositivo"
                     Theme.ThemeStyle.Black -> "Tema classico con colori predefiniti"
                     Theme.ThemeStyle.QuinacridoneMagenta -> "Colori dinamici basati sul wallpaper"
-                    else -> "Stile personalizzato"
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

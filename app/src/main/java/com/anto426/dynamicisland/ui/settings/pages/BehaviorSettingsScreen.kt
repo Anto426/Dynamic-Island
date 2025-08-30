@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.ui.settings.pages.EnhancedSettingSwitch
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Animation
+import androidx.compose.material.icons.filled.Vibration
 
 /**
  * Schermata completamente ridisegnata per le impostazioni di comportamento
@@ -81,13 +84,13 @@ fun BehaviorSettingsScreen() {
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Controlla il comportamento",
+                                text = stringResource(id = R.string.settings_behavior_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Text(
-                                text = "Gestisci quando e come appare l'isola dinamica",
+                                text = stringResource(id = R.string.settings_behavior_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                             )
@@ -100,7 +103,7 @@ fun BehaviorSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Visibilità",
+                        text = stringResource(id = R.string.behavior_visibility_section),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -130,10 +133,10 @@ fun BehaviorSettingsScreen() {
                                 }
                             )
 
-                            Divider(
-                                modifier = Modifier.fillMaxWidth(),
+                            HorizontalDivider(
+                                thickness = 1.dp,
                                 color = MaterialTheme.colorScheme.outlineVariant,
-                                thickness = 1.dp
+                                modifier = Modifier.fillMaxWidth(),
                             )
 
                             EnhancedSettingSwitch(
@@ -155,7 +158,7 @@ fun BehaviorSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Auto-nascondimento",
+                        text = stringResource(id = R.string.behavior_autohide_section),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -193,6 +196,78 @@ fun BehaviorSettingsScreen() {
                                 },
                                 icon = Icons.Default.Schedule,
                                 unit = "s"
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Sezione: Animazioni e feedback (spostata da Avanzate)
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(
+                        text = stringResource(id = R.string.behavior_animations_feedback_section),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.advanced_settings_enable_animations),
+                                description = stringResource(id = R.string.advanced_settings_enable_animations_desc),
+                                icon = Icons.Default.Animation,
+                                checked = IslandSettings.instance.animationsEnabled,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.animationsEnabled = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.advanced_settings_haptic),
+                                description = stringResource(id = R.string.advanced_settings_haptic_desc),
+                                icon = Icons.Default.Vibration,
+                                checked = IslandSettings.instance.hapticFeedback,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.hapticFeedback = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.advanced_settings_sounds),
+                                description = stringResource(id = R.string.advanced_settings_sounds_desc),
+                                icon = Icons.AutoMirrored.Filled.VolumeUp,
+                                checked = IslandSettings.instance.soundEnabled,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.soundEnabled = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
                             )
                         }
                     }
