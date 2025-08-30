@@ -145,7 +145,8 @@ class MainActivity : ComponentActivity() {
 								title = {
 									Box(modifier = Modifier.fillMaxWidth()) {
 										Crossfade(
-											targetState = if (currentScreen == IslandHome) stringResource(R.string.app_name) else currentScreen.title,
+											// FIX: Resolve the title to a String before passing it to the Crossfade
+											targetState = if (currentScreen == IslandHome) stringResource(R.string.app_name) else stringResource(id = currentScreen.title),
 											animationSpec = tween(300)
 										) { text ->
 											Text(
@@ -230,7 +231,8 @@ class MainActivity : ComponentActivity() {
 												},
 												label = {
 													Text(
-														destination.title,
+														// FIX: Use stringResource to convert the Int ID to a String
+														text = stringResource(id = destination.title),
 														style = MaterialTheme.typography.labelSmall.copy(
 															fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
 														)

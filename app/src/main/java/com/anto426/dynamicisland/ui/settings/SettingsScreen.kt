@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -49,6 +48,7 @@ fun SettingsScreen(
         } else {
             val query = searchQuery.text.lowercase()
             settings.filter { setting ->
+                // This filtering logic uses hardcoded keywords which is fine for now
                 when (setting) {
                     ThemeSetting -> "theme|tema|dark|light|sistema".contains(query)
                     PositionSizeSetting -> "position|posizione|size|dimensione".contains(query)
@@ -56,13 +56,15 @@ fun SettingsScreen(
                     EnabledAppsSetting -> "enabled|abilitate|apps|applicazioni".contains(query)
                     AboutSetting -> "about|info|informazioni".contains(query)
                     DeveloperScreen -> "dev|developer|sviluppatore".contains(query)
+                    UpdateSetting -> "update|aggiornamento".contains(query)
+                    AdvancedSetting -> "advanced|avanzate".contains(query)
                     else -> false
                 }
             }
         }
     }
 
-    val groupedSettings = remember(filteredSettings) {
+    val groupedSettings = remember(filteredSettings, isSearching) {
         if (isSearching) {
             mapOf("Risultati ricerca" to filteredSettings)
         } else {
@@ -70,7 +72,7 @@ fun SettingsScreen(
                 when (setting) {
                     ThemeSetting, PositionSizeSetting -> "Aspetto"
                     BehaviorSetting, EnabledAppsSetting -> "Comportamento"
-                    AboutSetting, DeveloperScreen -> "Informazioni"
+                    AboutSetting, DeveloperScreen, UpdateSetting -> "Informazioni"
                     else -> "Altro"
                 }
             }
@@ -165,12 +167,12 @@ fun SettingsScreen(
                     // Elementi della sezione
                     items(sectionSettings, key = { setting -> (setting as SettingItem).route }) { setting ->
                         val settingsItem = setting as SettingItem
-                        val titleResId = getStringResourceId(settingsItem.title)
-                        val subtitleResId = getStringResourceId(settingsItem.subtitle)
 
+                        // FIX: Directly use the Int resource IDs from the settingsItem.
+                        // The getStringResourceId helper function was removed as it was causing the error.
                         EnhancedSettingsItem(
-                            title = stringResource(id = titleResId),
-                            subtitle = stringResource(id = subtitleResId),
+                            title = stringResource(id = settingsItem.title),
+                            subtitle = stringResource(id = settingsItem.subtitle),
                             icon = settingsItem.icon,
                             onClick = { onSettingClicked(settingsItem) }
                         )
@@ -338,7 +340,7 @@ fun EnhancedSettingsItem(
 
             // Arrow indicator
             Icon(
-                imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 modifier = Modifier.size(20.dp)
@@ -357,26 +359,4 @@ private fun SettingsSectionHeader(title: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
     )
-}
-
-// Helper function to get string resource ID from string name
-@Composable
-private fun getStringResourceId(stringName: String): Int {
-    return when (stringName) {
-        "settings_item_theme" -> R.string.settings_theme_title
-        "settings_item_theme_subtitle" -> R.string.settings_theme_subtitle
-        "settings_item_position_size" -> R.string.settings_position_size_title
-        "settings_item_position_size_subtitle" -> R.string.settings_position_size_subtitle
-        "settings_item_enabled_apps" -> R.string.enabled_apps_title
-        "settings_item_enabled_apps_subtitle" -> R.string.settings_enabled_apps_subtitle
-        "settings_item_behavior" -> R.string.settings_behavior_title
-        "settings_item_behavior_subtitle" -> R.string.settings_behavior_subtitle
-        "settings_item_about" -> R.string.settings_about_title
-        "settings_item_about_subtitle" -> R.string.settings_about_subtitle
-        "settings_item_dev" -> R.string.settings_dev_title
-        "settings_item_dev_subtitle" -> R.string.settings_dev_subtitle
-        "settings_item_updates" -> R.string.settings_item_updates
-        "settings_item_updates_subtitle" -> R.string.settings_item_updates_subtitle
-        else -> R.string.app_name
-    }
 }
