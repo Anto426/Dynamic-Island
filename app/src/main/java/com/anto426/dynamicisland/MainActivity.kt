@@ -59,9 +59,8 @@ class MainActivity : ComponentActivity() {
 		settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
-		invertTheme(true) // Invert theme on start
+		invertTheme(true)
 
-		// Gestisci gli intent per gli aggiornamenti
 		handleUpdateIntent(intent)
 
 		setContent {
@@ -73,11 +72,9 @@ class MainActivity : ComponentActivity() {
 			Theme.instance.Init()
 			IslandSettingsClass.instance.loadSettings(this)
 
-			// Inizializza il sistema di aggiornamenti
 			val updateManager = UpdateManager(this)
 			if (updateManager.isAutoUpdateEnabled()) {
 				updateManager.startPeriodicUpdateCheck()
-				// Controlla aggiornamenti all'avvio se necessario
 				updateManager.checkForUpdatesOnStartup()
 			}
 
@@ -104,7 +101,6 @@ class MainActivity : ComponentActivity() {
 					val updateViewModel: UpdateViewModel = viewModel()
 					val updateUiState by updateViewModel.uiState.collectAsState()
 
-					// Inizializza il viewModel degli aggiornamenti
 					LaunchedEffect(Unit) {
 						updateViewModel.initialize(this@MainActivity)
 					}
@@ -140,7 +136,7 @@ class MainActivity : ComponentActivity() {
 										) {
 											Icon(
 												Icons.AutoMirrored.Filled.ArrowBack,
-												contentDescription = "Indietro",
+												contentDescription = "Back",
 												modifier = Modifier.size(24.dp)
 											)
 										}
@@ -286,9 +282,6 @@ class MainActivity : ComponentActivity() {
 	override fun onStop() { super.onStop(); invertTheme(false) }
 	override fun onDestroy() { super.onDestroy(); invertTheme(false) }
 
-	/**
-	 * Gestisce gli intent per gli aggiornamenti
-	 */
 	private fun handleUpdateIntent(intent: Intent?) {
 		intent?.let {
 			val showUpdateDialog = it.getBooleanExtra("show_update_dialog", false)
@@ -304,24 +297,16 @@ class MainActivity : ComponentActivity() {
 		}
 	}
 
-	/**
-	 * Gestisce i nuovi intent quando l'app è già aperta
-	 */
 	override fun onNewIntent(intent: Intent) {
 		super.onNewIntent(intent)
 		handleUpdateIntent(intent)
 	}
 
-	/**
-	 * Mostra il dialog per l'aggiornamento disponibile
-	 */
 	private fun showUpdateDialog(version: String, downloadUrl: String, releaseNotes: String?) {
-		// TODO: Implementare il dialog di aggiornamento
-		// Per ora mostriamo un toast con le informazioni disponibili
 		val message = if (releaseNotes != null) {
-			"Nuova versione disponibile: $version\n$releaseNotes"
+			"Update available: $version\n$releaseNotes"
 		} else {
-			"Nuova versione disponibile: $version"
+			"Update available: $version"
 		}
 
 		android.widget.Toast.makeText(
