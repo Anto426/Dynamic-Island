@@ -167,35 +167,38 @@ class UpdateViewModel : ViewModel() {
 
     private fun saveUpdateState(context: Context, updateInfo: LocalUpdateManager.UpdateInfo?) {
         val prefs = context.getSharedPreferences("update_prefs", Context.MODE_PRIVATE)
-        prefs.edit().apply {
+    // Usa commit() sincrono per preservare lo stato anche se il processo viene terminato
+    val editor = prefs.edit()
+    with(editor) {
             if (updateInfo != null) {
-                putBoolean("has_update_available", true)
-                putString("update_version", updateInfo.latestVersion)
-                putString("update_url", updateInfo.downloadUrl)
-                putLong("update_size", updateInfo.fileSize ?: 0L)
-                putString("update_checksum", updateInfo.checksum)
-                putString("update_changelog", updateInfo.changelog?.firstOrNull()?.changes?.firstOrNull() ?: "")
-                putString("update_channel", updateInfo.channel)
-                putInt("update_version_code", updateInfo.versionCode)
-                putString("update_release_notes", updateInfo.releaseNotes)
-                putString("update_release_date", updateInfo.releaseDate)
-                putString("update_min_supported_version", updateInfo.minimumSupportedVersion)
-                putBoolean("update_force_update", updateInfo.forceUpdate)
+        putBoolean("has_update_available", true)
+        putString("update_version", updateInfo.latestVersion)
+        putString("update_url", updateInfo.downloadUrl)
+        putLong("update_size", updateInfo.fileSize ?: 0L)
+        putString("update_checksum", updateInfo.checksum)
+        putString("update_changelog", updateInfo.changelog?.firstOrNull()?.changes?.firstOrNull() ?: "")
+        putString("update_channel", updateInfo.channel)
+        putInt("update_version_code", updateInfo.versionCode)
+        putString("update_release_notes", updateInfo.releaseNotes)
+        putString("update_release_date", updateInfo.releaseDate)
+        putString("update_min_supported_version", updateInfo.minimumSupportedVersion)
+        putBoolean("update_force_update", updateInfo.forceUpdate)
             } else {
-                putBoolean("has_update_available", false)
-                remove("update_version")
-                remove("update_url")
-                remove("update_size")
-                remove("update_checksum")
-                remove("update_changelog")
-                remove("update_channel")
-                remove("update_version_code")
-                remove("update_release_notes")
-                remove("update_release_date")
-                remove("update_min_supported_version")
-                remove("update_force_update")
+        putBoolean("has_update_available", false)
+        remove("update_version")
+        remove("update_url")
+        remove("update_size")
+        remove("update_checksum")
+        remove("update_changelog")
+        remove("update_channel")
+        remove("update_version_code")
+        remove("update_release_notes")
+        remove("update_release_date")
+        remove("update_min_supported_version")
+        remove("update_force_update")
             }
-            apply()
+        // commit sincrono
+        commit()
         }
     }
 
@@ -347,27 +350,56 @@ class UpdateViewModel : ViewModel() {
     fun installUpdate(context: Context, apkFile: File) {
 
         try {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                if (!context.packageManager.canRequestPackageInstalls()) {
-                    // Apri impostazioni per concedere il permesso
-                    val settingsIntent = android.content.Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-                        data = android.net.Uri.parse("package:${context.packageName}")
-                        flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
-                    context.startActivity(settingsIntent)
-                    // Imposta stato errore per informare l'utente
-                    _uiState.value = _uiState.value.copy(
-                        downloadState = DownloadState.Error("Permesso di installazione non concesso. Concedi il permesso nelle impostazioni.")
-                    )
-                    return
-                }
+
+            if (!context.packageManager.canRequestPackageInstalls()) {
+                // Apri impostazioni per concedere il permesso, ma mantieni lo stato 'Completed'
+                val settingsIntent =
+                    android.content.Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                        .apply {
+                            data = android.net.Uri.parse("package:${context.packageName}")
+                            flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+                context.startActivity(settingsIntent)
+                // Non cambiamo lo stato a Error: l'utente potrà riprovare 'Installa' dopo aver concesso il permesso
+                return
             }
 
-            val apkUri = androidx.core.content.FileProvider.getUriForFile(
-                context,
-                "${context.packageName}.fileprovider",
-                apkFile
-            )
+            // Ottieni un Uri tramite FileProvider; se il file è in una cartella pubblica non mappata,
+            // esegui fallback copiandolo in una dir privata dell'app supportata dal provider.
+            val apkUri = try {
+                androidx.core.content.FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    apkFile
+                )
+            } catch (iae: IllegalArgumentException) {
+                // Fallback: copia in externalFilesDir/Download/MaterialYou-Dynamic-Island
+                val base = android.os.Environment.DIRECTORY_DOWNLOADS
+                val baseDir = context.getExternalFilesDir(base) ?: context.getExternalFilesDir(null)
+                val privateDir = if (baseDir != null) java.io.File(baseDir, "MaterialYou-Dynamic-Island") else context.filesDir
+                if (!privateDir.exists()) privateDir.mkdirs()
+
+                val dest = java.io.File(privateDir, apkFile.name)
+                // Copia solo se differente o non esiste
+                if (!dest.exists() || dest.length() != apkFile.length()) {
+                    apkFile.inputStream().use { input ->
+                        dest.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                }
+
+                // Aggiorna il path salvato in modo che l'UI punti al file valido
+                val prefs = context.getSharedPreferences(PrefKeys.FILE, Context.MODE_PRIVATE)
+                prefs.edit().putString(PrefKeys.DOWNLOADED_APK_PATH, dest.absolutePath).apply()
+
+                // Ritenta con il file nella directory privata
+                androidx.core.content.FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    dest
+                )
+            }
 
             val installIntent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                 setDataAndType(apkUri, "application/vnd.android.package-archive")
@@ -392,6 +424,7 @@ class UpdateViewModel : ViewModel() {
 
             context.startActivity(installIntent)
         } catch (e: Exception) {
+            println("Errore nell'installazione: ${e.message}")
             _uiState.value = _uiState.value.copy(
                 downloadState = DownloadState.Error("Errore nell'installazione: ${e.message}")
             )
@@ -409,10 +442,12 @@ class UpdateViewModel : ViewModel() {
     // --- Helpers per gestione APK scaricati ---
     private fun saveDownloadedApkInfo(context: Context, file: File, version: String) {
         val prefs = context.getSharedPreferences(PrefKeys.FILE, Context.MODE_PRIVATE)
+        // Usa commit() sincrono per evitare perdita di stato se il processo viene
+        // terminato subito dopo l'avvio dell'installer (aggiornamento in-place).
         prefs.edit()
             .putString(PrefKeys.DOWNLOADED_APK_PATH, file.absolutePath)
             .putString(PrefKeys.DOWNLOADED_APK_VERSION, version)
-            .apply()
+            .commit()
     }
 
     private fun maybeCleanupOldDownloadedApk(context: Context, newVersion: String) {

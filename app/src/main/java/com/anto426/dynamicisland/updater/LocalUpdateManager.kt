@@ -2,6 +2,7 @@ package com.anto426.dynamicisland.updater
 
 import android.content.Context
 import android.util.Log
+import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
@@ -136,7 +137,15 @@ class LocalUpdateManager(private val context: Context) {
                 return UpdateCheckResult.Error("Impossibile caricare informazioni aggiornamento")
             }
 
-            val isNewer = isVersionNewer(updateInfo.latestVersion, currentVersion)
+            // Preferisci il confronto per versionCode quando possibile, con fallback al nome versione pulito
+            val currentCode = getCurrentAppVersionCode()
+            val isNewerByCode = try {
+                updateInfo.versionCode > currentCode
+            } catch (_: Exception) { false }
+
+            val isNewerByName = isVersionNewer(updateInfo.latestVersion, currentVersion)
+
+            val isNewer = isNewerByCode || isNewerByName
 
             if (isNewer) {
                 UpdateCheckResult.UpdateAvailable(updateInfo)
@@ -164,24 +173,41 @@ class LocalUpdateManager(private val context: Context) {
      */
     private fun isVersionNewer(version1: String, version2: String): Boolean {
         try {
-            val v1 = version1.removePrefix("v").split(".").map { it.toIntOrNull() ?: 0 }
-            val v2 = version2.removePrefix("v").split(".").map { it.toIntOrNull() ?: 0 }
+            val v1 = parseSemanticVersion(version1)
+            val v2 = parseSemanticVersion(version2)
 
-            // Gestione versioni beta/alpha
-            val v1Clean = v1.filter { it >= 0 }
-            val v2Clean = v2.filter { it >= 0 }
-
-            for (i in 0 until maxOf(v1Clean.size, v2Clean.size)) {
-                val part1 = v1Clean.getOrElse(i) { 0 }
-                val part2 = v2Clean.getOrElse(i) { 0 }
-
-                if (part1 > part2) return true
-                if (part1 < part2) return false
+            for (i in 0 until maxOf(v1.size, v2.size)) {
+                val a = v1.getOrElse(i) { 0 }
+                val b = v2.getOrElse(i) { 0 }
+                if (a != b) return a > b
             }
-            return false
+            return false // uguali
         } catch (e: Exception) {
             Log.e(TAG, "Errore nel confronto versioni: $version1 vs $version2", e)
             return false
+        }
+    }
+
+    // Pulisce stringhe tipo "v2.1.3-debug+001" -> [2,1,3]
+    private fun parseSemanticVersion(value: String): List<Int> {
+        val core = value.trim().removePrefix("v").removePrefix("V")
+        val base = core.split('-', '+', ' ').firstOrNull().orEmpty()
+        return base.split('.')
+            .map { part -> part.filter { it.isDigit() } }
+            .map { if (it.isEmpty()) 0 else it.toInt() }
+    }
+
+    private fun getCurrentAppVersionCode(): Int {
+        return try {
+            val pkg = context.packageManager.getPackageInfo(context.packageName, 0)
+            if (Build.VERSION.SDK_INT >= 28) {
+                (pkg.longVersionCode and 0x7FFFFFFF).toInt()
+            } else {
+                @Suppress("DEPRECATION")
+                pkg.versionCode
+            }
+        } catch (_: Exception) {
+            0
         }
     }
 
