@@ -33,6 +33,7 @@ import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Density
@@ -47,6 +48,7 @@ import com.anto426.dynamicisland.ui.theme.BatteryEmpty
 import com.anto426.dynamicisland.ui.theme.BatteryFull
 import java.util.concurrent.TimeUnit
 import androidx.core.content.edit
+import com.anto426.dynamicisland.R
 
 private enum class DisplayMode {
 	CHARGING, LOW_BATTERY, POWER_SAVER
@@ -287,14 +289,14 @@ class BatteryPlugin(
 		val progressColor = lerp(BatteryEmpty, BatteryFull, batteryPercent / 100f)
 		BatteryStatusView(
 			progressColor = progressColor,
-			title = "In Carica",
+			title = context.getString(R.string.battery_charging_title),
 			subtitle = formatChargeTime(chargeTimeRemaining),
 			overlayIcon = Icons.Rounded.Bolt,
 			actions = {
 				Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-					InfoRow(Icons.Rounded.DeviceThermostat, "Temperatura", "${"%.1f".format(batteryTemperature)}°C")
-					InfoRow(Icons.Rounded.Power, "Fonte", chargingSource)
-					InfoRow(Icons.Rounded.HealthAndSafety, "Salute", batteryHealth)
+					InfoRow(Icons.Rounded.DeviceThermostat, context.getString(R.string.temperature), "${"%.1f".format(batteryTemperature)}°C")
+					InfoRow(Icons.Rounded.Power, context.getString(R.string.power_source), chargingSource)
+					InfoRow(Icons.Rounded.HealthAndSafety, context.getString(R.string.health), batteryHealth)
 				}
 			}
 		)
@@ -304,8 +306,8 @@ class BatteryPlugin(
 	private fun LowBatteryView() {
 		BatteryStatusView(
 			progressColor = BatteryEmpty,
-			title = "Batteria Scarica",
-			subtitle = "$batteryPercent% rimanente",
+			title = context.getString(R.string.battery_low_title),
+			subtitle = context.getString(R.string.battery_remaining_subtitle, batteryPercent),
 			actions = {
 				Row(
 					modifier = Modifier.fillMaxWidth(),
@@ -313,7 +315,7 @@ class BatteryPlugin(
 					verticalAlignment = Alignment.CenterVertically
 				) {
 					TextButton(onClick = { context.removePlugin(this@BatteryPlugin) }) {
-						Text("Ignora")
+						Text(stringResource(id = R.string.ignore))
 					}
 					Button(onClick = {
 						val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
@@ -321,7 +323,7 @@ class BatteryPlugin(
 						context.startActivity(intent)
 						context.shrink()
 					}) {
-						Text("Risparmio Energetico")
+						Text(stringResource(id = R.string.battery_saver))
 					}
 				}
 			}
@@ -332,8 +334,8 @@ class BatteryPlugin(
 	private fun PowerSaverView() {
 		BatteryStatusView(
 			progressColor = PowerSaverYellow,
-			title = "Risparmio Energetico",
-			subtitle = "Modalità attiva per estendere la durata",
+			title = context.getString(R.string.battery_saver),
+			subtitle = context.getString(R.string.power_saver_active_desc),
 			overlayIcon = Icons.Rounded.EnergySavingsLeaf,
 			actions = {}
 		)
@@ -348,13 +350,13 @@ class BatteryPlugin(
 			when (displayMode) {
 				DisplayMode.CHARGING -> {
 					val progressColor = lerp(BatteryEmpty, BatteryFull, batteryPercent / 100f)
-					Icon(imageVector = Icons.Rounded.Bolt, "Charging", tint = progressColor, modifier = Modifier.fillMaxSize())
+					Icon(imageVector = Icons.Rounded.Bolt, context.getString(R.string.charging), tint = progressColor, modifier = Modifier.fillMaxSize())
 				}
 				DisplayMode.LOW_BATTERY -> {
-					Icon(imageVector = Icons.Rounded.BatteryAlert, "Low Battery", tint = BatteryEmpty, modifier = Modifier.fillMaxSize())
+					Icon(imageVector = Icons.Rounded.BatteryAlert, context.getString(R.string.low_battery), tint = BatteryEmpty, modifier = Modifier.fillMaxSize())
 				}
 				DisplayMode.POWER_SAVER -> {
-					Icon(imageVector = Icons.Rounded.EnergySavingsLeaf, "Power Saver", tint = PowerSaverYellow, modifier = Modifier.fillMaxSize())
+					Icon(imageVector = Icons.Rounded.EnergySavingsLeaf, context.getString(R.string.power_saver), tint = PowerSaverYellow, modifier = Modifier.fillMaxSize())
 				}
 				null -> {}
 			}
