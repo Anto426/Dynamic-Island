@@ -58,8 +58,8 @@ fun UpdateSettingsScreen(viewModel: UpdateViewModel = viewModel()) {
 
         LazyColumn(
                         modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 24.dp),
+                            .fillMaxSize()
+                            .padding(horizontal = 24.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(vertical = 16.dp)
         ) {
@@ -74,8 +74,8 @@ fun UpdateSettingsScreen(viewModel: UpdateViewModel = viewModel()) {
                         ) {
                                 Row(
                                         modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(20.dp),
+                                            .fillMaxWidth()
+                                            .padding(20.dp),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
@@ -334,19 +334,33 @@ private fun CompactSettingsContent(uiState: UpdateViewModel.UiState, viewModel: 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 // Auto-update
                 EnhancedSettingSwitch(
-                        stringResource(R.string.auto_update_title),
-                        stringResource(R.string.auto_update_desc),
-                        Icons.Default.Autorenew,
-                        uiState.isAutoUpdateEnabled
-                ) { viewModel.setAutoUpdateEnabled(context, it) }
+                    title = stringResource(R.string.auto_update_title),
+                    description = stringResource(R.string.auto_update_desc),
+                    icon = Icons.Default.Autorenew,
+                    checked = uiState.isAutoUpdateEnabled,
+                    onCheckedChange = { checked ->
+                        viewModel.setAutoUpdateEnabled(
+                            context,
+                            checked
+                        )
+                    },
+                    enabled = true
+                )
 
                 // Auto-download
                 EnhancedSettingSwitch(
-                        stringResource(R.string.auto_download_title),
-                        stringResource(R.string.auto_download_desc),
-                        Icons.Default.Download,
-                        uiState.isAutoDownloadEnabled
-                ) { viewModel.setAutoDownloadEnabled(context, it) }
+                    title = stringResource(R.string.auto_download_title),
+                    description = stringResource(R.string.auto_download_desc),
+                    icon = Icons.Default.Download,
+                    checked = uiState.isAutoDownloadEnabled,
+                    onCheckedChange = { checked ->
+                        viewModel.setAutoDownloadEnabled(
+                            context,
+                            checked
+                        )
+                    },
+                    enabled = true
+                )
             }
         }
     }
@@ -404,11 +418,12 @@ private fun ReleaseChannelDropdown(uiState: UpdateViewModel.UiState, viewModel: 
                         )
                     },
                     modifier =
-                            Modifier.fillMaxWidth()
-                                    .menuAnchor(
-                                            type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                                            enabled = true
-                                    ),
+                            Modifier
+                                .fillMaxWidth()
+                                .menuAnchor(
+                                    type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
+                                    enabled = true
+                                ),
                     shape = MaterialTheme.shapes.large,
                     colors =
                             OutlinedTextFieldDefaults.colors(
@@ -646,7 +661,9 @@ private fun ChangelogContent(uiState: UpdateViewModel.UiState) {
 @Composable
 fun DynamicThemeContent(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
     Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -683,13 +700,17 @@ fun EnhancedUpdateItem(
             )
 
     Card(
-            modifier = Modifier.fillMaxWidth().scale(scale),
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(scale),
             colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f)),
             shape = MaterialTheme.shapes.extraLarge,
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(
@@ -768,19 +789,22 @@ fun EnhancedChannelItem(
 
     Card(
             modifier =
-                    Modifier.fillMaxWidth()
-                            .scale(scale)
-                            .clickable(
-                                    interactionSource = interactionSource,
-                                    indication = null,
-                                    onClick = onClick
-                            ),
+                    Modifier
+                        .fillMaxWidth()
+                        .scale(scale)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = onClick
+                        ),
             colors = CardDefaults.cardColors(containerColor = backgroundColor),
             shape = MaterialTheme.shapes.extraLarge,
             elevation = CardDefaults.cardElevation(defaultElevation = if (selected) 4.dp else 1.dp)
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -839,7 +863,10 @@ fun EnhancedActionButton(
     Button(
             onClick = onClick,
             enabled = enabled,
-            modifier = Modifier.fillMaxWidth().scale(scale).height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .scale(scale)
+                .height(56.dp),
             colors =
                     ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -899,30 +926,33 @@ fun EnhancedInfoItem(
 
     Card(
             modifier =
-                    Modifier.fillMaxWidth()
-                            .scale(scale)
-                            .clickable(
-                                    enabled = isCopyable,
-                                    interactionSource = interactionSource,
-                                    indication = null,
-                                    onClick = {
-                                        val clipboard =
-                                                context.getSystemService(
-                                                        Context.CLIPBOARD_SERVICE
-                                                ) as
-                                                        ClipboardManager
-                                        clipboard.setPrimaryClip(
-                                                ClipData.newPlainText(title, value)
-                                        )
-                                        Toast.makeText(context, copiedMessage, Toast.LENGTH_SHORT)
-                                                .show()
-                                    }
-                            ),
+                    Modifier
+                        .fillMaxWidth()
+                        .scale(scale)
+                        .clickable(
+                            enabled = isCopyable,
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = {
+                                val clipboard =
+                                    context.getSystemService(
+                                        Context.CLIPBOARD_SERVICE
+                                    ) as
+                                            ClipboardManager
+                                clipboard.setPrimaryClip(
+                                    ClipData.newPlainText(title, value)
+                                )
+                                Toast.makeText(context, copiedMessage, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        ),
             colors = CardDefaults.cardColors(containerColor = backgroundColor),
             shape = MaterialTheme.shapes.extraLarge
     ) {
         Row(
-                modifier = Modifier.fillMaxWidth().padding(20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
             Surface(

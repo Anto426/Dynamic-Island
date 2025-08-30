@@ -77,7 +77,6 @@ fun EnabledAppsSettingsScreen() {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            // Header informativo
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -94,6 +93,7 @@ fun EnabledAppsSettingsScreen() {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+
                     Surface(
                         modifier = Modifier.size(48.dp),
                         shape = CircleShape,
@@ -120,9 +120,43 @@ fun EnabledAppsSettingsScreen() {
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
-                            text = stringResource(id = R.string.enabled_apps_summary, IslandSettings.instance.enabledApps.size, apps.size),
+                            text = stringResource(id = R.string.enabled_apps_count, IslandSettings.instance.enabledApps.size, apps.size),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                        )
+                    }
+
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        AssistChip(
+                            onClick = {
+                                IslandSettings.instance.enabledApps.clear()
+                                IslandSettings.instance.enabledApps.addAll(apps.map { it.packageName })
+                                IslandSettings.instance.applySettings(context)
+                            },
+                            label = { Text(stringResource(id = R.string.select_all)) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.DoneAll,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+                        )
+
+                        AssistChip(
+                            onClick = {
+                                // Deseleziona tutte
+                                IslandSettings.instance.enabledApps.clear()
+                                IslandSettings.instance.applySettings(context)
+                            },
+                            label = { Text(stringResource(id = R.string.clear_all)) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.ClearAll,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         )
                     }
                 }

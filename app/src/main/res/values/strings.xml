@@ -288,6 +288,9 @@
     <string name="reset_settings">Reset settings</string>
     <string name="behavior_visibility_section">Visibility</string>
     <string name="behavior_autohide_section">Autohide</string>
+    <string name="behavior_autohide_enabled_title">Enable autohide</string>
+    <string name="behavior_autohide_enabled_desc">Automatically hide the island after a delay when idle</string>
+    <string name="behavior_autohide_expanded_island_title">Hide the expanded island after</string>
     <string name="behavior_animations_feedback_section">Animations &amp; Feedback</string>
     <string name="dev_error_connection">Connection error.</string>
     <string name="dev_error_not_found">Not found.</string>
@@ -308,7 +311,15 @@
     <string name="stars">Stars</string>
     <string name="open_repository">Open Repository</string>
     <string name="enabled_apps_summary">Choose which apps can use the Dynamic Island.</string>
+    <string name="enabled_apps_count">Enabled %1$d/%2$d</string>
+    <string name="select_all">Select all</string>
+    <string name="clear_all">Clear all</string>
     <string name="style_title">Style</string>
+    <string name="size_width_compact">Width (compact)</string>
+    <string name="size_height_compact">Height (compact)</string>
+    <string name="size_height_expanded">Height (expanded)</string>
+    <string name="preview_controls">Preview</string>
+    <string name="preview_expand">Expand</string>
     <string name="update_available_prompt">An update is available!</string>
     <string name="update_channel_description">Select the release channel for app updates.</string>
     <string name="permission_required_title">Permission Required</string>
@@ -334,4 +345,9 @@
     <string name="settings_section_appearance">Appearance</string>
     <string name="settings_search_results">Search Results</string>
     <string name="settings_section_behavior">Behavior</string>
+    <!-- Behavior additions -->
+    <string name="silent_mode_title">Silent mode</string>
+    <string name="silent_mode_desc">Mute any sounds from the island</string>
+    <string name="low_power_mode_title">Low power mode</string>
+    <string name="low_power_mode_desc">Reduce animations and effects to save battery</string>
 </resources>

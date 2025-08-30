@@ -255,7 +255,7 @@ fun PluginSettingsScreen(
                         )
 
                         Text(
-                            text = "di ${plugin.author}",
+                            text = stringResource(id = R.string.plugin_author_prefix) + plugin.author,
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                             textAlign = TextAlign.Center

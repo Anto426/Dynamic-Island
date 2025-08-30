@@ -278,6 +278,9 @@
     <string name="reset_settings">Ripristina impostazioni</string>
     <string name="behavior_visibility_section">Visibilità</string>
     <string name="behavior_autohide_section">Nascondi Automaticamente</string>
+    <string name="behavior_autohide_enabled_title">Abilita auto-nascondi</string>
+    <string name="behavior_autohide_enabled_desc">Nascondi automaticamente l’isola dopo un ritardo quando inattiva</string>
+    <string name="behavior_autohide_expanded_island_title">Nascondi l’isola espansa dopo</string>
     <string name="behavior_animations_feedback_section">Animazioni e Feedback</string>
 
     <string name="dev_error_connection">Errore di connessione.</string>
@@ -300,7 +303,15 @@
     <string name="open_repository">Apri Repository</string>
 
     <string name="enabled_apps_summary">Scegli quali app possono usare la Dynamic Island.</string>
+    <string name="enabled_apps_count">Abilitate %1$d/%2$d</string>
+    <string name="select_all">Seleziona tutte</string>
+    <string name="clear_all">Deseleziona tutte</string>
     <string name="style_title">Stile</string>
+    <string name="size_width_compact">Larghezza (compatta)</string>
+    <string name="size_height_compact">Altezza (compatta)</string>
+    <string name="size_height_expanded">Altezza (espansa)</string>
+    <string name="preview_controls">Anteprima</string>
+    <string name="preview_expand">Espandi</string>
     <string name="update_available_prompt">Un aggiornamento è disponibile!</string>
     <string name="update_channel_description">Seleziona il canale di rilascio per gli aggiornamenti dell’app.</string>
     <string name="permission_required_title">Permesso Richiesto</string>

@@ -94,7 +94,7 @@ fun PositionSizeSettingsScreen() {
 
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = stringResource(id = R.string.settings_position_size_subtitle),
+                                text = stringResource(id = R.string.settings_position_size_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -250,11 +250,21 @@ fun PositionSizeSettingsScreen() {
                                 .padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(20.dp)
                         ) {
-                            // Slider per larghezza
+                            // Anteprima/azione rapida: espandi per regolare misure
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = stringResource(id = R.string.preview_controls))
+                                Spacer(Modifier.weight(1f))
+                                OutlinedButton(onClick = {
+                                    com.anto426.dynamicisland.model.service.IslandOverlayService.getInstance()?.expand()
+                                }) { Text(stringResource(id = R.string.preview_expand)) }
+                            }
+
+                            // Slider per larghezza (compatta)
                             EnhancedSliderItem(
-                                title = stringResource(id = R.string.size_width),
+                                title = stringResource(id = R.string.size_width_compact),
                                 value = IslandSettings.instance.width.toFloat(),
-                                range = IslandViewState.Opened.height.value * 3..LocalConfiguration.current.screenWidthDp.toFloat() - IslandViewState.Opened.yPosition.value * 2,
+                                // Range più stabile: minimo ragionevole e massimo vicino alla larghezza schermo
+                                range = 80f..(LocalConfiguration.current.screenWidthDp.toFloat() - 32f).coerceAtLeast(120f),
                                 onValueChange = {
                                     IslandSettings.instance.width = it.roundToInt()
                                     IslandSettings.instance.applySettings(context)
@@ -266,17 +276,44 @@ fun PositionSizeSettingsScreen() {
                                 icon = Icons.Default.WidthNormal
                             )
 
-                            // Slider per altezza
+                            // Altezza compattata
                             EnhancedSliderItem(
-                                title = stringResource(id = R.string.size_height),
-                                value = IslandSettings.instance.height.toFloat(),
-                                range = 1f..LocalConfiguration.current.screenHeightDp.toFloat() / 2,
+                                title = stringResource(id = R.string.size_height_compact),
+                                value = IslandSettings.instance.openedHeight.toFloat(),
+                                range = 20f..120f,
                                 onValueChange = {
-                                    IslandSettings.instance.height = it.roundToInt()
+                                    val newOpened = it.roundToInt()
+                                    IslandSettings.instance.openedHeight = newOpened
+                                    // Mantieni l'altezza espansa sempre maggiore di quella compatta
+                                    if (IslandSettings.instance.height <= newOpened) {
+                                        IslandSettings.instance.height = newOpened + 4
+                                    }
                                     IslandSettings.instance.applySettings(context)
                                 },
                                 onReset = {
-                                    IslandSettings.instance.height = 200
+                                    IslandSettings.instance.openedHeight = 34
+                                    if (IslandSettings.instance.height <= 34) {
+                                        IslandSettings.instance.height = 38
+                                    }
+                                    IslandSettings.instance.applySettings(context)
+                                },
+                                icon = Icons.Default.Height
+                            )
+
+                            // Altezza espansa
+                            EnhancedSliderItem(
+                                title = stringResource(id = R.string.size_height_expanded),
+                                value = IslandSettings.instance.height.toFloat(),
+                                range = ((IslandSettings.instance.openedHeight + 4).toFloat())..(LocalConfiguration.current.screenHeightDp.toFloat() / 2f),
+                                onValueChange = {
+                                    val minExpanded = IslandSettings.instance.openedHeight + 4
+                                    val newExpanded = it.roundToInt().coerceAtLeast(minExpanded)
+                                    IslandSettings.instance.height = newExpanded
+                                    IslandSettings.instance.applySettings(context)
+                                },
+                                onReset = {
+                                    val minExpanded = IslandSettings.instance.openedHeight + 4
+                                    IslandSettings.instance.height = 200.coerceAtLeast(minExpanded)
                                     IslandSettings.instance.applySettings(context)
                                 },
                                 icon = Icons.Default.Height

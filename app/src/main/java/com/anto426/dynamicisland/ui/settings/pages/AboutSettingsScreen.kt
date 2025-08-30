@@ -111,7 +111,7 @@ fun AboutSettingsScreen() {
                         )
 
                         Text(
-                            text = "Versione $versionName",
+                            text = stringResource(id = R.string.about_version) + " $versionName",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
@@ -130,7 +130,7 @@ fun AboutSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Informazioni App",
+                        text = stringResource(id = R.string.about_app_info_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -195,7 +195,7 @@ fun AboutSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Dispositivo",
+                        text = stringResource(id = R.string.about_device_info_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -240,7 +240,7 @@ fun AboutSettingsScreen() {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
-                        text = "Link Utili",
+                        text = stringResource(id = R.string.about_useful_links_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface

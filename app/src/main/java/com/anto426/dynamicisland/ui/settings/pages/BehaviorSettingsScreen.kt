@@ -1,5 +1,6 @@
 package com.anto426.dynamicisland.ui.settings.pages
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -35,6 +36,7 @@ import androidx.compose.material.icons.filled.Vibration
 /**
  * Schermata completamente ridisegnata per le impostazioni di comportamento
  */
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BehaviorSettingsScreen() {
@@ -48,7 +50,6 @@ fun BehaviorSettingsScreen() {
             verticalArrangement = Arrangement.spacedBy(24.dp),
             contentPadding = PaddingValues(vertical = 24.dp)
         ) {
-            // Header informativo
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -99,7 +100,6 @@ fun BehaviorSettingsScreen() {
                 }
             }
 
-            // Sezione: Visibilità
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
@@ -177,6 +177,17 @@ fun BehaviorSettingsScreen() {
                                 .padding(20.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.behavior_autohide_enabled_title),
+                                description = stringResource(id = R.string.behavior_autohide_enabled_desc),
+                                icon = Icons.Default.VisibilityOff,
+                                checked = IslandSettings.instance.autoHideEnabled,
+                                onCheckedChange = {
+                                    IslandSettings.instance.autoHideEnabled = it
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
                             Text(
                                 text = stringResource(id = R.string.behavior_autohide_title),
                                 style = MaterialTheme.typography.titleMedium,
@@ -192,6 +203,19 @@ fun BehaviorSettingsScreen() {
                                 range = 0.5f..60f,
                                 onValueChange = {
                                     IslandSettings.instance.autoHideOpenedAfter = it * 1000
+                                    IslandSettings.instance.applySettings(context)
+                                },
+                                icon = Icons.Default.Schedule,
+                                unit = "s"
+                            )
+
+                            // Nuovo: auto-nascondimento per isola espansa
+                            EnhancedSliderItem(
+                                title = stringResource(id = R.string.behavior_autohide_expanded_island_title),
+                                value = IslandSettings.instance.autoHideExpandedAfter / 1000f,
+                                range = 1f..120f,
+                                onValueChange = {
+                                    IslandSettings.instance.autoHideExpandedAfter = it * 1000
                                     IslandSettings.instance.applySettings(context)
                                 },
                                 icon = Icons.Default.Schedule,
@@ -233,7 +257,8 @@ fun BehaviorSettingsScreen() {
                                 onCheckedChange = { enabled ->
                                     IslandSettings.instance.animationsEnabled = enabled
                                     IslandSettings.instance.applySettings(context)
-                                }
+                                },
+                                enabled = !IslandSettings.instance.lowPowerMode
                             )
 
                             HorizontalDivider(
@@ -266,6 +291,42 @@ fun BehaviorSettingsScreen() {
                                 checked = IslandSettings.instance.soundEnabled,
                                 onCheckedChange = { enabled ->
                                     IslandSettings.instance.soundEnabled = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            // Nuovo: Modalità silenziosa
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.silent_mode_title),
+                                description = stringResource(id = R.string.silent_mode_desc),
+                                icon = Icons.Default.NotificationsOff,
+                                checked = IslandSettings.instance.silentMode,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.silentMode = enabled
+                                    IslandSettings.instance.applySettings(context)
+                                }
+                            )
+
+                            HorizontalDivider(
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+
+                            // Nuovo: Risparmio energetico (disabilita animazioni)
+                            EnhancedSettingSwitch(
+                                title = stringResource(id = R.string.low_power_mode_title),
+                                description = stringResource(id = R.string.low_power_mode_desc),
+                                icon = Icons.Default.BatterySaver,
+                                checked = IslandSettings.instance.lowPowerMode,
+                                onCheckedChange = { enabled ->
+                                    IslandSettings.instance.lowPowerMode = enabled
                                     IslandSettings.instance.applySettings(context)
                                 }
                             )

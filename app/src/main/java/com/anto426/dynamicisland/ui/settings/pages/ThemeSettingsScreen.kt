@@ -156,7 +156,7 @@ fun ThemeSettingsScreen() {
                             EnhancedSettingSwitch(
                                 title = stringResource(id = R.string.dynamic_theme_title),
                                 description = stringResource(id = R.string.dynamic_theme_desc),
-                                icon = Icons.Default.BatteryFull,
+                                icon = Icons.Default.Palette,
                                 checked = IslandSettings.instance.dynamicThemeEnabled,
                                 onCheckedChange = { enabled ->
                                     IslandSettings.instance.dynamicThemeEnabled = enabled
@@ -454,7 +454,8 @@ fun EnhancedSettingSwitch(
     description: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -476,8 +477,8 @@ fun EnhancedSettingSwitch(
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .scale(scale),
+        .fillMaxWidth()
+        .scale(scale),
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         ),
@@ -489,7 +490,7 @@ fun EnhancedSettingSwitch(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = { onCheckedChange(!checked) }
+            onClick = { if (enabled) onCheckedChange(!checked) }
                 )
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -518,12 +519,12 @@ fun EnhancedSettingSwitch(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     maxLines = 2
                 )
             }
@@ -531,6 +532,7 @@ fun EnhancedSettingSwitch(
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
+                enabled = enabled,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = MaterialTheme.colorScheme.primary,
                     checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,

@@ -334,4 +334,15 @@
     <string name="settings_section_appearance">दिखावट</string>
     <string name="settings_search_results">खोज परिणाम</string>
     <string name="settings_section_behavior">व्यवहार</string>
+    <string name="behavior_autohide_enabled_title">Enable autohide</string>
+    <string name="behavior_autohide_enabled_desc">Automatically hide the island after a delay when idle</string>
+    <string name="behavior_autohide_expanded_island_title">Hide the expanded island after</string>
+    <string name="size_width_compact">Width (compact)</string>
+    <string name="size_height_compact">Height (compact)</string>
+    <string name="size_height_expanded">Height (expanded)</string>
+    <string name="preview_controls">Preview</string>
+    <string name="preview_expand">Expand</string>
+    <string name="select_all">Select all</string>
+    <string name="clear_all">Clear all</string>
+    <string name="enabled_apps_count">Enabled %1$d/%2$d</string>
 </resources>

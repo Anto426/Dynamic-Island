@@ -114,7 +114,7 @@ private fun PluginHeaderCard(enabledPluginsCount: Int) {
 
 			// Statistiche centrate
 			Text(
-				text = "$enabledPluginsCount di ${ExportedPlugins.plugins.size} plugin attivi",
+				text = stringResource(id = R.string.plugins_enabled_count, enabledPluginsCount),
 				style = MaterialTheme.typography.bodyLarge,
 				color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
 				textAlign = TextAlign.Center,
@@ -195,7 +195,7 @@ private fun PluginCard(
 			// Freccia per indicare navigazione
 			Icon(
 				imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
-				contentDescription = "Vai ai dettagli",
+				contentDescription = stringResource(id = R.string.go_to_details),
 				tint = MaterialTheme.colorScheme.onSurfaceVariant,
 				modifier = Modifier.size(24.dp)
 			)
