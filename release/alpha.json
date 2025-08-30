@@ -14,11 +14,13 @@
       "version": "2.1.2",
       "date": "2025-08-30",
       "changes": [
-        "Correzioni ai permessi di download e fallback a storage privato",
-        "Miglioramento della validazione checksum per placeholder invalidi",
-        "Installazione automatica degli aggiornamenti dopo il download",
-        "Aggiornamento interfaccia utente per il pulsante di installazione",
-        "Pulizia automatica delle vecchie versioni APK"
+        "🐛 Correzioni download e installazione: permessi EACCES, validazione checksum, auto-install",
+        "🔧 Sistema aggiornamenti migliorato: UI pulsante installazione, FileProvider, gestione errori",
+        "✨ Nuove funzionalità: pulizia automatica APK, notifiche aggiornamenti, localizzazioni complete",
+        "🎨 UI/UX migliorata: schermi localizzati, temi raffinati, navigazione ottimizzata",
+        "🏗️ Refactoring: rimossi componenti obsoleti, ottimizzazioni build e configurazione",
+        "🌐 Internazionalizzazione: traduzioni per 10+ lingue, risorse stringa centralizzate",
+        "📦 Build ottimizzato: Gradle tweaks, manifest pulito, lint baseline"
       ]
     },
     {
