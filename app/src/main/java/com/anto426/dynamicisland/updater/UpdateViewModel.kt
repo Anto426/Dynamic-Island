@@ -64,6 +64,9 @@ class UpdateViewModel : ViewModel() {
         // Carica lo stato dell'ultimo controllo aggiornamenti
         loadSavedUpdateState(context)
 
+        // Carica lo stato del download se presente
+        loadSavedDownloadState(context)
+
         // Ottiene versione attuale
         getCurrentVersion(context)
     }
@@ -110,6 +113,37 @@ class UpdateViewModel : ViewModel() {
                 _uiState.value = _uiState.value.copy(
                     updateCheckState = UpdateCheckState.UpdateAvailable(updateInfo)
                 )
+            }
+        }
+    }
+
+    private fun loadSavedDownloadState(context: Context) {
+        val prefs = context.getSharedPreferences(PrefKeys.FILE, Context.MODE_PRIVATE)
+        val savedPath = prefs.getString(PrefKeys.DOWNLOADED_APK_PATH, null)
+        val savedVersion = prefs.getString(PrefKeys.DOWNLOADED_APK_VERSION, null)
+
+        if (!savedPath.isNullOrEmpty() && !savedVersion.isNullOrEmpty()) {
+            val apkFile = File(savedPath)
+            if (apkFile.exists()) {
+                // Check if this version is already installed
+                if (savedVersion == _uiState.value.currentVersion) {
+                    // Version already installed, clean up
+                    apkFile.delete()
+                    prefs.edit()
+                        .remove(PrefKeys.DOWNLOADED_APK_PATH)
+                        .remove(PrefKeys.DOWNLOADED_APK_VERSION)
+                        .apply()
+                } else {
+                    _uiState.value = _uiState.value.copy(
+                        downloadState = DownloadState.Completed(apkFile)
+                    )
+                }
+            } else {
+                // File doesn't exist, clean up prefs
+                prefs.edit()
+                    .remove(PrefKeys.DOWNLOADED_APK_PATH)
+                    .remove(PrefKeys.DOWNLOADED_APK_VERSION)
+                    .apply()
             }
         }
     }
@@ -314,7 +348,10 @@ class UpdateViewModel : ViewModel() {
                         flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
                     }
                     context.startActivity(settingsIntent)
-                    // Lascia anche il file in stato completato; l'utente potrà riprovare l'installazione dal pulsante UI
+                    // Imposta stato errore per informare l'utente
+                    _uiState.value = _uiState.value.copy(
+                        downloadState = DownloadState.Error("Permesso di installazione non concesso. Concedi il permesso nelle impostazioni.")
+                    )
                     return
                 }
             }
