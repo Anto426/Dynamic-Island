@@ -126,39 +126,7 @@ fun EnabledAppsSettingsScreen() {
                         )
                     }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        AssistChip(
-                            onClick = {
-                                IslandSettings.instance.enabledApps.clear()
-                                IslandSettings.instance.enabledApps.addAll(apps.map { it.packageName })
-                                IslandSettings.instance.applySettings(context)
-                            },
-                            label = { Text(stringResource(id = R.string.select_all)) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.DoneAll,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        )
 
-                        AssistChip(
-                            onClick = {
-                                // Deseleziona tutte
-                                IslandSettings.instance.enabledApps.clear()
-                                IslandSettings.instance.applySettings(context)
-                            },
-                            label = { Text(stringResource(id = R.string.clear_all)) },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.ClearAll,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        )
-                    }
                 }
             }
 

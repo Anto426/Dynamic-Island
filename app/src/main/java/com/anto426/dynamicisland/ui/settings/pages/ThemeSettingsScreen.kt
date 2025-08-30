@@ -89,17 +89,12 @@ fun ThemeSettingsScreen() {
                             shape = CircleShape,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.1f)
                         ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Palette,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.size(24.dp)
                                 )
-                            }
                         }
 
                         Column(modifier = Modifier.weight(1f)) {
@@ -147,28 +142,22 @@ fun ThemeSettingsScreen() {
                         ),
                         shape = MaterialTheme.shapes.extraLarge
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            EnhancedSettingSwitch(
-                                title = stringResource(id = R.string.dynamic_theme_title),
-                                description = stringResource(id = R.string.dynamic_theme_desc),
-                                icon = Icons.Default.Palette,
-                                checked = IslandSettings.instance.dynamicThemeEnabled,
-                                onCheckedChange = { enabled ->
-                                    IslandSettings.instance.dynamicThemeEnabled = enabled
-                                    IslandSettings.instance.applySettings(context)
-                                }
-                            )
-                        }
+
+                        EnhancedSettingSwitch(
+                            title = stringResource(id = R.string.dynamic_theme_title),
+                            description = stringResource(id = R.string.dynamic_theme_desc),
+                            icon = Icons.Default.Palette,
+                            checked = IslandSettings.instance.dynamicThemeEnabled,
+                            onCheckedChange = { enabled ->
+                                IslandSettings.instance.dynamicThemeEnabled = enabled
+                                IslandSettings.instance.applySettings(context)
+                            }
+                        )
+
                     }
                 }
             }
 
-            // Sezione preferenze tema
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
@@ -262,7 +251,7 @@ fun ThemeSettingsScreen() {
 
                             @OptIn(kotlin.ExperimentalStdlibApi::class)
                             Column(Modifier.selectableGroup()) {
-                                Theme.ThemeStyle.values().forEach { themeStyle ->
+                                Theme.ThemeStyle.entries.forEach { themeStyle ->
                                     EnhancedStyleRadioButton(
                                         themeStyle = themeStyle,
                                         selected = (themeStyle == styleSelectedOption),
@@ -477,8 +466,8 @@ fun EnhancedSettingSwitch(
 
     Card(
         modifier = Modifier
-        .fillMaxWidth()
-        .scale(scale),
+            .fillMaxWidth()
+            .scale(scale),
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
         ),
@@ -490,7 +479,7 @@ fun EnhancedSettingSwitch(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-            onClick = { if (enabled) onCheckedChange(!checked) }
+                    onClick = { if (enabled) onCheckedChange(!checked) }
                 )
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
