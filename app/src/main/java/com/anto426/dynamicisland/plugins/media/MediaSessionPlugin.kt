@@ -3,7 +3,6 @@ package com.anto426.dynamicisland.plugins.media
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.media.session.MediaController
 import android.media.session.MediaSessionManager
@@ -36,7 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
+import com.anto426.dynamicisland.plugins.PluginPriority
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
+import com.anto426.dynamicisland.ui.island.PluginDefaults
 import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -68,6 +69,8 @@ class MediaSessionPlugin(
 	val pluginScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
 	private var activeCallback by mutableStateOf<MediaCallback?>(null)
+	// Traccia quando abbiamo mostrato per l'ultima volta una sessione in pausa, per evitare loop
+	private var lastPausedShownAt: Long = 0L
 
 	private val listenerForActiveSessions = MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
 		controllers?.forEach { registerController(it) }
@@ -103,29 +106,39 @@ class MediaSessionPlugin(
 	}
 
 	fun updateActiveMediaSession() {
-		val playingSession = callbackMap.values.firstOrNull { it.mediaStruct.isPlaying() }
+		// Filtra sessioni con contenuti significativi per evitare falsi positivi
+		val meaningful = callbackMap.values.filter { it.mediaStruct.hasMeaningfulContent() }
+		val playingSession = meaningful.firstOrNull { it.mediaStruct.isPlaying() }
 
 		if (playingSession != null) {
 			activeCallback = playingSession
-			context.addPlugin(this)
-		} else {
-			val mostRecentActive = callbackMap.values.filter {
-				// CORREZIONE 1: Aggiunto operatore safe-call (?.) e valore di default (?:)
-				val state = it.mediaStruct.playbackState.value?.state ?: PlaybackState.STATE_NONE
-				state != PlaybackState.STATE_NONE && state != PlaybackState.STATE_STOPPED
-			}.maxByOrNull {
-				// CORREZIONE 2: Aggiunto operatore safe-call (?.) e valore di default (?:)
-				it.mediaStruct.playbackState.value?.lastPositionUpdateTime ?: 0L
-			}
+			if (priority.value.ordinal < PluginPriority.MEDIUM.ordinal) priority.value = PluginPriority.MEDIUM
+			this.show(context)
+			// Reset gestione pausa
+			lastPausedShownAt = 0L
+			playingSession.cancelAutoHideJob()
+			return
+		}
 
-			if (mostRecentActive != null) {
-				activeCallback = mostRecentActive
-				context.addPlugin(this)
-				mostRecentActive.startAutoHideJob()
+		// Paused or stopped
+		val pausedSession = meaningful.firstOrNull {
+			it.mediaStruct.playbackState.value?.state == PlaybackState.STATE_PAUSED
+		}
+		if (pausedSession != null) {
+			activeCallback = pausedSession
+			val now = System.currentTimeMillis()
+			val shouldShowBriefly = now - lastPausedShownAt > 5_000
+			if (shouldShowBriefly) {
+				lastPausedShownAt = now
+				this.show(context, timeoutMs = 5_000)
+				pausedSession.startAutoHideJob(timeoutMs = 5_000)
 			} else {
-				activeCallback = null
-				context.removePlugin(this)
+				// Se abbiamo già mostrato di recente la pausa, non risollevare
+				this.hide(context)
 			}
+		} else {
+			activeCallback = null
+			this.hide(context)
 		}
 	}
 
@@ -160,7 +173,9 @@ class MediaSessionPlugin(
 		Box(modifier = Modifier.fillMaxSize()) {
 			PlayerBackground(cover = mediaStruct.cover.value)
 			Column(
-				modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 16.dp),
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(PluginDefaults.ContentPadding),
 				horizontalAlignment = Alignment.CenterHorizontally,
 				verticalArrangement = Arrangement.SpaceAround
 			) {

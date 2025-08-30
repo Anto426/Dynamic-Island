@@ -10,6 +10,7 @@ import com.anto426.dynamicisland.model.SETTINGS_CHANGED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import androidx.core.content.edit
+import com.anto426.dynamicisland.plugins.PluginManager
 
 abstract class BasePlugin {
 	abstract val id: String
@@ -21,6 +22,15 @@ abstract class BasePlugin {
 	abstract val permissions: ArrayList<String>
 	abstract var enabled: MutableState<Boolean>
 	abstract var pluginSettings: MutableMap<String, PluginSettingsItem>
+
+	// Priority model (persisted)
+	var priority: MutableState<PluginPriority> = androidx.compose.runtime.mutableStateOf(PluginPriority.MEDIUM)
+	// Track last time this plugin requested to show (used as tie-breaker)
+	var lastUpdatedAt: MutableState<Long> = androidx.compose.runtime.mutableStateOf(0L)
+	// Whether this plugin currently wants to be visible in the island
+	var wantsToShow: MutableState<Boolean> = androidx.compose.runtime.mutableStateOf(false)
+	// Whether plugin resources are started (managed by PluginEngine)
+	var isStarted: MutableState<Boolean> = androidx.compose.runtime.mutableStateOf(false)
 
 	val active get() = enabled.value && allPermissionsGranted
 
@@ -70,5 +80,30 @@ abstract class BasePlugin {
 		val preferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
 		Log.d("BasePlugin", "isPluginEnabled: ${preferences.getBoolean(id, false)}")
 		return preferences.getBoolean(id, false)
+	}
+
+	fun persistPriority(context: Context) {
+		context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE).edit {
+			putString("${id}_priority", priority.value.name)
+		}
+	}
+
+	fun loadPriority(context: Context) {
+		val preferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
+		priority.value = PluginPriority.fromString(preferences.getString("${id}_priority", null))
+	}
+
+	// Helper to notify that plugin wants to show/hide and refresh ordering
+	@Suppress("UNUSED_PARAMETER")
+	fun show(service: IslandOverlayService, timeoutMs: Long = 0L) {
+		wantsToShow.value = true
+		lastUpdatedAt.value = System.currentTimeMillis()
+		PluginManager.submit(this, priority.value, timeoutMs)
+	}
+
+	@Suppress("UNUSED_PARAMETER")
+	fun hide(service: IslandOverlayService) {
+		wantsToShow.value = false
+		PluginManager.end(this)
 	}
 }

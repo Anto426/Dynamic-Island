@@ -37,8 +37,13 @@ import com.anto426.dynamicisland.model.NOTIFICATION_REMOVED
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
+import com.anto426.dynamicisland.plugins.PluginPriority
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
+import androidx.core.content.ContextCompat
 import com.skydoves.landscapist.rememberDrawablePainter
+import com.anto426.dynamicisland.ui.island.RoundedPainterIcon
+import com.anto426.dynamicisland.ui.island.SectionCard
+import com.anto426.dynamicisland.ui.island.PluginDefaults
 import kotlinx.coroutines.*
 
 class NotificationPlugin(
@@ -74,8 +79,8 @@ class NotificationPlugin(
 					val sbn = notificationService?.notifications?.lastOrNull { it.id == notificationId } ?: return
 					Log.d(TAG, "Notifica ricevuta: ${sbn.notification.extras.getString(Notification.EXTRA_TITLE)}")
 					notificationMeta = NotificationMeta(
-						title = sbn.notification.extras.getString(Notification.EXTRA_TITLE),
-						body = sbn.notification.extras.getString(Notification.EXTRA_TEXT) ?: "",
+						title = sbn.notification.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
+						body = sbn.notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: "",
 						id = sbn.id,
 						iconDrawable = sbn.notification.smallIcon.loadDrawable(context) ?: return,
 						packageName = sbn.packageName,
@@ -83,7 +88,9 @@ class NotificationPlugin(
 						statusBarNotification = sbn
 					)
 					startDismissTimeout()
-					this@NotificationPlugin.context.addPlugin(this@NotificationPlugin)
+					// Notifications are high priority by default
+					if (priority.value.ordinal < PluginPriority.HIGH.ordinal) priority.value = PluginPriority.HIGH
+					this@NotificationPlugin.show(this@NotificationPlugin.context)
 				}
 				NOTIFICATION_REMOVED -> {
 					val removedId = extras.getInt("id")
@@ -102,8 +109,8 @@ class NotificationPlugin(
 		val nextSbn = notificationService?.notifications?.firstOrNull()
 		notificationMeta = nextSbn?.let {
 			NotificationMeta(
-				title = it.notification.extras.getString(Notification.EXTRA_TITLE),
-				body = it.notification.extras.getString(Notification.EXTRA_TEXT) ?: "",
+				title = it.notification.extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
+				body = it.notification.extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: "",
 				id = it.id,
 				iconDrawable = it.notification.smallIcon.loadDrawable(context) ?: return@let null,
 				packageName = it.packageName,
@@ -114,7 +121,7 @@ class NotificationPlugin(
 
 		if (notificationMeta == null) {
 			Log.d(TAG, "Nessuna notifica rimasta, rimuovo il plugin.")
-			context.removePlugin(this)
+			this.hide(context)
 		} else {
 			startDismissTimeout()
 		}
@@ -128,7 +135,12 @@ class NotificationPlugin(
 			addAction(NOTIFICATION_POSTED)
 			addAction(NOTIFICATION_REMOVED)
 		}
-		context.registerReceiver(notificationBroadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+		ContextCompat.registerReceiver(
+			context,
+			notificationBroadcastReceiver,
+			filter,
+			ContextCompat.RECEIVER_NOT_EXPORTED
+		)
 	}
 
 	@Composable
@@ -138,7 +150,7 @@ class NotificationPlugin(
 		Column(
 			modifier = Modifier
 				.fillMaxSize()
-				.padding(20.dp),
+				.padding(PluginDefaults.ContentPadding),
 			horizontalAlignment = Alignment.CenterHorizontally,
 			verticalArrangement = Arrangement.spacedBy(16.dp)
 		) {
@@ -149,23 +161,9 @@ class NotificationPlugin(
 				horizontalArrangement = Arrangement.spacedBy(16.dp)
 			) {
 				// Icona dell'app
-				Surface(
-					modifier = Modifier.size(56.dp),
-					shape = CircleShape,
-					color = MaterialTheme.colorScheme.primaryContainer
-				) {
-					Box(
-						contentAlignment = Alignment.Center,
-						modifier = Modifier.fillMaxSize()
-					) {
-						Icon(
-							painter = rememberDrawablePainter(drawable = meta.iconDrawable),
-							contentDescription = "Icona app",
-							tint = MaterialTheme.colorScheme.onPrimaryContainer,
-							modifier = Modifier.size(28.dp)
-						)
-					}
-				}
+				RoundedPainterIcon(
+					painter = rememberDrawablePainter(drawable = meta.iconDrawable)
+				)
 
 				// Titolo e corpo
 				Column(
@@ -196,26 +194,8 @@ class NotificationPlugin(
 
 			// Azioni disponibili
 			if (meta.actions.isNotEmpty()) {
-				Card(
-					modifier = Modifier.fillMaxWidth(),
-					colors = CardDefaults.cardColors(
-						containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-					),
-					shape = MaterialTheme.shapes.large
-				) {
-					Column(
-						modifier = Modifier.padding(16.dp),
-						verticalArrangement = Arrangement.spacedBy(12.dp)
-					) {
-						Text(
-							text = "Azioni",
-							style = MaterialTheme.typography.titleSmall,
-							fontWeight = FontWeight.Medium,
-							color = MaterialTheme.colorScheme.primary
-						)
-
-						NotificationActions(meta)
-					}
+				SectionCard(title = "Azioni", modifier = Modifier.fillMaxWidth()) {
+					NotificationActions(meta)
 				}
 			}
 

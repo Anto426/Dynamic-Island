@@ -44,23 +44,29 @@ class MediaCallback(
 	}
 
 	// NUOVO: Funzione chiamata dal plugin per avviare il timer di rimozione
-	fun startAutoHideJob() {
-		// Se è già in esecuzione, non fare nulla
-		if (autoHideJob?.isActive == true) return
-
+	fun startAutoHideJob(timeoutMs: Long = AUTO_HIDE_TIMEOUT) {
+		autoHideJob?.cancel()
 		autoHideJob = plugin.pluginScope.launch {
-			delay(AUTO_HIDE_TIMEOUT)
+			delay(timeoutMs)
 			// Dopo il timeout, ricontrolla lo stato
 			plugin.updateActiveMediaSession()
 		}
+	}
+
+	fun cancelAutoHideJob() {
+		autoHideJob?.cancel()
+		autoHideJob = null
 	}
 
 	override fun onMetadataChanged(metadata: MediaMetadata?) {
 		super.onMetadataChanged(metadata)
 		if (metadata == null) return
 
-		mediaStruct.title.value = (metadata.getText(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title").toString()
-		mediaStruct.artist.value = (metadata.getText(MediaMetadata.METADATA_KEY_ARTIST) ?: "Unknown Artist").toString()
+		val titleText = metadata.getText(MediaMetadata.METADATA_KEY_TITLE)?.toString()?.trim()
+		val artistText = metadata.getText(MediaMetadata.METADATA_KEY_ARTIST)?.toString()?.trim()
+		// Non impostare placeholder rumorosi; mantieni stringhe vuote quando assenti
+		mediaStruct.title.value = titleText ?: ""
+		mediaStruct.artist.value = artistText ?: ""
 		mediaStruct.cover.value = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
 			?: metadata.getBitmap(MediaMetadata.METADATA_KEY_ART)
 					?: metadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)

@@ -43,12 +43,15 @@ import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.model.BATTERY_SHOW_PERCENTAGE
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.plugins.BasePlugin
+import com.anto426.dynamicisland.plugins.PluginPriority
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
 import com.anto426.dynamicisland.ui.theme.BatteryEmpty
 import com.anto426.dynamicisland.ui.theme.BatteryFull
 import java.util.concurrent.TimeUnit
 import androidx.core.content.edit
 import com.anto426.dynamicisland.R
+import com.anto426.dynamicisland.ui.island.PluginDefaults
+import com.anto426.dynamicisland.ui.island.SectionCard
 
 private enum class DisplayMode {
 	CHARGING, LOW_BATTERY, POWER_SAVER
@@ -133,10 +136,11 @@ class BatteryPlugin(
 
 		if (newDisplayMode != displayMode) {
 			displayMode = newDisplayMode
-			if (newDisplayMode != null) {
-				context.addPlugin(this@BatteryPlugin)
-			} else {
-				context.removePlugin(this@BatteryPlugin)
+			when (newDisplayMode) {
+				DisplayMode.LOW_BATTERY -> { priority.value = PluginPriority.HIGH; show(context) }
+				DisplayMode.CHARGING -> { priority.value = PluginPriority.LOW; show(context) }
+				DisplayMode.POWER_SAVER -> { priority.value = PluginPriority.LOW; show(context) }
+				null -> hide(context)
 			}
 		}
 	}
@@ -233,7 +237,7 @@ class BatteryPlugin(
 			Color.White
 
 		Column(
-			modifier = Modifier.fillMaxSize().padding(16.dp),
+			modifier = Modifier.fillMaxSize().padding(PluginDefaults.ContentPadding),
 			horizontalAlignment = Alignment.CenterHorizontally,
 			verticalArrangement = Arrangement.SpaceBetween
 		) {
@@ -293,10 +297,12 @@ class BatteryPlugin(
 			subtitle = formatChargeTime(chargeTimeRemaining),
 			overlayIcon = Icons.Rounded.Bolt,
 			actions = {
-				Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-					InfoRow(Icons.Rounded.DeviceThermostat, context.getString(R.string.temperature), "${"%.1f".format(batteryTemperature)}°C")
-					InfoRow(Icons.Rounded.Power, context.getString(R.string.power_source), chargingSource)
-					InfoRow(Icons.Rounded.HealthAndSafety, context.getString(R.string.health), batteryHealth)
+				SectionCard(title = context.getString(R.string.go_to_details), modifier = Modifier.fillMaxWidth()) {
+					Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+						InfoRow(Icons.Rounded.DeviceThermostat, context.getString(R.string.temperature), "${"%.1f".format(batteryTemperature)}°C")
+						InfoRow(Icons.Rounded.Power, context.getString(R.string.power_source), chargingSource)
+						InfoRow(Icons.Rounded.HealthAndSafety, context.getString(R.string.health), batteryHealth)
+					}
 				}
 			}
 		)
@@ -309,21 +315,23 @@ class BatteryPlugin(
 			title = context.getString(R.string.battery_low_title),
 			subtitle = context.getString(R.string.battery_remaining_subtitle, batteryPercent),
 			actions = {
-				Row(
-					modifier = Modifier.fillMaxWidth(),
-					horizontalArrangement = Arrangement.SpaceEvenly,
-					verticalAlignment = Alignment.CenterVertically
-				) {
-					TextButton(onClick = { context.removePlugin(this@BatteryPlugin) }) {
-						Text(stringResource(id = R.string.ignore))
-					}
-					Button(onClick = {
-						val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
-						intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-						context.startActivity(intent)
-						context.shrink()
-					}) {
-						Text(stringResource(id = R.string.battery_saver))
+				SectionCard(modifier = Modifier.fillMaxWidth()) {
+					Row(
+						modifier = Modifier.fillMaxWidth(),
+						horizontalArrangement = Arrangement.SpaceEvenly,
+						verticalAlignment = Alignment.CenterVertically
+					) {
+						TextButton(onClick = { context.removePlugin(this@BatteryPlugin) }) {
+							Text(stringResource(id = R.string.ignore))
+						}
+						Button(onClick = {
+							val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
+							intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+							context.startActivity(intent)
+							context.shrink()
+						}) {
+							Text(stringResource(id = R.string.battery_saver))
+						}
 					}
 				}
 			}
