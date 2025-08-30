@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced error handling for download failures
   - Added automatic installation after successful download
   - Implemented cleanup of old APK versions
+  - Updated FileProvider paths to use external-files-path for better compatibility
 
 ### 🔧 Changed
 - **Update System Improvements**
@@ -21,12 +22,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added explicit URI permissions for APK installation
   - Improved FileProvider configuration for secure file sharing
   - Enhanced progress tracking and user feedback
+  - Updated download URLs in release JSON files to point to main branch
+  - Enhanced DownloadManager with improved error handling, logging, and directory management
 
 ### ✨ Added
 - **New Features**
   - Automatic APK cleanup on version updates
   - Better error messages for download failures
   - Localized strings for install button in all languages
+  - Startup and manual update checks with notifications
+  - Channel description for update notifications
+  - Update card strings for better user communication
+
+### 🎨 UI/UX Improvements
+- Localized Home, Plugins, and Settings screens
+- Polished headers and search UX
+- Refined colors and typography tokens
+- Added overlay service description
+- Centralized UI text with string resources
+- Replaced old Compose screen with lightweight activity and links
+
+### 🏗️ Refactoring
+- Removed OnboardingActions and related logic
+- Removed Advanced Setting screen and related search keywords
+- Replaced `ic_launcher` with `icon` in PermissionOnboardingScreen and HomeScreen
+- Used String Resource IDs for Titles and Subtitles
+- Dropped outdated values-it placeholder; consolidated strings in default locale
+
+### 🌐 Internationalization
+- Updated English strings
+- Added translations for AR, DE, EL, ES, FR, IT, JA, PT, RU, ZH-RCN
+- Updated SettingsScreen.kt to use string resources
+
+### 📦 Build & Configuration
+- Gradle tweaks for compose/material and aapt stability
+- Manifest cleanups and theme adjustments
+- Added launcher icon
+- Removed outdated release APKs
+- Added lint baseline configuration
 
 ## [2.1.1] - 2025-08-29
 
