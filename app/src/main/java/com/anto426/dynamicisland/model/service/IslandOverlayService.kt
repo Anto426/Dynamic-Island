@@ -5,12 +5,15 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.content.Intent.ACTION_SCREEN_OFF
 import android.content.Intent.ACTION_SCREEN_ON
+import android.content.Intent.ACTION_USER_PRESENT
+import android.content.Intent.ACTION_USER_UNLOCKED
 import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.util.Log
 import android.view.*
 import android.view.WindowManager.LayoutParams.*
 import android.view.accessibility.AccessibilityEvent
+import android.app.KeyguardManager
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.AndroidUiDispatcher
 import androidx.compose.ui.platform.ComposeView
@@ -24,10 +27,18 @@ import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.island.IslandViewState
 import com.anto426.dynamicisland.model.*
 import com.anto426.dynamicisland.plugins.BasePlugin
+import com.anto426.dynamicisland.plugins.PluginPriority
+import com.anto426.dynamicisland.plugins.PluginManager
+import com.anto426.dynamicisland.plugins.PluginEngine
 import com.anto426.dynamicisland.plugins.ExportedPlugins
 import com.anto426.dynamicisland.ui.island.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import com.anto426.dynamicisland.R
 
 
@@ -52,9 +63,15 @@ class IslandOverlayService : AccessibilityService() {
 	// Plugins
 	private val plugins: ArrayList<BasePlugin> = ExportedPlugins.plugins
 	val bindedPlugins = mutableStateListOf<BasePlugin>()
+	private val initializedPlugins = mutableSetOf<String>()
+	// Keep a stack to support fallback when a higher priority plugin hides
+	private val activeStack = ArrayDeque<BasePlugin>()
 
 	// Theme
 	var invertedTheme by mutableStateOf(false)
+
+	// Auto-hide job
+	private var autoHideJob: Job? = null
 
 	companion object {
 		private var instance: IslandOverlayService? = null
@@ -68,7 +85,9 @@ class IslandOverlayService : AccessibilityService() {
 		override fun onReceive(context: Context, intent: Intent) {
 			when (intent.action) {
 				SETTINGS_CHANGED -> {
-					init()
+					// Re-setup permissions/enabled states
+					ExportedPlugins.setupPlugins(context = this@IslandOverlayService)
+					incrementalInit()
 				}
 				SETTINGS_THEME_INVERTED -> {
 					val settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
@@ -76,9 +95,16 @@ class IslandOverlayService : AccessibilityService() {
 				}
 				ACTION_SCREEN_ON -> {
 					Island.isScreenOn = true
+					val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+					Island.isLocked = km.isKeyguardLocked
 				}
 				ACTION_SCREEN_OFF -> {
 					Island.isScreenOn = false
+					Island.isLocked = true
+				}
+				ACTION_USER_PRESENT, ACTION_USER_UNLOCKED -> {
+					// Device just unlocked; ensure we show again based on normal visibility rules
+					Island.isLocked = false
 				}
 			}
 		}
@@ -98,14 +124,18 @@ class IslandOverlayService : AccessibilityService() {
 				addAction(SETTINGS_THEME_INVERTED)
 				addAction(ACTION_SCREEN_ON)
 				addAction(ACTION_SCREEN_OFF)
+				addAction(ACTION_USER_PRESENT)
+				addAction(ACTION_USER_UNLOCKED)
 			},
 			RECEIVER_EXPORTED
 		)
 
-		// Setup plugins (check if they are enabled)
+		// Setup plugins lifecycle and manager
 		ExportedPlugins.setupPlugins(context = this)
+		PluginManager.attach(this)
+		PluginEngine.start(this)
 
-		// Setup
+		// Setup initial composition
 		init()
 
 		val windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -113,29 +143,21 @@ class IslandOverlayService : AccessibilityService() {
 	}
 
 	fun init() {
-		// Remove plugins
-		plugins.forEach {
-			it.onDestroy()
-		}
-
-		// Remove binded plugins
-		bindedPlugins.forEach {
-			bindedPlugins.remove(it)
-		}
-
-		// Reset island state
+		// First-time clean state
+		initializedPlugins.clear()
+		bindedPlugins.clear()
 		islandState = IslandViewState.Closed
-
-		// Initialize the plugins
-		plugins.forEach {
-			if (!it.active) return@forEach
-			it.onCreate(this)
-			Log.d("OverlayService", "Plugin ${it.name} initialized")
-		}
+		// PluginEngine will start needed plugins
+		PluginEngine.sync(this)
 
 		// Setup inverted theme
 		val settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
 		invertedTheme = settingsPreferences.getBoolean(THEME_INVERTED, false)
+	}
+
+	private fun incrementalInit() {
+		// Delegate lifecycle sync to PluginEngine
+		PluginEngine.sync(this)
 	}
 
 	@SuppressLint("ClickableViewAccessibility")
@@ -151,11 +173,15 @@ class IslandOverlayService : AccessibilityService() {
 			// Listen for plugin changes
 			LaunchedEffect(bindedPlugins.firstOrNull()) {
 				islandState = if (bindedPlugins.firstOrNull() != null) {
-					IslandViewState.Opened
+					if (Island.isLocked && !IslandSettings.instance.showOnLockScreen) {
+						IslandViewState.Closed
+					} else IslandViewState.Opened
 				} else {
 					IslandViewState.Closed
 				}
 				Log.d("OverlayService", "Plugins changed: $bindedPlugins")
+				// Start auto-hide when a plugin appears
+				scheduleAutoHide()
 			}
 
 			IslandApp(
@@ -207,34 +233,55 @@ class IslandOverlayService : AccessibilityService() {
 	}
 
 	fun addPlugin(plugin: BasePlugin) {
-		// Check for existing plugin with same id
-		if (bindedPlugins.any { it.id == plugin.id }) {
-			Log.d("OverlayService", "Plugin with id ${plugin.id} already binded")
-			return
-		}
-		if (bindedPlugins.isNotEmpty() && plugins.indexOf(plugin) < plugins.indexOf(bindedPlugins.first())) {
-			bindedPlugins.add(0, plugin)
-			Log.d("OverlayService", "Plugin with id ${plugin.id} added at the beginning")
-		} else {
-			bindedPlugins.add(plugin)
-			Log.d("OverlayService", "Plugin with id ${plugin.id} added at the end")
-		}
+	// Update recency
+	plugin.lastUpdatedAt.value = System.currentTimeMillis()
+
+	// Push or move to top in active stack
+	activeStack.removeIf { it.id == plugin.id }
+	activeStack.addFirst(plugin)
+
+	// Refresh visible list from stack applying priority ordering
+	refreshVisibleFromStack()
 	}
 	fun removePlugin(plugin: BasePlugin) {
 		Log.d("OverlayService", "Plugin with id ${plugin.id} removed")
+		// Remove from stack and visible list, then restore next appropriate
+		activeStack.removeIf { it.id == plugin.id }
 		bindedPlugins.removeIf { it.id == plugin.id }
+		refreshVisibleFromStack()
 	}
 
-	fun expand() { islandState = IslandViewState.Expanded(configuration = resources.configuration) }
-	fun shrink() { islandState = IslandViewState.Opened }
+	private fun refreshVisibleFromStack() {
+		// Select the top-most plugin by priority then recency from the stack
+		val top = activeStack
+			.distinctBy { it.id }
+			.sortedWith(compareByDescending<BasePlugin> { it.priority.value.weight }
+				.thenByDescending { it.lastUpdatedAt.value })
+			.firstOrNull()
+
+		bindedPlugins.clear()
+		if (top != null) bindedPlugins.add(top)
+
+		islandState = if (top != null) {
+			if (Island.isLocked && !IslandSettings.instance.showOnLockScreen) {
+				IslandViewState.Closed
+			} else IslandViewState.Opened
+		} else IslandViewState.Closed
+		scheduleAutoHide()
+
+		Log.d("OverlayService", "Top plugin: ${top?.id} | stack: ${activeStack.map { it.id to it.priority.value }}")
+	}
+
+	fun expand() { islandState = IslandViewState.Expanded(configuration = resources.configuration); scheduleAutoHide() }
+	fun shrink() { islandState = IslandViewState.Opened; scheduleAutoHide() }
 
 	// Metodi per gestire le nuove impostazioni avanzate
 	fun performHapticFeedback() {
 		if (IslandSettings.instance.hapticFeedback) {
-			// Implementa haptic feedback qui
-			// Per ora usiamo una vibrazione semplice
-			val vibrator = getSystemService(VIBRATOR_SERVICE) as? android.os.Vibrator
-			vibrator?.vibrate(50)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				val vibrator = getSystemService(Vibrator::class.java)
+				vibrator?.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE))
+			}
 		}
 	}
 
@@ -246,14 +293,32 @@ class IslandOverlayService : AccessibilityService() {
 	}
 
 	fun shouldAnimate(): Boolean {
+		// Honor animations toggle; low power mode suppresses animations without changing the stored value
 		return IslandSettings.instance.animationsEnabled && !IslandSettings.instance.lowPowerMode
 	}
 
 	fun getAutoHideDelay(): Long {
+		// Autohide applies only when enabled and there is something visible to hide
+		if (!IslandSettings.instance.autoHideEnabled) return 0L
+		// Nothing to hide if no plugin is currently bound
+		if (bindedPlugins.isEmpty()) return 0L
 		return when (islandState.state) {
 			IslandStates.Opened -> IslandSettings.instance.autoHideOpenedAfter.toLong()
 			IslandStates.Expanded -> IslandSettings.instance.autoHideExpandedAfter.toLong()
 			else -> 0L
+		}
+	}
+
+	private fun scheduleAutoHide() {
+		autoHideJob?.cancel()
+		val delayMs = getAutoHideDelay()
+		if (delayMs <= 0L) return
+		autoHideJob = CoroutineScope(AndroidUiDispatcher.CurrentThread).launch {
+			delay(delayMs)
+			// Only close visual state; keep current plugin so it can re-open on new events
+			if (bindedPlugins.isNotEmpty()) {
+				islandState = IslandViewState.Closed
+			}
 		}
 	}
 
@@ -264,7 +329,8 @@ class IslandOverlayService : AccessibilityService() {
 
 	override fun onDestroy() {
 		super.onDestroy()
-		plugins.forEach { it.onDestroy() }
+		PluginEngine.stop()
+		PluginManager.detach()
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
@@ -274,4 +340,18 @@ class IslandOverlayService : AccessibilityService() {
 
 	override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 	override fun onInterrupt() {}
+
+		// Called by PluginManager to set the top plugin deterministically
+		fun setTopFromManager(top: BasePlugin?) {
+			bindedPlugins.clear()
+			if (top != null) bindedPlugins.add(top)
+			// Respect lock-screen visibility preference
+			islandState = if (top != null) {
+				if (Island.isLocked && !IslandSettings.instance.showOnLockScreen) {
+					IslandViewState.Closed
+				} else IslandViewState.Opened
+			} else IslandViewState.Closed
+			// Whenever the top changes, reschedule autohide accordingly
+			scheduleAutoHide()
+		}
 }
