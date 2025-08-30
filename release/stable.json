@@ -7,8 +7,8 @@
   "release_date": "2025-08-30",
   "minimum_supported_version": "2.1.0",
   "force_update": false,
-  "checksum": "1AFE0379A1D9E5B28A6F6575CC6EF7CF7F42A2913098538E31879D7811F5D895",
-  "file_size": 84949782,
+  "checksum": "187BB5E2B4D6666577B4C975069CA3B3EF110D78A727CDE39ED90212CA60EBAE",
+  "file_size": 85133022,
   "changelog": [
     {
       "version": "2.1.3",
