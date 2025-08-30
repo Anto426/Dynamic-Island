@@ -12,10 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * Classe di utilità per gestire gli aggiornamenti dell'app
- * Ora utilizza il nuovo sistema basato su file JSON locali
- */
+
 class UpdateManager(private val context: Context) {
 
     companion object {
@@ -125,15 +122,20 @@ class UpdateManager(private val context: Context) {
     }
 
     /**
-     * Controlla gli aggiornamenti all'avvio dell'app (solo se necessario)
-     * Rispetta l'intervallo minimo tra controlli per evitare richieste eccessive
+     * Controlla gli aggiornamenti all'avvio dell'app (sempre attivo se auto-update abilitato)
+     * Ora controlla sempre all'avvio per garantire che l'utente sia sempre aggiornato
      */
     fun checkForUpdatesOnStartup() {
-        if (shouldCheckForUpdatesOnStartup()) {
-            Log.d(TAG, "Controllo aggiornamenti all'avvio dell'app")
-            checkForUpdatesNow()
+        if (isAutoUpdateEnabled()) {
+            Log.d(TAG, "Controllo aggiornamenti all'avvio dell'app (sempre attivo)")
+
+            // Aggiungi un piccolo delay per non bloccare l'avvio dell'app
+            CoroutineScope(Dispatchers.Main).launch {
+                kotlinx.coroutines.delay(2000) // 2 secondi di delay
+                checkForUpdatesNow()
+            }
         } else {
-            Log.d(TAG, "Controllo aggiornamenti saltato (troppo recente)")
+            Log.d(TAG, "Controllo aggiornamenti disabilitato nelle impostazioni")
         }
     }
 
@@ -290,14 +292,14 @@ class UpdateManager(private val context: Context) {
 
             val result = localUpdateManager.checkForUpdate(selectedChannel, currentVersion)
 
-            return when (result) {
+            when (result) {
                 is LocalUpdateManager.UpdateCheckResult.UpdateAvailable -> false
                 is LocalUpdateManager.UpdateCheckResult.UpToDate -> true
                 is LocalUpdateManager.UpdateCheckResult.Error -> true // Se errore, assumiamo aggiornata
             }
         } catch (e: Exception) {
             Log.e(TAG, "Errore nel controllo versione", e)
-            return true
+            true
         }
     }
 }

@@ -22,21 +22,6 @@ object UpdateNotifications {
     ) {
         createNotificationChannel(context)
 
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("show_update_dialog", true)
-            putExtra("new_version", version)
-            putExtra("download_url", downloadUrl)
-            putExtra("release_notes", releaseNotes)
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.update_available))
@@ -52,7 +37,6 @@ object UpdateNotifications {
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             .build()
 
         val notificationManager =

@@ -230,24 +230,12 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
      * Mostra notifica per richiedere il permesso di installazione
      */
     private fun showInstallPermissionNotification() {
-        val intent = Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
-            data = Uri.parse("package:$packageName")
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(getString(R.string.permission_required_title))
             .setContentText(getString(R.string.permission_required_text))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
             .build()
 
         notificationManager.notify(NOTIFICATION_ID + 1, notification)

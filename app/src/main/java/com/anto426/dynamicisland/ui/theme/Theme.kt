@@ -3,6 +3,8 @@ package com.anto426.dynamicisland.ui.theme
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -16,6 +18,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.STYLE
 import com.anto426.dynamicisland.model.THEME
+import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.ui.theme.themes.BlackTheme
 import com.anto426.dynamicisland.ui.theme.themes.QuinacridoneMagentaThemeDarkColors
 import com.anto426.dynamicisland.ui.theme.themes.QuinacridoneMagentaThemeLightColors
@@ -134,13 +137,17 @@ fun DynamicIslandTheme(
 	MaterialTheme(
 		colorScheme = when(style) {
 			Theme.ThemeStyle.MaterialYou -> {
-				if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+				if (IslandSettings.instance.dynamicThemeEnabled) {
+					if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+				} else {
+					if (darkTheme) darkColorScheme() else lightColorScheme()
+				}
 			}
 			else -> {
 				if (darkTheme) {
-					style.darkScheme ?: style.lightScheme ?: dynamicDarkColorScheme(context)
+					style.darkScheme ?: style.lightScheme ?: if (IslandSettings.instance.dynamicThemeEnabled) dynamicDarkColorScheme(context) else darkColorScheme()
 				} else {
-					style.lightScheme ?: style.darkScheme ?: dynamicLightColorScheme(context)
+					style.lightScheme ?: style.darkScheme ?: if (IslandSettings.instance.dynamicThemeEnabled) dynamicLightColorScheme(context) else lightColorScheme()
 				}
 			}
 		},

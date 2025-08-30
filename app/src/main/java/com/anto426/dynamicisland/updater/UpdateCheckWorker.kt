@@ -144,22 +144,6 @@ class UpdateCheckWorker(
     private fun showUpdateNotification(release: GitHubRelease, downloadUrl: String) {
         createNotificationChannel()
 
-        // Intent per aprire l'app quando si clicca la notifica
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("show_update_dialog", true)
-            putExtra("new_version", release.tagName)
-            putExtra("download_url", downloadUrl)
-            putExtra("release_notes", release.body)
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(applicationContext.getString(R.string.update_available))
@@ -169,34 +153,10 @@ class UpdateCheckWorker(
                         applicationContext.getString(R.string.update_available_prompt, release.tagName) + "\n\n" + (release.body ?: applicationContext.getString(R.string.no_description))))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .addAction(
-                R.drawable.ic_launcher_foreground,
-                applicationContext.getString(R.string.download),
-                createDownloadPendingIntent(downloadUrl, release.tagName)
-            )
             .build()
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
-    }
-
-    /**
-     * Crea il PendingIntent per il download
-     */
-    private fun createDownloadPendingIntent(downloadUrl: String, version: String): PendingIntent {
-        val intent = Intent(context, UpdateDownloadService::class.java).apply {
-            action = UpdateDownloadService.ACTION_START_DOWNLOAD
-            putExtra(UpdateDownloadService.EXTRA_DOWNLOAD_URL, downloadUrl)
-            putExtra(UpdateDownloadService.EXTRA_VERSION, version)
-        }
-
-        return PendingIntent.getService(
-            context,
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
     }
 
     /**
