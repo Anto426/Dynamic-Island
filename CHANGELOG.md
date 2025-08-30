@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.3] - 2025-08-30
+
+### 🐛 Fixed
+- Autohide no longer hides the island permanently: closes only the visual state and keeps plugins running
+- Lock screen visibility now respects the setting and recovers correctly after unlock
+- Position/size sliders: safer ranges and resets; expanded height constrained to be > compact
+
+### ✨ Added
+- Default expanded height set to maximum on first run (50% screen height, respecting compact + 4dp)
+- New plugin infrastructure helpers: `PluginPriority`, `PluginManager` (top selection + timers), `PluginEngine`
+- Shared UI components for plugin UIs (`PluginComponents`: SectionCard, RoundedIcon helpers)
+- Behavior: Silent mode and Low power mode toggles
+
+### 🎨 UI/UX
+- Dynamic theme toggle polished and icon updated
+- Plugins screen: localized stats and accessibility text
+- Enabled Apps: Select all / Clear all chips with localized count
+- About screen: localized section titles and labels
+- Home/Onboarding and navigation visuals polished (no logic changes)
+
+### 🌐 Internationalization
+- Added/updated strings across locales (EN, IT, AR, DE, EL, ES, FR, HI, JA, KO, NL, PT, RU, ZH)
+- New behavior strings and size labels; preview controls
+
+### 🔧 Changed
+- Theme behavior: when dynamic theme disabled, fall back to platform light/dark color schemes
+- Update notifications simplified (removed PendingIntent actions)
+
+### 📦 Release
+- Version bumped to 2.1.3 (code 10)
+- `release/stable.json` updated with changelog and proper emoji
+
 ## [2.1.2] - 2025-08-30
 
 ### 🐛 Fixed
