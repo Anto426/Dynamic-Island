@@ -1,21 +1,24 @@
-# Material You Dynamic Island v2.1.1
+# Material You Dynamic Island v2.1.2
 
 ## 🚀 Release Notes
 
-This release introduces a complete o- **Build Date**: August 29, 2025
-- **Commit**: 2df559d
+This release fixes download and installation issues in the update system, improving reliability and user experience.
+
+- **Build Date**: August 30, 2025
+- **Commit**: 40d9440
 - **Version Code**: 9
-- **Version Name**: 2.1.1
-- **Build Type**: Release
-- **Minification**: Enabled
-- **ProGuard**: Basic optimization
+- **Version Name**: 2.1.2
+- **Build Type**: Debug
+- **Minification**: Disabled
+- **ProGuard**: Disabled
 
 ---
 
 **Checksums** (for verification):
-- Debug APK: `DB92014549F8035995ECD55804407D1269BA47D35B88A7F8B8F8B8F8B8F8B8F8B`
-- Release APK: `11A48F6E496C56B0864B892A96B465FE339F8B8F8B8F8B8F8B8F8B8F8B8F8B8F8`
-- Bundle AAB: `1A53443972D583A213D7CDBBE7DA0BF4A84D979FA6678F8B8F8B8F8B8F8B8F8F8` update system with automatic checking, enhanced UI notifications, and improved user experience.
+- Debug APK: `1AFE0379A1D9E5B28A6F6575CC6EF7CF7F42A2913098538E31879D7811F5D895`
+- File Size: 84,949,782 bytes
+
+---
 
 ## 📦 Downloads
 

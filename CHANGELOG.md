@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.2] - 2025-08-30
+
+### 🐛 Fixed
+- **Download and Installation Issues**
+  - Fixed permission errors (EACCES) by adding fallback to private external storage
+  - Improved checksum validation to skip invalid placeholder files
+  - Enhanced error handling for download failures
+  - Added automatic installation after successful download
+  - Implemented cleanup of old APK versions
+
+### 🔧 Changed
+- **Update System Improvements**
+  - Updated UI to show "Installa Aggiornamento" button after download
+  - Added explicit URI permissions for APK installation
+  - Improved FileProvider configuration for secure file sharing
+  - Enhanced progress tracking and user feedback
+
+### ✨ Added
+- **New Features**
+  - Automatic APK cleanup on version updates
+  - Better error messages for download failures
+  - Localized strings for install button in all languages
+
 ## [2.1.1] - 2025-08-29
 
 ### ✨ Added

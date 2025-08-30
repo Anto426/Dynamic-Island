@@ -1,26 +1,48 @@
 ﻿{
   "channel": "beta",
-  "latest_version": "2.1.1",
+  "latest_version": "2.1.2",
   "version_code": 9,
-  "download_url": "https://github.com/Anto426/Dynamic-Island/raw/refs/heads/main/release/MaterialYou-Dynamic-Island-v2.1.1-debug.apk",
-  "release_notes": "Versione beta del sistema di aggiornamenti automatici. Include tutte le funzionalità della versione stable con logging aggiuntivo per il debugging.",
-  "release_date": "2025-08-29",
+  "download_url": "https://github.com/Anto426/Dynamic-Island/raw/refs/heads/main/release/res/MaterialYou-Dynamic-Island-v2.1.2-debug.apk",
+  "release_notes": "Versione beta con correzioni ai download e installazione automatica degli aggiornamenti.",
+  "release_date": "2025-08-30",
   "minimum_supported_version": "2.1.0",
   "force_update": false,
-  "checksum": "DB92014549F8035995ECD55804407D1269BA47D35B88A7F8B8F8B8F8B8F8B8F8B",
-  "file_size": 84664909,
+  "checksum": "1AFE0379A1D9E5B28A6F6575CC6EF7CF7F42A2913098538E31879D7811F5D895",
+  "file_size": 84949782,
   "changelog": [
     {
-      "version": "2.1.1-beta",
+      "version": "2.1.2",
+      "date": "2025-08-30",
+      "changes": [
+        "Correzioni ai permessi di download e fallback a storage privato",
+        "Miglioramento della validazione checksum per placeholder invalidi",
+        "Installazione automatica degli aggiornamenti dopo il download",
+        "Aggiornamento interfaccia utente per il pulsante di installazione",
+        "Pulizia automatica delle vecchie versioni APK"
+      ]
+    },
+    {
+      "version": "2.1.1",
       "date": "2025-08-29",
       "changes": [
-        "Sistema di aggiornamenti completamente rinnovato (beta)",
+        "Sistema di aggiornamenti completamente rinnovato",
         "Controllo automatico degli aggiornamenti all'avvio",
         "Badge di notifica nella barra di navigazione",
         "Interfaccia utente migliorata con Material You",
-        "Logging esteso per debugging",
         "Gestione stato persistente degli aggiornamenti",
-        "Architettura MVVM per migliore gestione dello stato"
+        "Architettura MVVM per migliore gestione dello stato",
+        "Correzioni di errori e miglioramenti di performance"
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2024-07-15",
+      "changes": [
+        "Riscrittura completa dell'interfaccia utente",
+        "Implementazione Material Design 3",
+        "Nuovo sistema di impostazioni organizzato",
+        "Miglioramenti significativi alle prestazioni",
+        "Supporto completo per Dynamic Island"
       ]
     }
   ]
