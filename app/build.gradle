@@ -12,8 +12,8 @@ android {
         applicationId "com.anto426.dynamicisland"
         minSdk 34
         targetSdk 36
-        versionCode 8
-        versionName '2.1.0'
+        versionCode 9
+        versionName '2.1.2'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
