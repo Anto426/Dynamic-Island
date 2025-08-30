@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Material You Dynamic Gradient Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="?android:attr/colorPrimary"
+                android:centerColor="?android:attr/colorAccent"
+                android:endColor="?android:attr/colorAccent"
+                android:angle="135"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <!-- Shadow Effect -->
+    <item
+        android:width="130dp"
+        android:height="130dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="#33000000" />
+        </shape>
+    </item>
+
+    <!-- App Icon Background Circle -->
+    <item
+        android:width="120dp"
+        android:height="120dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="?android:attr/colorBackground" />
+            <stroke
+                android:width="2dp"
+                android:color="?android:attr/colorPrimary" />
+        </shape>
+    </item>
+</layer-list>

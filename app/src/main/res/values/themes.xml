@@ -9,6 +9,28 @@
         <item name="motionDurationMedium1">200</item>
         <item name="motionDurationLong1">300</item>
         <item name="motionDurationLong2">500</item>
+
+        <!-- Material You Dynamic Colors (Android 12+ supported attributes) -->
+        <item name="colorPrimary">?android:attr/colorPrimary</item>
+        <item name="colorPrimaryDark">?android:attr/colorPrimaryDark</item>
+        <item name="colorAccent">?android:attr/colorAccent</item>
+        <item name="android:colorBackground">?android:attr/colorBackground</item>
+        <item name="colorSurface">?android:attr/colorBackground</item>
+        <item name="colorError">?android:attr/colorError</item>
+        <item name="colorOnError">?android:attr/colorError</item>
+
+        <!-- Splash Screen Configuration (Android 12+) -->
+        <item name="android:windowSplashScreenBackground">@drawable/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowSplashScreenAnimationDuration">500</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">?android:attr/colorBackground</item>
+    </style>
+
+    <!-- Legacy Splash Screen Theme for Android < 12 -->
+    <style name="Theme.DynamicIsland.Launcher" parent="Theme.DynamicIsland">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">?android:attr/colorBackground</item>
+        <item name="android:navigationBarColor">?android:attr/colorBackground</item>
     </style>
 
 </resources>
