@@ -53,12 +53,6 @@ object BehaviorSetting : IslandDestination, SettingItem {
 	override val route: String = "behavior"
 }
 
-object AdvancedSetting : IslandDestination, SettingItem {
-	override val title: Int = R.string.settings_item_advanced
-	override val subtitle: Int = R.string.settings_item_advanced_subtitle
-	override val icon: ImageVector = Icons.Default.Settings
-	override val route: String = "advanced"
-}
 
 object AboutSetting : IslandDestination, SettingItem {
 	override val title: Int = R.string.settings_item_about
@@ -85,7 +79,6 @@ val settings = listOf(
 	ThemeSetting,
 	BehaviorSetting,
 	UpdateSetting,
-	AdvancedSetting,
 	PositionSizeSetting,
 	EnabledAppsSetting,
 	AboutSetting,

@@ -57,7 +57,6 @@ fun SettingsScreen(
                     AboutSetting -> "about|info|informazioni".contains(query)
                     DeveloperScreen -> "dev|developer|sviluppatore".contains(query)
                     UpdateSetting -> "update|aggiornamento".contains(query)
-                    AdvancedSetting -> "advanced|avanzate".contains(query)
                     else -> false
                 }
             }
