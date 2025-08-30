@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dynamic Island</string>
+
+    <string name="overlay_service_label">Dynamic Island</string>
+    <string name="plugin_author_prefix">بواسطة </string>
+    <string name="plugin_enable_title">تمكين المكون الإضافي</string>
+    <string name="plugin_enable_description_generic">تمكين أو تعطيل هذا المكون الإضافي</string>
+    <string name="plugin_enable_description_needs_permissions">امنح الأذونات لتمكينه</string>
+    <string name="plugin_info_title">معلومات المكون الإضافي</string>
+    <string name="plugin_version_title">الإصدار</string>
+    <string name="plugin_identifier_title">المعرف</string>
+    <string name="plugin_source_code_title">الكود المصدري</string>
+    <string name="plugin_view_on_web">عرض على الويب</string>
+    <string name="plugin_permissions_required_title">الأذونات المطلوبة</string>
+    <string name="plugin_permissions_granted_toast">تم منح الأذونات! يمكنك الآن تمكين المكون الإضافي.</string>
+    <string name="plugin_settings_title">إعدادات المكون الإضافي</string>
+    <string name="overlay_service_description">خدمة إمكانية الوصول لـ Dynamic Island</string>
+
+    <string name="notification_service_label">خدمة الإشعارات</string>
+    <string name="settings_preferences">التفضيلات</string>
+
+    <string name="title_activity_disclosure">الإفصاح</string>
+    <string name="welcome_title">مرحبًا بك في Dynamic Island</string>
+    <string name="welcome_description">قم بإعداد جزيرتك الديناميكية لتلقي الإشعارات والموسيقى والمكالمات وغير ذلك الكثير.</string>
+    <string name="i_agree">أوافق وأستمر</string>
+    <string name="previous">السابق</string>
+    <string name="disable_optimization">تعطيل التحسين</string>
+    <string name="ignore">تجاهل</string>
+    <string name="battery_optimization_description">لضمان عمل Dynamic Island بشكل صحيح في الخلفية، يرجى تعطيل تحسينات البطارية للتطبيق.</string>
+    <string name="battery_optimization_title">تحسين البطارية</string>
+    <string name="tap_to_disable">انقر للتعطيل</string>
+    <string name="service_active">الخدمة نشطة</string>
+    <string name="get_started">ابدأ</string>
+    <string name="no_plugins_description">لا توجد مكونات إضافية ممكّنة حاليًا. انتقل إلى إعدادات المكونات الإضافية لتمكينها وفتح ميزات جديدة.</string>
+    <string name="no_active_plugins">لا توجد مكونات إضافية نشطة</string>
+    <string name="understood">مفهوم</string>
+    <string name="read">قراءة</string>
+    <string name="informativa_description">قبل المتابعة، يرجى قراءة سياسة الخصوصية وشروط الخدمة والموافقة عليها.</string>
+    <string name="informativa">الإفصاح</string>
+    <string name="accessibility_permission_description">يتطلب Dynamic Island إذن إمكانية الوصول لعرض الجزيرة وميزاتها.</string>
+    <string name="accessibility_permission_title">إذن إمكانية الوصول</string>
+    <string name="next">التالي</string>
+    <string name="overlay_permission_title">إذن الظهور فوق التطبيقات الأخرى</string>
+    <string name="overlay_permission_description">يحتاج Dynamic Island إلى إذن الظهور فوق التطبيقات الأخرى ليتم عرضه.</string>
+    <string name="tap_to_enable">انقر للتمكين</string>
+    <string name="service_disabled">الخدمة معطلة</string>
+    <string name="repositories">المستودعات</string>
+    <string name="developer">المطور</string>
+    <string name="no_description">لا يوجد وصف متاح.</string>
+
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_theme_subtitle">تغيير مظهر التطبيق</string>
+    <string name="settings_position_size_title">الموضع والحجم</string>
+    <string name="settings_position_size_subtitle">تعديل موضع وحجم الجزيرة</string>
+    <string name="settings_behavior_title">السلوك</string>
+    <string name="settings_behavior_subtitle">تخصيص سلوك الجزيرة</string>
+    <string name="settings_about_title">حول</string>
+    <string name="settings_about_subtitle">تفاصيل حول التطبيق</string>
+
+    <string name="update_title">التحديثات</string>
+    <string name="update_settings_title">إعدادات التحديث</string>
+    <string name="back">رجوع</string>
+    <string name="update_status_section">حالة التحديث</string>
+    <string name="release_channel_section">قناة الإصدار</string>
+    <string name="auto_controls_section">التحكم التلقائي</string>
+    <string name="manual_actions_section">الإجراءات اليدوية</string>
+    <string name="changelog_section">سجل التغييرات</string>
+    <string name="app_up_to_date">التطبيق محدّث</string>
+    <string name="app_up_to_date_desc">تطبيقك على أحدث إصدار</string>
+    <string name="checking_updates">جارٍ التحقق من وجود تحديثات...</string>
+    <string name="checking_updates_desc">يتم التحقق من وجود إصدارات جديدة</string>
+    <string name="update_available">يتوفر تحديث</string>
+    <string name="update_available_desc">الإصدار %1$s جاهز للتنزيل</string>
+    <string name="update_error">خطأ في التحقق</string>
+    <string name="current_version">الإصدار الحالي</string>
+    <string name="channel_stable">مستقر</string>
+    <string name="channel_stable_desc">إصدارات مستقرة ومختبرة</string>
+    <string name="channel_beta">تجريبي (Beta)</string>
+    <string name="channel_beta_desc">ميزات جديدة قيد الاختبار</string>
+    <string name="channel_alpha">أولي (Alpha)</string>
+    <string name="channel_alpha_desc">إصدارات تجريبية</string>
+    <string name="auto_update_title">التحديثات التلقائية</string>
+    <string name="auto_update_desc">التحقق من وجود إصدارات جديدة تلقائيًا</string>
+    <string name="auto_download_title">التنزيلات التلقائية</string>
+    <string name="auto_download_desc">تنزيل التحديثات تلقائيًا</string>
+    <string name="check_updates_button">التحقق من وجود تحديثات</string>
+    <string name="download_update_button">تنزيل التحديث</string>
+    <string name="downloading_progress">جارٍ التنزيل...</string>
+    <string name="changelog_version">الإصدار %1$s (%2$s)</string>
+    <string name="copied_to_clipboard">تم نسخ %1$s إلى الحافظة!</string>
+    <string name="copy">نسخ</string>
+</resources>

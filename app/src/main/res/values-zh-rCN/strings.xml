@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">灵动岛</string>
+
+    <string name="overlay_service_label">灵动岛</string>
+    <string name="plugin_author_prefix">作者：</string>
+    <string name="plugin_enable_title">启用插件</string>
+    <string name="plugin_enable_description_generic">启用或禁用此插件</string>
+    <string name="plugin_enable_description_needs_permissions">授予权限以启用</string>
+    <string name="plugin_info_title">插件信息</string>
+    <string name="plugin_version_title">版本</string>
+    <string name="plugin_identifier_title">标识符</string>
+    <string name="plugin_source_code_title">源代码</string>
+    <string name="plugin_view_on_web">在网页上查看</string>
+    <string name="plugin_permissions_required_title">所需权限</string>
+    <string name="plugin_permissions_granted_toast">权限已授予！您现在可以启用该插件了。</string>
+    <string name="plugin_settings_title">插件设置</string>
+    <string name="overlay_service_description">灵动岛的无障碍服务</string>
+
+    <string name="notification_service_label">通知服务</string>
+    <string name="settings_preferences">偏好设置</string>
+
+    <string name="title_activity_disclosure">披露信息</string>
+    <string name="welcome_title">欢迎使用灵动岛</string>
+    <string name="welcome_description">设置您的灵动岛以接收通知、音乐、通话等。</string>
+    <string name="i_agree">我同意并继续</string>
+    <string name="previous">上一步</string>
+    <string name="disable_optimization">禁用优化</string>
+    <string name="ignore">忽略</string>
+    <string name="battery_optimization_description">为确保灵动岛在后台正常运行，请为该应用禁用电池优化。</string>
+    <string name="battery_optimization_title">电池优化</string>
+    <string name="tap_to_disable">点击以禁用</string>
+    <string name="service_active">服务已激活</string>
+    <string name="get_started">开始使用</string>
+    <string name="no_plugins_description">当前没有启用的插件。请转到插件设置以启用它们并解锁新功能。</string>
+    <string name="no_active_plugins">没有活动的插件</string>
+    <string name="understood">我明白了</string>
+    <string name="read">阅读</string>
+    <string name="informativa_description">在继续之前，请阅读并同意我们的隐私政策和服务条款。</string>
+    <string name="informativa">披露信息</string>
+    <string name="accessibility_permission_description">灵动岛需要无障碍权限才能显示岛屿及其功能。</string>
+    <string name="accessibility_permission_title">无障碍权限</string>
+    <string name="next">下一步</string>
+    <string name="overlay_permission_title">悬浮窗权限</string>
+    <string name="overlay_permission_description">灵动岛需要悬浮窗权限才能在其他应用之上显示。</string>
+    <string name="tap_to_enable">点击以启用</string>
+    <string name="service_disabled">服务已禁用</string>
+    <string name="repositories">代码仓库</string>
+    <string name="developer">开发者</string>
+    <string name="no_description">无可用描述。</string>
+
+    <string name="settings_theme_title">主题</string>
+    <string name="settings_theme_subtitle">更改应用主题</string>
+    <string name="settings_position_size_title">位置和大小</string>
+    <string name="settings_position_size_subtitle">修改岛屿的位置和大小</string>
+    <string name="settings_behavior_title">行为</string>
+    <string name="settings_behavior_subtitle">自定义岛屿的行为</string>
+    <string name="settings_about_title">关于</string>
+    <string name="settings_about_subtitle">关于应用的详细信息</string>
+
+    <string name="update_title">更新</string>
+    <string name="update_settings_title">更新设置</string>
+    <string name="back">返回</string>
+    <string name="update_status_section">更新状态</string>
+    <string name="release_channel_section">发布渠道</string>
+    <string name="auto_controls_section">自动控制</string>
+    <string name="manual_actions_section">手动操作</string>
+    <string name="changelog_section">更新日志</string>
+    <string name="app_up_to_date">应用已是最新版本</string>
+    <string name="app_up_to_date_desc">您的应用已是最新版本</string>
+    <string name="checking_updates">正在检查更新...</string>
+    <string name="checking_updates_desc">正在检查新版本</string>
+    <string name="update_available">有可用更新</string>
+    <string name="update_available_desc">版本 %1$s 已可供下载</string>
+    <string name="update_error">检查出错</string>
+    <string name="current_version">当前版本</string>
+    <string name="channel_stable">稳定版</string>
+    <string name="channel_stable_desc">稳定且经过测试的版本</string>
+    <string name="channel_beta">测试版 (Beta)</string>
+    <string name="channel_beta_desc">正在测试的新功能</string>
+    <string name="channel_alpha">预览版 (Alpha)</string>
+    <string name="channel_alpha_desc">实验性版本</string>
+    <string name="auto_update_title">自动更新</string>
+    <string name="auto_update_desc">自动检查新版本</string>
+    <string name="auto_download_title">自动下载</string>
+    <string name="auto_download_desc">自动下载更新</string>
+    <string name="check_updates_button">检查更新</string>
+    <string name="download_update_button">下载更新</string>
+    <string name="downloading_progress">下载中...</string>
+    <string name="changelog_version">版本 %1$s (%2$s)</string>
+    <string name="copied_to_clipboard">已将“%1$s”复制到剪贴板！</string>
+    <string name="copy">复制</string>
+</resources>

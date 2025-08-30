@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Dynamic Island</string>
 
-    <!-- Accessibility Service -->
     <string name="overlay_service_label">Dynamic Island</string>
     <string name="plugin_author_prefix">by </string>
     <string name="plugin_enable_title">Enable plugin</string>
@@ -18,348 +17,320 @@
     <string name="plugin_settings_title">Plugin settings</string>
     <string name="overlay_service_description">Accessibility service for Dynamic Island</string>
 
-    <!-- Notification Service -->
-    <string name="notification_service_label">Servizio Notifiche</string>
-    <string name="settings_preferences">Preferenze</string>
+    <string name="notification_service_label">Notification Service</string>
+    <string name="settings_preferences">Preferences</string>
 
-    <!-- Common -->
-    <string name="title_activity_disclosure">Informativa</string>
-    <string name="welcome_title">Benvenuto in Dynamic Island</string>
-    <string name="welcome_description">Configura la tua isola dinamica per ricevere notifiche, musica, chiamate e molto altro.</string>
-    <string name="i_agree">Accetto e continuo</string>
-    <string name="previous">Indietro</string>
-    <string name="disable_optimization">Disabilita ottimizzazione</string>
-    <string name="ignore">Ignora</string>
-    <string name="battery_optimization_description">Per garantire che Dynamic Island funzioni correttamente in background, disattiva le ottimizzazioni della batteria per l’app.</string>
-    <string name="battery_optimization_title">Ottimizzazione batteria</string>
-    <string name="tap_to_disable">Tocca per disattivare</string>
-    <string name="service_active">Servizio attivo</string>
-    <string name="get_started">Inizia</string>
-    <string name="no_plugins_description">Nessun plugin è attualmente abilitato. Vai alle impostazioni dei plugin per attivarli e sbloccare nuove funzionalità.</string>
-    <string name="no_active_plugins">Nessun plugin attivo</string>
-    <string name="understood">Ho capito</string>
-    <string name="read">Leggi</string>
-    <string name="informativa_description">Prima di continuare, leggi e accetta la nostra informativa sulla privacy e i termini di servizio.</string>
-    <string name="informativa">Informativa</string>
-    <string name="accessibility_permission_description">Dynamic Island richiede il permesso di accessibilità per mostrare l’isola e le sue funzioni.</string>
-    <string name="accessibility_permission_title">Permesso di accessibilità</string>
-    <string name="next">Continua</string>
-    <string name="overlay_permission_title">Permesso di overlay</string>
-    <string name="overlay_permission_description">Dynamic Island necessita del permesso di overlay per mostrarsi sopra le altre app.</string>
-    <string name="tap_to_enable">Tocca per abilitare</string>
-    <string name="service_disabled">Servizio disabilitato</string>
-    <string name="repositories">Repository</string>
-    <string name="developer">Sviluppatore</string>
-    <string name="no_description">Nessuna descrizione disponibile.</string>
+    <string name="title_activity_disclosure">Disclosure</string>
+    <string name="welcome_title">Welcome to Dynamic Island</string>
+    <string name="welcome_description">Set up your dynamic island to receive notifications, music, calls, and much more.</string>
+    <string name="i_agree">I agree and continue</string>
+    <string name="previous">Previous</string>
+    <string name="disable_optimization">Disable optimization</string>
+    <string name="ignore">Ignore</string>
+    <string name="battery_optimization_description">To ensure Dynamic Island works correctly in the background, please disable battery optimizations for the app.</string>
+    <string name="battery_optimization_title">Battery Optimization</string>
+    <string name="tap_to_disable">Tap to disable</string>
+    <string name="service_active">Service active</string>
+    <string name="get_started">Get started</string>
+    <string name="no_plugins_description">No plugins are currently enabled. Go to the plugin settings to enable them and unlock new features.</string>
+    <string name="no_active_plugins">No active plugins</string>
+    <string name="understood">Understood</string>
+    <string name="read">Read</string>
+    <string name="informativa_description">Before continuing, please read and accept our privacy policy and terms of service.</string>
+    <string name="informativa">Disclosure</string>
+    <string name="accessibility_permission_description">Dynamic Island requires accessibility permission to display the island and its features.</string>
+    <string name="accessibility_permission_title">Accessibility Permission</string>
+    <string name="next">Next</string>
+    <string name="overlay_permission_title">Overlay Permission</string>
+    <string name="overlay_permission_description">Dynamic Island needs overlay permission to display over other apps.</string>
+    <string name="tap_to_enable">Tap to enable</string>
+    <string name="service_disabled">Service disabled</string>
+    <string name="repositories">Repositories</string>
+    <string name="developer">Developer</string>
+    <string name="no_description">No description available.</string>
 
-    <!-- DisclosureActivity -->
-    <string name="disclosure_welcome_title">Benvenuto in Dynamic Island</string>
-    <string name="disclosure_welcome_description">Come su iOS, Dynamic Island mostra una notch interattiva che si adatta a chiamate in arrivo, notifiche, avvisi, musica, navigazione e molto altro. Tocca o tieni premuto sull’isola per accedere a funzioni aggiuntive o aprire app.</string>
-    <string name="disclosure_accessibility_title">Uso dei permessi di Accessibilità e Overlay</string>
-    <string name="disclosure_accessibility_description">Dynamic Island utilizza i servizi di accessibilità esclusivamente per mostrare l’isola. Non richiede permessi superflui né raccoglie informazioni personali. Puoi consultare l’informativa sulla privacy in qualsiasi momento.</string>
-    <string name="disclosure_plugin_title">Permessi dei plugin</string>
-    <string name="disclosure_plugin_description">Alcuni plugin potrebbero richiedere permessi aggiuntivi per funzionare correttamente. Dynamic Island chiederà solo i permessi strettamente necessari.</string>
+    <string name="disclosure_welcome_title">Welcome to Dynamic Island</string>
+    <string name="disclosure_welcome_description">Like on iOS, Dynamic Island displays an interactive notch that adapts to incoming calls, notifications, alerts, music, navigation, and much more. Tap or long-press the island to access additional features or open apps.</string>
+    <string name="disclosure_accessibility_title">Use of Accessibility and Overlay Permissions</string>
+    <string name="disclosure_accessibility_description">Dynamic Island uses accessibility services solely to display the island. It does not require unnecessary permissions or collect personal information. You can review the privacy policy at any time.</string>
+    <string name="disclosure_plugin_title">Plugin Permissions</string>
+    <string name="disclosure_plugin_description">Some plugins may require additional permissions to function correctly. Dynamic Island will only request strictly necessary permissions.</string>
     <string name="disclosure_privacy_title">Privacy</string>
-    <string name="disclosure_privacy_description">La tua privacy è importante. Dynamic Island non raccoglie né condivide dati personali, non traccia e non vende alcuna informazione.</string>
-    <string name="disclosure_privacy_link">Leggi l’informativa sulla privacy</string>
-    <string name="disclosure_tos_title">Termini di servizio</string>
-    <string name="disclosure_tos_description">Usando Dynamic Island accetti i nostri termini di servizio. L’app è fornita “così com’è”, senza garanzie. Non siamo responsabili di eventuali danni derivanti dall’uso.</string>
-    <string name="disclosure_tos_link">Leggi i termini di servizio</string>
+    <string name="disclosure_privacy_description">Your privacy is important. Dynamic Island does not collect or share personal data, does not track, and does not sell any information.</string>
+    <string name="disclosure_privacy_link">Read the privacy policy</string>
+    <string name="disclosure_tos_title">Terms of Service</string>
+    <string name="disclosure_tos_description">By using Dynamic Island, you agree to our terms of service. The app is provided "as is," without warranties. We are not responsible for any damages resulting from its use.</string>
+    <string name="disclosure_tos_link">Read the terms of service</string>
 
-    <!-- PluginsScreen -->
-    <string name="plugins_enabled_title">Plugin abilitati</string>
-    <string name="plugin_status_enabled">Attivo</string>
-    <string name="plugin_status_disabled">Disattivato</string>
+    <string name="plugins_enabled_title">Enabled Plugins</string>
+    <string name="plugin_status_enabled">Enabled</string>
+    <string name="plugin_status_disabled">Disabled</string>
 
-    <!-- AboutSettingsScreen -->
-    <string name="about_app_icon_description">Icona dell’app</string>
-    <string name="about_app_info_title">Informazioni sull’app</string>
-    <string name="about_version">Versione</string>
-    <string name="about_target_sdk">SDK di destinazione</string>
-    <string name="about_min_sdk">SDK minimo</string>
-    <string name="about_build_date">Data di compilazione</string>
-    <string name="about_device_info_title">Informazioni sul dispositivo</string>
-    <string name="about_android_version">Versione Android</string>
-    <string name="about_cpu_architecture">Architettura CPU</string>
-    <string name="about_useful_links_title">Link utili</string>
-    <string name="about_developer">Sviluppatore</string>
+    <string name="about_app_icon_description">App icon</string>
+    <string name="about_app_info_title">App information</string>
+    <string name="about_version">Version</string>
+    <string name="about_target_sdk">Target SDK</string>
+    <string name="about_min_sdk">Minimum SDK</string>
+    <string name="about_build_date">Build date</string>
+    <string name="about_device_info_title">Device information</string>
+    <string name="about_android_version">Android version</string>
+    <string name="about_cpu_architecture">CPU architecture</string>
+    <string name="about_useful_links_title">Useful links</string>
+    <string name="about_developer">Developer</string>
     <string name="developer_name">Anto426</string>
     <string name="about_github">GitHub</string>
-    <string name="about_open_in_browser">Apri nel browser</string>
-    <string name="about_copied_toast">%1$s copiato!</string>
+    <string name="about_open_in_browser">Open in browser</string>
+    <string name="about_copied_toast">%1$s copied!</string>
 
-    <!-- BehaviorSettingsScreen -->
-    <string name="behavior_visual_title">Comportamento visivo</string>
-    <string name="behavior_show_on_lockscreen_title">Mostra su schermata di blocco</string>
-    <string name="behavior_show_on_lockscreen_description">Mostra l’isola anche sulla schermata di blocco e sull’always-on display.</string>
-    <string name="behavior_show_in_landscape_title">Mostra in orizzontale</string>
-    <string name="behavior_show_in_landscape_description">Mostra l’isola anche in modalità orizzontale.</string>
-    <string name="behavior_autohide_title">Nascondi automaticamente</string>
-    <string name="behavior_autohide_opened_island_title">Nascondi l’isola aperta dopo</string>
+    <string name="behavior_visual_title">Visual Behavior</string>
+    <string name="behavior_show_on_lockscreen_title">Show on lock screen</string>
+    <string name="behavior_show_on_lockscreen_description">Show the island on the lock screen and always-on display.</string>
+    <string name="behavior_show_in_landscape_title">Show in landscape</string>
+    <string name="behavior_show_in_landscape_description">Show the island in landscape mode as well.</string>
+    <string name="behavior_autohide_title">Autohide</string>
+    <string name="behavior_autohide_opened_island_title">Hide the expanded island after</string>
     <string name="seconds_suffix">s</string>
 
-    <!-- PositionSizeSettingsScreen -->
-    <string name="position_title">Posizione</string>
-    <string name="position_island_gravity">Allineamento isola</string>
-    <string name="position_expand_icon_desc">Espandi</string>
-    <string name="position_x_title">Posizione X</string>
+    <string name="position_title">Position</string>
+    <string name="position_island_gravity">Island alignment</string>
+    <string name="position_expand_icon_desc">Expand</string>
+    <string name="position_x_title">Position X</string>
     <string name="unit_dp">dp</string>
-    <string name="position_y_title">Posizione Y</string>
-    <string name="size_title">Dimensione</string>
-    <string name="size_width">Larghezza</string>
-    <string name="size_height">Altezza</string>
-    <string name="corners_title">Angoli</string>
-    <string name="corners_radius">Raggio angoli</string>
-    <string name="reset_button">Ripristina</string>
-    <string name="decrease_icon_desc">Diminuisci</string>
-    <string name="increase_icon_desc">Aumenta</string>
+    <string name="position_y_title">Position Y</string>
+    <string name="size_title">Size</string>
+    <string name="size_width">Width</string>
+    <string name="size_height">Height</string>
+    <string name="corners_title">Corners</string>
+    <string name="corners_radius">Corner radius</string>
+    <string name="reset_button">Reset</string>
+    <string name="decrease_icon_desc">Decrease</string>
+    <string name="increase_icon_desc">Increase</string>
 
-    <!-- ThemeSettingsScreen -->
-    <string name="theme_show_borders_title">Mostra bordi</string>
-    <string name="theme_show_borders_description">Mostra un bordo attorno all’isola</string>
-    <string name="theme_preference_title">Tema</string>
-    <string name="theme_option_system">Sistema</string>
-    <string name="theme_option_dark">Scuro</string>
-    <string name="theme_option_light">Chiaro</string>
-    <string name="theme_style_preference_title">Stile</string>
+    <string name="theme_show_borders_title">Show borders</string>
+    <string name="theme_show_borders_description">Show a border around the island</string>
+    <string name="theme_preference_title">Theme</string>
+    <string name="theme_option_system">System</string>
+    <string name="theme_option_dark">Dark</string>
+    <string name="theme_option_light">Light</string>
+    <string name="theme_style_preference_title">Style</string>
 
-    <!-- EnabledAppsSettingsScreen -->
-    <string name="enabled_apps_title">App abilitate</string>
-    <string name="app_icon_content_description">Icona dell’app: %1$s</string>
+    <string name="enabled_apps_title">Enabled Apps</string>
+    <string name="app_icon_content_description">App icon: %1$s</string>
 
-    <!-- Settings Titles and Subtitles -->
-    <string name="settings_theme_title">Tema</string>
-    <string name="settings_theme_subtitle">Cambia il tema dell’app</string>
-    <string name="settings_position_size_title">Posizione e dimensione</string>
-    <string name="settings_position_size_subtitle">Modifica la posizione e la dimensione dell’isola</string>
-    <string name="settings_enabled_apps_subtitle">Seleziona le app che possono apparire sull’isola</string>
-    <string name="settings_behavior_title">Comportamento</string>
-    <string name="settings_behavior_subtitle">Personalizza il comportamento dell’isola</string>
-    <string name="settings_about_title">Informazioni</string>
-    <string name="settings_about_subtitle">Dettagli sull’app</string>
-    <string name="settings_dev_title">Sviluppo</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_subtitle">Change the app theme</string>
+    <string name="settings_position_size_title">Position and size</string>
+    <string name="settings_position_size_subtitle">Modify the position and size of the island</string>
+    <string name="settings_enabled_apps_subtitle">Select which apps can appear on the island</string>
+    <string name="settings_behavior_title">Behavior</string>
+    <string name="settings_behavior_subtitle">Customize the island\'s behavior</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_about_subtitle">Details about the app</string>
+    <string name="settings_dev_title">Development</string>
 
-    <!-- Theme Styles -->
     <string name="theme_style_material_you">Material You</string>
     <string name="theme_style_black_white">Black &amp; White</string>
     <string name="theme_style_quinacridone_magenta">Quinacridone Magenta</string>
 
-    <!-- Settings Items -->
-    <string name="settings_item_theme">Tema</string>
-    <string name="settings_item_theme_subtitle">Cambia il tema dell’app</string>
-    <string name="settings_item_position_size">Posizione e dimensione</string>
-    <string name="settings_item_position_size_subtitle">Modifica la posizione e la dimensione dell’isola</string>
-    <string name="settings_item_enabled_apps">App abilitate</string>
-    <string name="settings_item_enabled_apps_subtitle">Seleziona le app che possono apparire sull’isola</string>
-    <string name="settings_item_behavior">Comportamento</string>
-    <string name="settings_item_behavior_subtitle">Personalizza il comportamento dell’isola</string>
-    <string name="settings_item_about">Informazioni</string>
-    <string name="settings_item_about_subtitle">Dettagli sull’app</string>
-    <string name="settings_item_dev">Sviluppo</string>
-    <string name="settings_item_dev_subtitle">Informazioni sullo sviluppatore</string>
-    <string name="settings_item_updates">Aggiornamenti</string>
-    <string name="settings_item_updates_subtitle">Controlla e scarica aggiornamenti</string>
+    <string name="settings_item_theme">Theme</string>
+    <string name="settings_item_theme_subtitle">Change the app theme</string>
+    <string name="settings_item_position_size">Position and size</string>
+    <string name="settings_item_position_size_subtitle">Modify the position and size of the island</string>
+    <string name="settings_item_enabled_apps">Enabled apps</string>
+    <string name="settings_item_enabled_apps_subtitle">Select which apps can appear on the island</string>
+    <string name="settings_item_behavior">Behavior</string>
+    <string name="settings_item_behavior_subtitle">Customize the island\'s behavior</string>
+    <string name="settings_item_about">About</string>
+    <string name="settings_item_about_subtitle">Details about the app</string>
+    <string name="settings_item_dev">Development</string>
+    <string name="settings_item_dev_subtitle">Developer information</string>
+    <string name="settings_item_updates">Updates</string>
+    <string name="settings_item_updates_subtitle">Check for and download updates</string>
 
-    <!-- Disclosure Screen (pulsanti) -->
-    <string name="disclosure_button_next">Continua</string>
-    <string name="disclosure_button_previous">Indietro</string>
-    <string name="disclosure_button_agree">Accetto</string>
-    <!-- Advanced Settings -->
-    <string name="advanced_settings_title">Impostazioni avanzate</string>
-    <string name="advanced_settings_description">Personalizza animazioni, feedback e comportamento</string>
+    <string name="disclosure_button_next">Continue</string>
+    <string name="disclosure_button_previous">Previous</string>
+    <string name="disclosure_button_agree">I Agree</string>
 
-    <!-- Animations -->
-    <string name="advanced_settings_animations">Animazioni</string>
-    <string name="advanced_settings_enable_animations">Abilita animazioni</string>
-    <string name="advanced_settings_enable_animations_desc">Mostra animazioni fluide nelle transizioni</string>
+    <string name="advanced_settings_title">Advanced Settings</string>
+    <string name="advanced_settings_description">Customize animations, feedback, and behavior</string>
 
-    <!-- Feedback -->
+    <string name="advanced_settings_animations">Animations</string>
+    <string name="advanced_settings_enable_animations">Enable animations</string>
+    <string name="advanced_settings_enable_animations_desc">Show smooth animations in transitions</string>
+
     <string name="advanced_settings_feedback">Feedback</string>
-    <string name="advanced_settings_haptic">Feedback aptico</string>
-    <string name="advanced_settings_haptic_desc">Vibrazione leggera per le interazioni</string>
-    <string name="advanced_settings_sounds">Suoni</string>
-    <string name="advanced_settings_sounds_desc">Riproduci effetti sonori quando interagisci</string>
+    <string name="advanced_settings_haptic">Haptic feedback</string>
+    <string name="advanced_settings_haptic_desc">Light vibration for interactions</string>
+    <string name="advanced_settings_sounds">Sounds</string>
+    <string name="advanced_settings_sounds_desc">Play sound effects when interacting</string>
 
-    <!-- Behavior -->
-    <string name="advanced_settings_behavior">Comportamento</string>
-    <string name="advanced_settings_behavior_placeholder">Prossimamente potrai modificare il comportamento avanzato dell’isola</string>
+    <string name="advanced_settings_behavior">Behavior</string>
+    <string name="advanced_settings_behavior_placeholder">You will soon be able to modify the island\'s advanced behavior</string>
 
-    <!-- Dynamic Theme -->
-    <string name="advanced_settings_dynamic_theme">Tema dinamico</string>
-    <string name="advanced_settings_dynamic_theme_title">Abilita tema dinamico</string>
-    <string name="advanced_settings_dynamic_theme_desc">Adatta automaticamente i colori in base al contesto</string>
+    <string name="advanced_settings_dynamic_theme">Dynamic Theme</string>
+    <string name="advanced_settings_dynamic_theme_title">Enable dynamic theme</string>
+    <string name="advanced_settings_dynamic_theme_desc">Automatically adapt colors based on context</string>
 
-    <!-- Animation Labels -->
     <string name="animation_click_label">clickAnimation</string>
-    <string name="settings_dev_subtitle">Informazioni per sviluppatori e debug</string>
-    <string name="plugin_icon_content_description">Icona del plugin</string>
+    <string name="settings_dev_subtitle">Information for developers and debugging</string>
+    <string name="plugin_icon_content_description">Plugin icon</string>
 
-        <!-- Titoli schermata -->
-        <string name="update_title">Aggiornamenti</string>
-        <string name="update_settings_title">Impostazioni Aggiornamenti</string>
-        <string name="back">Indietro</string>
+    <string name="update_title">Updates</string>
+    <string name="update_settings_title">Update Settings</string>
+    <string name="back">Back</string>
 
-        <!-- Sezioni -->
-        <string name="update_status_section">Stato Aggiornamento</string>
-        <string name="release_channel_section">Canale di Rilascio</string>
-        <string name="auto_controls_section">Controlli Automatici</string>
-        <string name="manual_actions_section">Azioni Manuali</string>
-        <string name="changelog_section">Changelog</string>
-        <string name="dynamic_theme_section">Tema Dinamico</string> <!-- se vuoi includere la sezione tema dinamico -->
+    <string name="update_status_section">Update Status</string>
+    <string name="release_channel_section">Release Channel</string>
+    <string name="auto_controls_section">Automatic Controls</string>
+    <string name="manual_actions_section">Manual Actions</string>
+    <string name="changelog_section">Changelog</string>
+    <string name="dynamic_theme_section">Dynamic Theme</string>
 
-        <!-- Stato aggiornamento -->
-        <string name="app_up_to_date">App Aggiornata</string>
-        <string name="app_up_to_date_desc">La tua app è alla versione più recente</string>
-        <string name="checking_updates">Controllo Aggiornamenti...</string>
-        <string name="checking_updates_desc">Verifica disponibilità nuove versioni</string>
-        <string name="update_available">Aggiornamento Disponibile</string>
-        <string name="update_available_desc">Versione %1$s pronta per il download</string>
-        <string name="update_error">Errore Controllo</string>
+    <string name="app_up_to_date">App Up to Date</string>
+    <string name="app_up_to_date_desc">Your app is on the latest version</string>
+    <string name="checking_updates">Checking for Updates...</string>
+    <string name="checking_updates_desc">Checking for new versions</string>
+    <string name="update_available">Update Available</string>
+    <string name="update_available_desc">Version %1$s is ready to download</string>
+    <string name="update_error">Check Error</string>
 
-        <!-- Versione corrente -->
-        <string name="current_version">Versione Attuale</string>
+    <string name="current_version">Current Version</string>
 
-        <!-- Canali di rilascio -->
-        <string name="channel_stable">Stabile</string>
-        <string name="channel_stable_desc">Versioni stabili e testate</string>
-        <string name="channel_beta">Beta</string>
-        <string name="channel_beta_desc">Funzionalità nuove in test</string>
-        <string name="channel_alpha">Alpha</string>
-        <string name="channel_alpha_desc">Versioni sperimentali</string>
+    <string name="channel_stable">Stable</string>
+    <string name="channel_stable_desc">Stable and tested versions</string>
+    <string name="channel_beta">Beta</string>
+    <string name="channel_beta_desc">New features in testing</string>
+    <string name="channel_alpha">Alpha</string>
+    <string name="channel_alpha_desc">Experimental versions</string>
 
-        <!-- Aggiornamenti automatici -->
-        <string name="auto_update_title">Aggiornamenti Automatici</string>
-        <string name="auto_update_desc">Controlla automaticamente nuove versioni</string>
-        <string name="auto_download_title">Download Automatici</string>
-        <string name="auto_download_desc">Scarica automaticamente gli aggiornamenti</string>
+    <string name="auto_update_title">Automatic Updates</string>
+    <string name="auto_update_desc">Automatically check for new versions</string>
+    <string name="auto_download_title">Automatic Downloads</string>
+    <string name="auto_download_desc">Automatically download updates</string>
 
-        <!-- Pulsanti manuali -->
-        <string name="check_updates_button">Controlla Aggiornamenti</string>
-        <string name="download_update_button">Scarica Aggiornamento</string>
-        <string name="downloading_progress">Scaricamento in corso...</string>
+    <string name="check_updates_button">Check for Updates</string>
+    <string name="download_update_button">Download Update</string>
+    <string name="downloading_progress">Downloading...</string>
 
-        <!-- Changelog -->
-        <string name="changelog_version">Versione %1$s (%2$s)</string>
+    <string name="changelog_version">Version %1$s (%2$s)</string>
 
-        <!-- Copia negli appunti -->
-        <string name="copied_to_clipboard">%1$s copiato negli appunti!</string>
-        <string name="copy">Copia</string>
+    <string name="copied_to_clipboard">%1$s copied to clipboard!</string>
+    <string name="copy">Copy</string>
 
-        <!-- Altre stringhe -->
-        <string name="dynamic_theme_title">Tema Dinamico</string>
-        <string name="dynamic_theme_desc">Adatta i colori automaticamente</string>
-        <string name="downloading">Scaricamento</string>
-        <string name="update_settings_section">Impostazioni Aggiornamento</string>
-        <string name="show_advanced_settings">Mostra impostazioni avanzate</string>
-        <string name="hide_advanced_settings">Nascondi impostazioni avanzate</string>
-        <string name="battery_charging_title" />
-        <string name="temperature" />
-        <string name="power_source" />
-        <string name="health" />
-        <string name="battery_low_title" />
-        <string name="battery_remaining_subtitle" />
-        <string name="battery_saver" />
-        <string name="power_saver_active_desc" />
-        <string name="charging" />
-        <string name="low_battery" />
-        <string name="power_saver" />
-        <string name="configured" />
-        <string name="app_configured_ready" />
-        <string name="update_card_title" />
-        <string name="download" />
-        <string name="permissions_required" />
-        <string name="configure_permissions_start" />
+    <string name="dynamic_theme_title">Dynamic Theme</string>
+    <string name="dynamic_theme_desc">Adapt colors automatically</string>
+    <string name="downloading">Downloading</string>
+    <string name="update_settings_section">Update Settings</string>
+    <string name="show_advanced_settings">Show advanced settings</string>
+    <string name="hide_advanced_settings">Hide advanced settings</string>
+    <string name="battery_charging_title">Battery Charging</string>
+    <string name="temperature">Temperature</string>
+    <string name="power_source">Power Source</string>
+    <string name="health">Health</string>
+    <string name="battery_low_title">Battery Low</string>
+    <string name="battery_remaining_subtitle">%1$d%% remaining</string>
+    <string name="battery_saver">Battery Saver</string>
+    <string name="power_saver_active_desc">Functionality may be limited</string>
+    <string name="charging">Charging</string>
+    <string name="low_battery">Low Battery</string>
+    <string name="power_saver">Power Saver</string>
+    <string name="configured">Configured</string>
+    <string name="app_configured_ready">The app is configured and ready to go!</string>
+    <string name="update_card_title">Update Available</string>
+    <string name="download">Download</string>
+    <string name="permissions_required">Permissions Required</string>
+    <string name="configure_permissions_start">Configure the required permissions to get started.</string>
 
-        <string name="onboarding_welcome_title">Onboarding Welcome Title</string>
-        <string name="onboarding_welcome_description">Onboarding welcome description.</string>
-        <string name="permission_accessibility_title">Accessibility Service Title</string>
-        <string name="permission_accessibility_desc">Accessibility service description.</string>
-        <string name="permission_category_system">System Category</string>
-        <string name="permission_overlay_title">Overlay Permission Title</string>
-        <string name="permission_overlay_desc">Overlay permission description.</string>
-        <string name="permission_battery_title">Battery Optimization Title</string>
-        <string name="permission_battery_desc">Battery optimization description.</string>
-        <string name="permission_notification_listener_title">Notification Listener Title</string>
-        <string name="permission_notification_listener_desc">Notification listener description.</string>
-        <string name="permission_category_notifications">Notifications Category</string>
-        <string name="permission_post_notifications_title">Post Notifications Title</string>
-        <string name="permission_post_notifications_desc">Post notifications description.</string>
-        <string name="permission_vibrate_title">Vibrate Permission Title</string>
-        <string name="permission_vibrate_desc">Vibrate permission description.</string>
-        <string name="permission_storage_legacy_title">Legacy Storage Title</string>
-        <string name="permission_storage_legacy_desc">Legacy storage description.</string>
-        <string name="permission_category_storage">Storage Category</string>
-        <string name="permission_media_images_title">Media Images Title</string>
-        <string name="permission_media_images_desc">Media images description.</string>
-        <string name="permission_media_video_title">Media Video Title</string>
-        <string name="permission_media_video_desc">Media video description.</string>
-        <string name="permission_media_audio_title">Media Audio Title</string>
-        <string name="permission_media_audio_desc">Media audio description.</string>
-        <string name="permission_unknown_sources_title">Unknown Sources Title</string>
-        <string name="permission_unknown_sources_desc">Unknown sources description.</string>
-        <string name="permission_category_updates">Updates Category</string>
-        <string name="onboarding_step_counter">Step %1$d of %2$d</string>
-        <string name="onboarding_permission_granted">Permission Granted</string>
-        <string name="permission_granted_label">Granted</string>
-        <string name="enable_in_settings">Enable in Settings</string>
-        <string name="onboarding_finish">Finish</string>
-        <string name="onboarding_continue">Continue</string>
-        <string name="onboarding_setup_complete_title">Setup Complete Title</string>
-        <string name="onboarding_setup_complete_desc">Setup complete description.</string>
-        <string name="plugins_enabled_count">%1$d enabled</string>
-        <string name="go_to_details">Go to details</string>
-        <string name="search">Search</string>
-        <string name="search_settings_placeholder">Search settings...</string>
-        <string name="clear_search">Clear search</string>
-        <string name="no_results_found">No results found.</string>
-        <string name="try_different_keywords">Try different keywords.</string>
-        <string name="reset_settings">Reset settings</string>
-        <string name="behavior_visibility_section">Visibility Section</string>
-        <string name="behavior_autohide_section">Autohide Section</string>
-        <string name="behavior_animations_feedback_section">Animations &amp; Feedback Section</string>
-        <string name="dev_error_connection">Connection error.</string>
-        <string name="dev_error_not_found">Not found error.</string>
-        <string name="dev_error_unknown">Unknown error.</string>
-        <string name="dev_loading_title">Loading title...</string>
-        <string name="dev_loading_subtitle">Loading subtitle...</string>
-        <string name="error">Error</string>
-        <string name="dev_error_title">Error Title</string>
-        <string name="retry">Retry</string>
-        <string name="dev_profile_title">Profile Title</string>
-        <string name="dev_updated_from_github">Updated from GitHub</string>
-        <string name="dev_public_repos_title">Public Repositories</string>
-        <string name="dev_no_public_repos_title">No Public Repositories</string>
-        <string name="dev_no_public_repos_desc">No public repositories description.</string>
-        <string name="avatar_of">Avatar of %1$s</string>
-        <string name="open_profile">Open Profile</string>
-        <string name="copy_username">Copy Username</string>
-        <string name="stars">Stars</string>
-        <string name="open_repository">Open Repository</string>
-        <string name="enabled_apps_summary">Enabled apps summary.</string>
-        <string name="style_title">Style</string>
-        <string name="update_available_prompt">Update available</string>
-        <string name="update_channel_description">Update channel description.</string>
-        <string name="permission_required_title">Permission Required</string>
-        <string name="permission_required_text">Permission required text.</string>
-        <string name="update_notification_title">Update Notification Title</string>
-        <string name="update_preparing_download">Preparing download...</string>
-        <string name="update_download_channel_description">Update download channel description.</string>
-        <string name="settings_item_advanced" />
-        <string name="settings_item_advanced_subtitle" />
-        <string name="destination_plugin_settings" />
-        <string name="destination_advanced" />
-        <string name="destination_settings" />
-        <string name="destination_home" />
-        <string name="destination_plugins" />
-    <string name="settings_reset_content_description" />
-    <string name="settings_no_results_subtitle" />
-    <string name="settings_no_results_title" />
-    <string name="settings_clear_search_content_description" />
-    <string name="settings_search_placeholder" />
-    <string name="settings_search_content_description" />
-    <string name="settings_section_information" />
-    <string name="settings_section_other" />
-    <string name="settings_section_appearance" />
-    <string name="settings_search_results" />
-    <string name="settings_section_behavior" />
+    <string name="onboarding_welcome_title">Welcome to Dynamic Island</string>
+    <string name="onboarding_welcome_description">Let\'s set up the necessary permissions to get everything working perfectly.</string>
+    <string name="permission_accessibility_title">Accessibility Service</string>
+    <string name="permission_accessibility_desc">Required to display the Dynamic Island over other apps and detect interactions.</string>
+    <string name="permission_category_system">System</string>
+    <string name="permission_overlay_title">Display Over Other Apps</string>
+    <string name="permission_overlay_desc">Allows the Dynamic Island to appear on top of your current screen.</string>
+    <string name="permission_battery_title">Battery Optimization</string>
+    <string name="permission_battery_desc">Disabling this ensures the app runs smoothly in the background without being closed.</string>
+    <string name="permission_notification_listener_title">Notification Access</string>
+    <string name="permission_notification_listener_desc">Needed to show notifications from your apps on the Dynamic Island.</string>
+    <string name="permission_category_notifications">Notifications</string>
+    <string name="permission_post_notifications_title">Post Notifications</string>
+    <string name="permission_post_notifications_desc">Allows the app to show you important updates and alerts.</string>
+    <string name="permission_vibrate_title">Vibration</string>
+    <string name="permission_vibrate_desc">Provides haptic feedback for a more interactive experience.</string>
+    <string name="permission_storage_legacy_title">Legacy Storage</string>
+    <string name="permission_storage_legacy_desc">Required for older Android versions to access files.</string>
+    <string name="permission_category_storage">Storage</string>
+    <string name="permission_media_images_title">Access Media &amp; Photos</string>
+    <string name="permission_media_images_desc">Allows plugins to display images and media content.</string>
+    <string name="permission_media_video_title">Access Videos</string>
+    <string name="permission_media_video_desc">Allows plugins to display video content.</string>
+    <string name="permission_media_audio_title">Access Audio</string>
+    <string name="permission_media_audio_desc">Allows plugins to interact with audio files.</string>
+    <string name="permission_unknown_sources_title">Install Unknown Apps</string>
+    <string name="permission_unknown_sources_desc">Required to install app updates downloaded from within the app.</string>
+    <string name="permission_category_updates">Updates</string>
+    <string name="onboarding_step_counter">Step %1$d of %2$d</string>
+    <string name="onboarding_permission_granted">Permission Granted</string>
+    <string name="permission_granted_label">Granted</string>
+    <string name="enable_in_settings">Enable in Settings</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_setup_complete_title">Setup Complete!</string>
+    <string name="onboarding_setup_complete_desc">You\'re all set. Dynamic Island is now active.</string>
+    <string name="plugins_enabled_count">%1$d enabled</string>
+    <string name="go_to_details">Go to details</string>
+    <string name="search">Search</string>
+    <string name="search_settings_placeholder">Search settings...</string>
+    <string name="clear_search">Clear search</string>
+    <string name="no_results_found">No results found.</string>
+    <string name="try_different_keywords">Try different keywords.</string>
+    <string name="reset_settings">Reset settings</string>
+    <string name="behavior_visibility_section">Visibility</string>
+    <string name="behavior_autohide_section">Autohide</string>
+    <string name="behavior_animations_feedback_section">Animations &amp; Feedback</string>
+    <string name="dev_error_connection">Connection error.</string>
+    <string name="dev_error_not_found">Not found.</string>
+    <string name="dev_error_unknown">An unknown error occurred.</string>
+    <string name="dev_loading_title">Loading...</string>
+    <string name="dev_loading_subtitle">Please wait...</string>
+    <string name="error">Error</string>
+    <string name="dev_error_title">Something Went Wrong</string>
+    <string name="retry">Retry</string>
+    <string name="dev_profile_title">Profile</string>
+    <string name="dev_updated_from_github">Updated from GitHub</string>
+    <string name="dev_public_repos_title">Public Repositories</string>
+    <string name="dev_no_public_repos_title">No Public Repositories</string>
+    <string name="dev_no_public_repos_desc">This user has no public repositories.</string>
+    <string name="avatar_of">Avatar of %1$s</string>
+    <string name="open_profile">Open Profile</string>
+    <string name="copy_username">Copy Username</string>
+    <string name="stars">Stars</string>
+    <string name="open_repository">Open Repository</string>
+    <string name="enabled_apps_summary">Choose which apps can use the Dynamic Island.</string>
+    <string name="style_title">Style</string>
+    <string name="update_available_prompt">An update is available!</string>
+    <string name="update_channel_description">Select the release channel for app updates.</string>
+    <string name="permission_required_title">Permission Required</string>
+    <string name="permission_required_text">This feature requires a permission that has not been granted.</string>
+    <string name="update_notification_title">Update Available</string>
+    <string name="update_preparing_download">Preparing download...</string>
+    <string name="update_download_channel_description">Notifications for app update downloads.</string>
+    <string name="settings_item_advanced">Advanced</string>
+    <string name="settings_item_advanced_subtitle">Customize animations, feedback, and more</string>
+    <string name="destination_plugin_settings">Plugin Settings</string>
+    <string name="destination_advanced">Advanced Settings</string>
+    <string name="destination_settings">Settings</string>
+    <string name="destination_home">Home</string>
+    <string name="destination_plugins">Plugins</string>
+    <string name="settings_reset_content_description">Reset settings to default</string>
+    <string name="settings_no_results_subtitle">Try searching for something else</string>
+    <string name="settings_no_results_title">No results found</string>
+    <string name="settings_clear_search_content_description">Clear search query</string>
+    <string name="settings_search_placeholder">Search settings</string>
+    <string name="settings_search_content_description">Search settings icon</string>
+    <string name="settings_section_information">Information</string>
+    <string name="settings_section_other">Other</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_search_results">Search Results</string>
+    <string name="settings_section_behavior">Behavior</string>
 </resources>
