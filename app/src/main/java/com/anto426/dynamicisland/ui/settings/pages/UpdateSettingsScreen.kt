@@ -477,13 +477,28 @@ private fun ManualActionsContent(uiState: UpdateViewModel.UiState, viewModel: Up
                 enter = fadeIn() + slideInVertically(initialOffsetY = { 20 }),
                 exit = fadeOut() + slideOutVertically(targetOffsetY = { -20 })
         ) {
-            if (uiState.updateCheckState is UpdateViewModel.UpdateCheckState.UpdateAvailable) {
-                EnhancedActionButton(
-                        stringResource(R.string.download_update_button),
-                        Icons.Default.Download,
-                        { viewModel.downloadUpdate(context, uiState.updateCheckState.updateInfo) }
-                )
-            }
+                        if (uiState.updateCheckState is UpdateViewModel.UpdateCheckState.UpdateAvailable) {
+                                val isDownloaded = uiState.downloadState is UpdateViewModel.DownloadState.Completed
+                                val buttonText = if (isDownloaded) {
+                                        stringResource(R.string.install_update_button)
+                                } else {
+                                        stringResource(R.string.download_update_button)
+                                }
+                                val onClick = if (isDownloaded) {
+                                        {
+                                                val file = (uiState.downloadState as UpdateViewModel.DownloadState.Completed).file
+                                                viewModel.installUpdate(context, file)
+                                        }
+                                } else {
+                                        { viewModel.downloadUpdate(context, uiState.updateCheckState.updateInfo) }
+                                }
+
+                                EnhancedActionButton(
+                                                buttonText,
+                                                Icons.Default.Download,
+                                                onClick
+                                )
+                        }
         }
 
         // Barra di progresso download (solo durante il download)

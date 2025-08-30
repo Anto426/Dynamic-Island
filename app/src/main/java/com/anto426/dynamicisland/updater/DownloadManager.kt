@@ -13,9 +13,7 @@ import java.io.IOException
 import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
 
-/**
- * Classe avanzata per gestire i download con controlli di integrità
- */
+
 class DownloadManager(private val context: Context) {
 
     private val client = OkHttpClient.Builder()
@@ -142,8 +140,9 @@ class DownloadManager(private val context: Context) {
                 return DownloadResult.Error(error, response.code in 500..599)
             }
 
-            response.body?.use { body ->
-                val contentLength = body.contentLength()
+            val body = response.body
+            body.use { responseBody ->
+                val contentLength = responseBody.contentLength()
                 val actualSize = if (contentLength > 0) contentLength else expectedSize ?: 0
 
                 Log.d(TAG, "Body ricevuto - ContentLength: $contentLength, ActualSize: $actualSize")
@@ -168,41 +167,45 @@ class DownloadManager(private val context: Context) {
                     }
                 }
 
-                // Crea file di output con fallback per permessi
-                var outputFile = File(downloadDir, fileName)
+                // Imposta destinazione pubblica iniziale; in caso di EACCES effettueremo fallback a directory privata
+                val publicTarget = File(downloadDir, fileName)
+                var outputFile = publicTarget
                 var usePrivateDir = false
-
-                // Verifica se possiamo scrivere nella directory pubblica
-                try {
-                    if (!downloadDir.canWrite()) {
-                        Log.w(TAG, "Directory pubblica non scrivibile, uso directory privata")
-                        val privateDir = File(context.getExternalFilesDir(null), DOWNLOAD_DIR)
-                        privateDir.mkdirs()
-                        outputFile = File(privateDir, fileName)
-                        usePrivateDir = true
-                        Log.d(TAG, "Uso directory privata: ${outputFile.absolutePath}")
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Errore verifica permessi, uso directory privata: ${e.message}")
-                    val privateDir = File(context.getExternalFilesDir(null), DOWNLOAD_DIR)
-                    privateDir.mkdirs()
-                    outputFile = File(privateDir, fileName)
-                    usePrivateDir = true
-                }
-
-                if (outputFile.exists()) {
-                    outputFile.delete()
-                }
-
-                Log.d(TAG, "Creando file di output: ${outputFile.absolutePath} (privata: $usePrivateDir)")
 
                 // Scarica con progresso
                 var bytesRead = 0L
                 val digest = if (expectedChecksum != null) MessageDigest.getInstance("SHA-256") else null
 
                 try {
-                    FileOutputStream(outputFile).use { output ->
-                        body.byteStream().use { input ->
+                    // Prova ad aprire lo stream sul percorso pubblico; se fallisce per permessi, esegui fallback su percorso privato dell'app
+                    val outputStream = try {
+                        if (outputFile.exists()) {
+                            outputFile.delete()
+                        }
+                        outputFile.parentFile?.mkdirs()
+                        FileOutputStream(outputFile)
+                    } catch (e: Exception) {
+                        val permissionIssue = e is SecurityException || (e is IOException && (e.message?.contains("EACCES", true) == true || e.message?.contains("Permission denied", true) == true))
+                        if (permissionIssue) {
+                            Log.w(TAG, "Permesso negato nella directory pubblica, uso directory privata dell'app", e)
+                            val basePrivate = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) ?: context.getExternalFilesDir(null)
+                            val privateDir = if (basePrivate != null) File(basePrivate, "MaterialYou-Dynamic-Island") else File(context.filesDir, DOWNLOAD_DIR)
+                            if (!privateDir.exists()) privateDir.mkdirs()
+                            outputFile = File(privateDir, fileName)
+                            usePrivateDir = true
+                            if (outputFile.exists()) {
+                                outputFile.delete()
+                            }
+                            FileOutputStream(outputFile)
+                        } else {
+                            throw e
+                        }
+                    }
+
+                    Log.d(TAG, "Creando file di output: ${outputFile.absolutePath} (privata: $usePrivateDir)")
+
+                    outputStream.use { output ->
+                        responseBody.byteStream().use { input ->
                             val buffer = ByteArray(BUFFER_SIZE)
                             var bytes: Int
                             var readCount = 0
@@ -245,21 +248,22 @@ class DownloadManager(private val context: Context) {
                     // Verifica checksum se fornita (con fallback per checksum errati)
                     if (expectedChecksum != null && digest != null) {
                         val actualChecksum = digest.digest().joinToString("") { "%02x".format(it) }
+                        val expectedNorm = expectedChecksum.trim().lowercase()
+                        val isValidChecksum = isLikelyValidSha256(expectedNorm)
                         Log.d(TAG, "Verifica checksum - Attesa: $expectedChecksum, Calcolata: $actualChecksum")
 
-                        // Controlla se il checksum atteso sembra valido (lunghezza minima per SHA-256)
-                        val isValidChecksum = expectedChecksum.length >= 32 && !expectedChecksum.contains("B8F8B8F8B8F8B8F8B8F8B8F8B8F8B8F8")
-
-                        if (isValidChecksum && actualChecksum != expectedChecksum.lowercase()) {
-                            val error = "Checksum non corrispondente. Attesa: $expectedChecksum, Calcolata: $actualChecksum"
-                            Log.e(TAG, error)
-                            outputFile.delete()
-                            callback?.onError(error, true)
-                            return DownloadResult.Error(error, true)
-                        } else if (!isValidChecksum) {
-                            Log.w(TAG, "Checksum atteso sembra invalido o incompleto, procedo senza verifica")
+                        if (isValidChecksum) {
+                            if (actualChecksum != expectedNorm) {
+                                val error = "Checksum non corrispondente. Attesa: $expectedChecksum, Calcolata: $actualChecksum"
+                                Log.e(TAG, error)
+                                outputFile.delete()
+                                callback?.onError(error, true)
+                                return DownloadResult.Error(error, true)
+                            } else {
+                                Log.d(TAG, "Checksum verificato con successo")
+                            }
                         } else {
-                            Log.d(TAG, "Checksum verificato con successo")
+                            Log.w(TAG, "Checksum atteso sembra invalido o placeholder, procedo senza verifica")
                         }
                     } else {
                         Log.d(TAG, "Nessun checksum fornito, salto verifica")
@@ -313,11 +317,6 @@ class DownloadManager(private val context: Context) {
                     callback?.onError("Errore durante il download: ${e.message}", true)
                     return DownloadResult.Error("Errore durante il download: ${e.message}", true, e)
                 }
-            } ?: run {
-                val error = "Risposta HTTP senza body"
-                Log.e(TAG, error)
-                callback?.onError(error, true)
-                return DownloadResult.Error(error, true)
             }
         } catch (e: IOException) {
             val error = "Errore di connessione/timeout: ${e.message}"
@@ -345,7 +344,7 @@ class DownloadManager(private val context: Context) {
                 context,
                 arrayOf(file.absolutePath),
                 null
-            ) { path, uri ->
+            ) { path, _ ->
                 Log.d(TAG, "File scansionato dal media scanner: $path")
             }
         } catch (e: Exception) {
@@ -386,8 +385,9 @@ class DownloadManager(private val context: Context) {
         }
 
         // Verifica dimensione
-        if (expectedSize != null && file.length() != expectedSize) {
-            return false
+        if (expectedSize != null) {
+            val diff = kotlin.math.abs(file.length() - expectedSize)
+            if (diff > 1024) return false
         }
 
         // Verifica checksum
@@ -402,7 +402,13 @@ class DownloadManager(private val context: Context) {
                     }
                     digest.digest().joinToString("") { "%02x".format(it) }
                 }
-                checksum == expectedChecksum
+                val expectedNorm = expectedChecksum.trim().lowercase()
+                if (!isLikelyValidSha256(expectedNorm)) {
+                    Log.w(TAG, "Checksum atteso sembra invalido o placeholder, salto verifica in isFileValid")
+                    true
+                } else {
+                    checksum == expectedNorm
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Errore nella verifica checksum", e)
                 false
@@ -423,5 +429,16 @@ class DownloadManager(private val context: Context) {
             Log.w(TAG, "Memoria esterna non disponibile, uso directory privata")
             File(context.getExternalFilesDir(null), DOWNLOAD_DIR)
         }
+    }
+
+    // Rileva se una stringa sembra un SHA-256 valido ed evita placeholder ripetuti
+    private fun isLikelyValidSha256(value: String): Boolean {
+        val v = value.trim().lowercase()
+        if (v.length != 64) return false
+        if (!v.all { (it >= '0' && it <= '9') || (it >= 'a' && it <= 'f') }) return false
+        // escludi pattern sospetti ripetuti
+        val suspicious = listOf("b8f8")
+        if (suspicious.any { pat -> v.contains(pat.repeat(8)) }) return false
+        return true
     }
 }

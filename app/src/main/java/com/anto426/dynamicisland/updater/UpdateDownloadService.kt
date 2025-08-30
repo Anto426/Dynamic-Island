@@ -3,6 +3,7 @@ package com.anto426.dynamicisland.updater
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.ClipData
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -138,7 +139,7 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
                 throw IOException("Download fallito: ${response.code}")
             }
 
-            val body = response.body ?: throw IOException("Risposta vuota")
+            val body = response.body
 
             val contentLength = body.contentLength()
             var bytesRead = 0L
@@ -187,6 +188,21 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
             val installIntent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(apkUri, "application/vnd.android.package-archive")
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                clipData = ClipData.newRawUri("APK", apkUri)
+                addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            }
+
+            // Concede esplicitamente il permesso a tutti i potential handler
+            val resList = packageManager.queryIntentActivities(installIntent, 0)
+            for (res in resList) {
+                grantUriPermission(
+                    res.activityInfo.packageName,
+                    apkUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                        Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                )
             }
 
             // Per Android 8.0+ potrebbe essere necessario un permesso aggiuntivo

@@ -21,6 +21,12 @@ class UpdateViewModel : ViewModel() {
     private lateinit var localUpdateManager: LocalUpdateManager
     private lateinit var downloadManager: DownloadManager
 
+    private object PrefKeys {
+        const val FILE = "update_prefs"
+        const val DOWNLOADED_APK_PATH = "downloaded_apk_path"
+        const val DOWNLOADED_APK_VERSION = "downloaded_apk_version"
+    }
+
     data class UiState(
         val currentVersion: String = "1.0.0",
         val selectedChannel: ReleaseChannel = ReleaseChannel.STABLE,
@@ -171,6 +177,8 @@ class UpdateViewModel : ViewModel() {
 
             // Salva lo stato se c'è un aggiornamento disponibile
             if (result is UpdateCheckResult.UpdateAvailable) {
+                // Se esiste un APK scaricato di versione inferiore, eliminalo
+                maybeCleanupOldDownloadedApk(context, result.updateInfo.latestVersion)
                 saveUpdateState(context, result.updateInfo)
                 // Invia una notifica per informare l'utente
                 UpdateNotifications.showUpdateAvailableNotification(
@@ -181,6 +189,8 @@ class UpdateViewModel : ViewModel() {
                 )
             } else if (result is UpdateCheckResult.UpToDate) {
                 saveUpdateState(context, null)
+                // Se l'app è aggiornata, rimuovi eventuale APK scaricato residuo che non serve
+                maybeCleanupOldDownloadedApk(context, _uiState.value.currentVersion)
             }
         }
     }
@@ -228,6 +238,10 @@ class UpdateViewModel : ViewModel() {
                         _uiState.value = _uiState.value.copy(
                             downloadState = DownloadState.Completed(file)
                         )
+                        // Salva info del pacchetto scaricato
+                        saveDownloadedApkInfo(context, file, updateInfo.latestVersion)
+                        // Avvia installazione automaticamente
+                        installUpdate(context, file)
                     }
 
                     override fun onError(message: String, canRetry: Boolean) {
@@ -243,6 +257,8 @@ class UpdateViewModel : ViewModel() {
                     _uiState.value = _uiState.value.copy(
                         downloadState = DownloadState.Completed(result.file)
                     )
+                    // Persisti anche in questo ramo
+                    saveDownloadedApkInfo(context, result.file, updateInfo.latestVersion)
                 }
                 is DownloadResult.Error -> {
                     _uiState.value = _uiState.value.copy(
@@ -288,9 +304,21 @@ class UpdateViewModel : ViewModel() {
     }
 
     fun installUpdate(context: Context, apkFile: File) {
-        // Implementazione dell'installazione APK
-        // Questo richiederà permessi e gestione sicura
+
         try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                if (!context.packageManager.canRequestPackageInstalls()) {
+                    // Apri impostazioni per concedere il permesso
+                    val settingsIntent = android.content.Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
+                        data = android.net.Uri.parse("package:${context.packageName}")
+                        flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(settingsIntent)
+                    // Lascia anche il file in stato completato; l'utente potrà riprovare l'installazione dal pulsante UI
+                    return
+                }
+            }
+
             val apkUri = androidx.core.content.FileProvider.getUriForFile(
                 context,
                 "${context.packageName}.fileprovider",
@@ -300,6 +328,22 @@ class UpdateViewModel : ViewModel() {
             val installIntent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                 setDataAndType(apkUri, "application/vnd.android.package-archive")
                 flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
+                clipData = android.content.ClipData.newRawUri("APK", apkUri)
+                addFlags(android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                addFlags(android.content.Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+            }
+
+            // Concede esplicitamente il permesso a tutti i potential handler
+            val pm = context.packageManager
+            val resList = pm.queryIntentActivities(installIntent, 0)
+            for (res in resList) {
+                context.grantUriPermission(
+                    res.activityInfo.packageName,
+                    apkUri,
+                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or
+                        android.content.Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
+                )
             }
 
             context.startActivity(installIntent)
@@ -316,5 +360,47 @@ class UpdateViewModel : ViewModel() {
 
     fun clearUpdateError() {
         _uiState.value = _uiState.value.copy(updateCheckState = UpdateCheckState.Idle)
+    }
+
+    // --- Helpers per gestione APK scaricati ---
+    private fun saveDownloadedApkInfo(context: Context, file: File, version: String) {
+        val prefs = context.getSharedPreferences(PrefKeys.FILE, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString(PrefKeys.DOWNLOADED_APK_PATH, file.absolutePath)
+            .putString(PrefKeys.DOWNLOADED_APK_VERSION, version)
+            .apply()
+    }
+
+    private fun maybeCleanupOldDownloadedApk(context: Context, newVersion: String) {
+        val prefs = context.getSharedPreferences(PrefKeys.FILE, Context.MODE_PRIVATE)
+        val savedPath = prefs.getString(PrefKeys.DOWNLOADED_APK_PATH, null)
+        val savedVersion = prefs.getString(PrefKeys.DOWNLOADED_APK_VERSION, null)
+        if (!savedPath.isNullOrEmpty() && !savedVersion.isNullOrEmpty()) {
+            val cmp = compareVersions(savedVersion, newVersion)
+            if (cmp < 0) {
+                // Trovata versione più recente -> elimina il vecchio APK
+                try {
+                    val old = File(savedPath)
+                    if (old.exists()) old.delete()
+                } catch (_: Exception) {}
+                prefs.edit().remove(PrefKeys.DOWNLOADED_APK_PATH).remove(PrefKeys.DOWNLOADED_APK_VERSION).apply()
+                // Resetta lo stato di download per riflettere la rimozione
+                _uiState.value = _uiState.value.copy(downloadState = DownloadState.Idle)
+            }
+        }
+    }
+
+    // Confronto semplice tra versioni tipo x.y.z (riempie con zeri se mancano componenti)
+    private fun compareVersions(a: String, b: String): Int {
+        fun parse(v: String) = v.split('.').mapNotNull { it.toIntOrNull() }
+        val av = parse(a)
+        val bv = parse(b)
+        val max = maxOf(av.size, bv.size)
+        for (i in 0 until max) {
+            val ai = if (i < av.size) av[i] else 0
+            val bi = if (i < bv.size) bv[i] else 0
+            if (ai != bi) return ai.compareTo(bi)
+        }
+        return 0
     }
 }
