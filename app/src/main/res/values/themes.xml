@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.DynamicIsland" parent="android:Theme.Material.Light.NoActionBar" />
-    
+    <style name="Theme.DynamicIsland" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Enable Material 3 Expressive features -->
+        <item name="android:enableOnBackInvokedCallback">true</item>
+        <item name="motionDurationShort1">50</item>
+        <item name="motionDurationShort2">100</item>
+        <item name="motionDurationMedium1">200</item>
+        <item name="motionDurationLong1">300</item>
+        <item name="motionDurationLong2">500</item>
+    </style>
+
 </resources>
