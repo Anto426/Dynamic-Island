@@ -41,8 +41,9 @@ fun IslandNavHost(
 				onGetStartedClick = {
 					navController.navigateSingleTopTo(IslandPlugins.route)
 				},
-				onShowDisclosureClick = {
-					navController.navigate(AboutSetting.route)
+				// onShowDisclosureClick removed - disclosure no longer required
+				onNavigateToUpdates = {
+					navController.navigateSingleTopTo(UpdateSetting.route)
 				},
 			)
 		}

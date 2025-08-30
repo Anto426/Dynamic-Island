@@ -31,6 +31,7 @@ import com.anto426.dynamicisland.island.*
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
+import android.graphics.Color
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -243,7 +244,9 @@ private fun IslandExpandedContent(
 	content: @Composable () -> Unit
 ) {
 	Column(
-		modifier = Modifier.fillMaxSize(),
+		modifier = Modifier
+			.fillMaxSize()
+			.padding(top = 30.dp), // leggero padding per evitare la fotocamera in alto quando espansa
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Box(
@@ -272,8 +275,10 @@ private fun CloseHandle(
 				indication = null,
 				onClick = onClick
 			)
+			.background(androidx.compose.ui.graphics.Color.Transparent)
 			.padding(vertical = 16.dp),
 		contentAlignment = Alignment.Center
+		
 	) {
 		Box(
 			modifier = Modifier

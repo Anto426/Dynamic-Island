@@ -26,6 +26,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -43,6 +45,10 @@ import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import kotlinx.coroutines.delay
 import androidx.core.net.toUri
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.LinearProgressIndicator
 
 data class PermissionItemData(
     val title: String,
@@ -114,14 +120,39 @@ private fun IntroScreen(onContinue: () -> Unit) {
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.size(120.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer)
+                modifier = Modifier
+                    .size(120.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon),
-                    contentDescription = stringResource(id = R.string.about_app_icon_description),
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                // Soft radial glow behind the app icon (visual only)
+                Box(
+                    modifier = Modifier
+                        .size(110.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.22f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
+                                    Color.Transparent
+                                )
+                            ),
+                            shape = CircleShape
+                        )
                 )
+
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shadowElevation = 4.dp
+                ) {
+                    Box(modifier = Modifier.size(96.dp), contentAlignment = Alignment.Center) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon),
+                            contentDescription = stringResource(id = R.string.about_app_icon_description),
+                            modifier = Modifier.size(56.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
             }
             Text(
                 text = stringResource(id = R.string.onboarding_welcome_title),
@@ -252,16 +283,52 @@ private fun PermissionStepContent(
     ) { /* Lo stato verrà aggiornato dal LifecycleObserver del genitore */ }
 
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.onboarding_step_counter, step, totalSteps),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
+        // Header with step counter, category chip and a subtle progress bar (UI only)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(id = R.string.onboarding_step_counter, step, totalSteps),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AssistChip(
+                onClick = {},
+                label = { Text(permission.category) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = permission.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                colors = AssistChipDefaults.assistChipColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+        }
         Spacer(modifier = Modifier.height(8.dp))
+        LinearProgressIndicator(
+            progress = { (step.toFloat() / totalSteps.coerceAtLeast(1)) },
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp)),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         PermissionCard(
             permission = permission,
             isGranted = isGranted,
@@ -289,16 +356,28 @@ private fun PermissionCard(permission: PermissionItemData, isGranted: Boolean, o
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier.padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Surface(modifier = Modifier.size(80.dp), shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer) {
+            // Icon circle with gentle elevation
+            Surface(
+                modifier = Modifier.size(80.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shadowElevation = 6.dp
+            ) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(imageVector = permission.icon, contentDescription = null, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                    Icon(
+                        imageVector = permission.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             }
             Text(text = permission.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
@@ -325,17 +404,40 @@ private fun PermissionCard(permission: PermissionItemData, isGranted: Boolean, o
 @Composable
 private fun CelebrationScreen() {
     Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(32.dp)
+        Card(
+            shape = MaterialTheme.shapes.extraLarge,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Icon(imageVector = Icons.Rounded.CheckCircle, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(80.dp))
-            Text(stringResource(id = R.string.onboarding_setup_complete_title), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            Text(stringResource(id = R.string.onboarding_setup_complete_desc), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(28.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.CheckCircle,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(80.dp)
+                )
+                Text(
+                    stringResource(id = R.string.onboarding_setup_complete_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    stringResource(id = R.string.onboarding_setup_complete_desc),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

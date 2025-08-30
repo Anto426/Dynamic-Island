@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import com.anto426.dynamicisland.model.BATTERY_OPTIMIZATION_DISMISSED
-import com.anto426.dynamicisland.model.DISCLOSURE_ACCEPTED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.packageName
 import com.anto426.dynamicisland.model.service.IslandOverlayService
@@ -57,7 +56,8 @@ import com.anto426.dynamicisland.updater.UpdateViewModel
 @Composable
 fun HomeScreen(
 	onGetStartedClick: () -> Unit,
-	onShowDisclosureClick: () -> Unit,
+	// onShowDisclosureClick: () -> Unit, // Removed - disclosure no longer required
+	onNavigateToUpdates: () -> Unit,
 ) {
 	val context = LocalContext.current
 	val settingsPreferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
@@ -68,7 +68,7 @@ fun HomeScreen(
 	val updateUiState by updateViewModel.uiState.collectAsState()
 
 	var optimizationDismissed by remember { mutableStateOf(settingsPreferences.getBoolean(BATTERY_OPTIMIZATION_DISMISSED, false)) }
-	var disclosureAccepted by remember { mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false)) }
+	// var disclosureAccepted by remember { mutableStateOf(settingsPreferences.getBoolean(DISCLOSURE_ACCEPTED, false)) } // Removed - disclosure no longer required
 
 	val celebrateComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.celebrate))
 	var isCelebrating by remember { mutableStateOf(false) }
@@ -218,7 +218,7 @@ fun HomeScreen(
 							)
 						}
 						Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-							Button(onClick = { updateViewModel.downloadUpdate(context, updateInfo) }) {
+							Button(onClick = { onNavigateToUpdates() }) {
 								Text(stringResource(id = R.string.download))
 							}
 							OutlinedButton(onClick = { updateViewModel.ignoreCurrentUpdate(context) }) {
@@ -287,21 +287,6 @@ fun HomeScreen(
 			}
 		}
 
-		item {
-			AnimatedVisibility(
-				visible = !disclosureAccepted,
-				enter = fadeIn() + expandVertically(),
-				exit = fadeOut() + shrinkVertically()
-			) {
-				DisclosureCard(
-					onAcceptClick = {
-						disclosureAccepted = true
-						settingsPreferences.edit { putBoolean(DISCLOSURE_ACCEPTED, true) }
-					},
-					onShowClick = onShowDisclosureClick
-				)
-			}
-		}
 
 		item {
 			AnimatedVisibility(
@@ -341,6 +326,7 @@ fun HomeScreen(
 		contentScale = ContentScale.Crop
 	)
 }
+
 
 
 @Composable
@@ -407,6 +393,7 @@ fun DisclosureCard(
 		}
 	}
 }
+
 
 @Composable
 fun NoPluginsActivatedCard(
