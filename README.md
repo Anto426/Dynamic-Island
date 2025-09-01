@@ -21,13 +21,55 @@ Current version: 2.1.5 (code 12)
 
 ## 🖼️ Screenshots
 
-If you cloned the repo, place PNGs in `release/screenshots/` using the suggested names. The README will automatically pick them up via these relative links (add files to see them here):
 
-- Overview: ![Overview](release/screenshots/01_overview.png)
-- Notifications: ![Notifications](release/screenshots/02_notifications.png)
-- Media controls: ![Media](release/screenshots/03_media.png)
-- Battery plugin: ![Battery](release/screenshots/04_battery.png)
-- Settings & Updates: ![Settings](release/screenshots/05_settings.png)
+<p align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="release/screenshots/01.png">
+          <img src="release/screenshots/01.png" alt="Home" width="260" style="border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" />
+        </a>
+        <br/>
+        <sub>Home</sub>
+      </td>
+      <td align="center">
+        <a href="release/screenshots/02.png">
+          <img src="release/screenshots/02.png" alt="Plugins" width="260" style="border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" />
+        </a>
+        <br/>
+        <sub>Plugins</sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <a href="release/screenshots/03.png">
+          <img src="release/screenshots/03.png" alt="Settings" width="260" style="border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" />
+        </a>
+        <br/>
+        <sub>Settings</sub>
+      </td>
+      <td align="center">
+        <a href="release/screenshots/04.png">
+          <img src="release/screenshots/04.png" alt="Dynamic Island" width="260" style="border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" />
+        </a>
+        <br/>
+  <sub>Updates</sub>
+      </td>
+    </tr>
+  </table>
+</p>
+
+<details>
+  <summary>More screenshots</summary>
+
+<p align="center">
+  <a href="release/screenshots/05.png"><img src="release/screenshots/05.png" alt="Screenshot 05" width="220" style="border-radius:14px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" /></a>
+  <a href="release/screenshots/06.png"><img src="release/screenshots/06.png" alt="Screenshot 06" width="220" style="border-radius:14px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" /></a>
+  <a href="release/screenshots/07.png"><img src="release/screenshots/07.png" alt="Screenshot 07" width="220" style="border-radius:14px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" /></a>
+  <a href="release/screenshots/08.png"><img src="release/screenshots/08.png" alt="Screenshot 08" width="220" style="border-radius:14px;border:1px solid #e5e7eb;box-shadow:0 2px 8px rgba(0,0,0,0.06);" /></a>
+</p>
+
+</details>
 
 ## ✅ Requirements
 
