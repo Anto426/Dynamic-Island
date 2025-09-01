@@ -253,11 +253,11 @@ private fun UpdateStatusContent(uiState: UpdateViewModel.UiState) {
                                     color = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Badge(
+                                                                Badge(
                                     containerColor = MaterialTheme.colorScheme.primary,
                                     contentColor = MaterialTheme.colorScheme.onPrimary
                                 ) {
-                                    Text("NEW", style = MaterialTheme.typography.labelSmall)
+                                                                        Text(stringResource(R.string.badge_new), style = MaterialTheme.typography.labelSmall)
                                 }
                             }
                             Text(
@@ -723,7 +723,6 @@ fun EnhancedUpdateItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .scale(scale),
-            colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.1f)),
             shape = MaterialTheme.shapes.extraLarge,
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
