@@ -45,6 +45,9 @@ import com.anto426.dynamicisland.ui.island.RoundedPainterIcon
 import com.anto426.dynamicisland.ui.island.SectionCard
 import com.anto426.dynamicisland.ui.island.PluginDefaults
 import kotlinx.coroutines.*
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.mutableStateMapOf
+import com.anto426.dynamicisland.R
 
 class NotificationPlugin(
 	override val id: String = "NotificationPlugin",
@@ -54,10 +57,12 @@ class NotificationPlugin(
 	override val permissions: ArrayList<String> = arrayListOf(
 		Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
 	),
-	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override var pluginSettings: SnapshotStateMap<String, PluginSettingsItem> = mutableStateMapOf(),
 	override val version: String = "1.0.0",
 	override val author: String = "Anto426", override val sourceCodeUrl: String = "https://github.com/Anto426/Dynamic-Island/blob/main/app/src/main/java/com/anto426/dynamicisland/plugins/notification/NotificationPlugin.kt",
 ) : BasePlugin() {
+	override val nameRes: Int? get() = R.string.plugin_notification_name
+	override val descriptionRes: Int? get() = R.string.plugin_notification_description
 
 	private companion object {
 		private const val TAG = "NotificationPlugin"
@@ -68,7 +73,6 @@ class NotificationPlugin(
 	private var notificationMeta by mutableStateOf<NotificationMeta?>(null)
 
 	private val pluginScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-	private var dismissJob: Job? = null
 
 	private val notificationBroadcastReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
@@ -87,7 +91,7 @@ class NotificationPlugin(
 						actions = (sbn.notification.actions ?: arrayOf()).toList(),
 						statusBarNotification = sbn
 					)
-					startDismissTimeout()
+					// Autohide removed: no automatic dismissal
 					// Notifications are high priority by default
 					if (priority.value.ordinal < PluginPriority.HIGH.ordinal) priority.value = PluginPriority.HIGH
 					this@NotificationPlugin.show(this@NotificationPlugin.context)
@@ -104,8 +108,7 @@ class NotificationPlugin(
 	}
 
 	private fun removeNotificationAndUpdateState(id: Int) {
-		notificationService?.notifications?.removeAll { it.id == id }
-		dismissJob?.cancel()
+	notificationService?.notifications?.removeAll { it.id == id }
 		val nextSbn = notificationService?.notifications?.firstOrNull()
 		notificationMeta = nextSbn?.let {
 			NotificationMeta(
@@ -123,7 +126,7 @@ class NotificationPlugin(
 			Log.d(TAG, "Nessuna notifica rimasta, rimuovo il plugin.")
 			this.hide(context)
 		} else {
-			startDismissTimeout()
+			// Autohide removed: keep showing next notification until user interaction or system removal
 		}
 	}
 
@@ -331,11 +334,5 @@ class NotificationPlugin(
 
 	override fun onRightSwipe() {}
 
-	private fun startDismissTimeout() {
-		dismissJob?.cancel()
-		dismissJob = pluginScope.launch {
-			delay(IslandSettings.instance.autoHideOpenedAfter.toLong())
-			notificationMeta?.let { removeNotificationAndUpdateState(it.id) }
-		}
-	}
+	// Autohide removed: no timeout-based dismissal
 }

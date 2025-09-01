@@ -350,4 +350,12 @@
     <string name="silent_mode_desc">Mute any sounds from the island</string>
     <string name="low_power_mode_title">Low power mode</string>
     <string name="low_power_mode_desc">Reduce animations and effects to save battery</string>
+
+    <!-- Plugin base strings -->
+    <string name="plugin_battery_name">Battery</string>
+    <string name="plugin_battery_description">Shows the device battery status</string>
+    <string name="plugin_notification_name">Notifications</string>
+    <string name="plugin_notification_description">Shows notifications and lets you interact with them</string>
+    <string name="plugin_media_name">Media</string>
+    <string name="plugin_media_description">Shows what’s currently playing and media controls</string>
 </resources>

@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -32,13 +31,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.animateColorAsState
 import com.anto426.dynamicisland.R
-import com.anto426.dynamicisland.ui.settings.pages.EnhancedSettingSwitch
-import com.anto426.dynamicisland.ui.settings.pages.SettingsDivider
 import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
+import com.anto426.dynamicisland.plugins.ExportedPlugins
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import android.content.Intent
+import com.anto426.dynamicisland.model.SETTINGS_CHANGED
 
 /**
  * Componente per gli elementi informativi dei plugin con design moderno e ottimizzato
@@ -201,6 +204,25 @@ fun PluginSettingsScreen(
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+    val lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+
+    // Ensure plugin settings are initialized so they render even if plugin isn't started
+    LaunchedEffect(plugin, context) {
+        runCatching { plugin.initSettings(context) }
+    }
+
+    // Aggiorna lo stato dei permessi quando si torna dalla schermata di sistema
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                ExportedPlugins.setupPlugins(context)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -246,7 +268,7 @@ fun PluginSettingsScreen(
 
                         // Nome e autore con miglior spaziatura
                         Text(
-                            text = plugin.name,
+                            text = plugin.nameRes?.let { stringResource(id = it) } ?: plugin.name,
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -263,7 +285,7 @@ fun PluginSettingsScreen(
 
                         // Descrizione con miglior leggibilità
                         Text(
-                            text = plugin.description,
+                            text = plugin.descriptionRes?.let { stringResource(id = it) } ?: plugin.description,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
                             textAlign = TextAlign.Center,
@@ -315,8 +337,9 @@ fun PluginSettingsScreen(
                         context = context
                     )
 
-                    plugin.sourceCodeUrl?.let { url ->
-                        if (url.toString().isNotBlank()) {
+                    run {
+                        val url = plugin.sourceCodeUrl.toString()
+                        if (url.isNotBlank()) {
                             SettingsDivider()
                             PluginInfoItem(
                                 icon = Icons.Default.Code,
@@ -324,7 +347,7 @@ fun PluginSettingsScreen(
                                 value = stringResource(id = R.string.plugin_view_on_web),
                                 onClick = {
                                     try {
-                                        uriHandler.openUri(url.toString())
+                                        uriHandler.openUri(url)
                                     } catch (e: Exception) {
                                         Toast.makeText(
                                             context,
@@ -340,20 +363,67 @@ fun PluginSettingsScreen(
                 }
             }
 
-            // Permessi richiesti con frecce decorative
+            // Permessi richiesti: spunta a sinistra (concesso/non concesso) e, se non concesso, freccia a destra per aprire impostazioni
             if (plugin.permissions.isNotEmpty()) {
                 item {
                     SettingGroup(
                         title = "Permessi e Funzioni"
                     ) {
-                        plugin.permissions.forEachIndexed { index, permission ->
-                            if (permission.isNotBlank()) {
-                                PluginInfoItem(
-                                    icon = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                    title = permission,
-                                    value = "Funzione disponibile",
-                                    context = context
-                                )
+                        plugin.permissions.forEachIndexed { index, permissionKey ->
+                            if (permissionKey.isNotBlank()) {
+                                val perm = ExportedPlugins.permissions[permissionKey]
+                                val granted = perm?.granted?.value == true
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .let {
+                                            if (!granted && perm != null) {
+                                                it.clickable {
+                                                    try {
+                                                        context.startActivity(perm.requestIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                                                    } catch (_: Exception) { }
+                                                }
+                                            } else it
+                                        }
+                                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    // Spunta stato permesso
+                                    Icon(
+                                        imageVector = if (granted) Icons.Default.CheckCircle else Icons.Default.Circle,
+                                        contentDescription = if (granted) "Permesso concesso" else "Permesso non concesso",
+                                        tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+
+                    val permName = perm?.name ?: permissionKey
+                    val permDesc = perm?.description ?: ""
+                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                        text = permName,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        Text(
+                        text = permDesc,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2
+                                        )
+                                    }
+
+                                    if (!granted && perm != null) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                            contentDescription = "Apri impostazioni permesso",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
 
                                 if (index < plugin.permissions.size - 1) {
                                     SettingsDivider()
@@ -373,14 +443,23 @@ fun PluginSettingsScreen(
                         plugin.pluginSettings.values.forEachIndexed { index, settings ->
                             when (settings) {
                                 is PluginSettingsItem.SwitchSettingsItem -> {
+                                    // Legge il valore persistito e sincronizza lo stato della UI
+                                    var checked by remember(settings.id) {
+                                        mutableStateOf(settings.isSettingEnabled(context, settings.id))
+                                    }
                                     EnhancedSettingSwitch(
                                         title = settings.title,
-                                        description = settings.description ?: "Impostazione del plugin",
+                                        description = settings.description,
                                         icon = Icons.Default.Settings,
-                                        checked = settings.value.value,
-                                        onCheckedChange = { checked ->
+                                        checked = checked,
+                                        onCheckedChange = { newValue ->
                                             try {
-                                                settings.onValueChange(context, checked)
+                                                settings.onValueChange(context, newValue)
+                                                // Notify plugin and service for real-time refresh
+                                                runCatching { plugin.onSettingsChanged(context, settings.id, newValue) }
+                                                context.sendBroadcast(Intent(SETTINGS_CHANGED))
+                                                // Aggiorna lo stato locale per un feedback immediato
+                                                checked = newValue
                                             } catch (e: Exception) {
                                                 Toast.makeText(
                                                     context,

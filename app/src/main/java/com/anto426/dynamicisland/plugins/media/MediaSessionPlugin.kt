@@ -42,6 +42,9 @@ import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.mutableStateMapOf
+import com.anto426.dynamicisland.R
 
 private object MediaPluginDefaults {
 	const val TAG = "MediaSessionPlugin"
@@ -56,11 +59,13 @@ class MediaSessionPlugin(
 	override val id: String = "MediaSessionPlugin",
 	override val name: String = "MediaSession",
 	override val permissions: ArrayList<String> = arrayListOf(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
-	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override var pluginSettings: SnapshotStateMap<String, PluginSettingsItem> = mutableStateMapOf(),
 	override val version: String = "1.0.0",
 	override val sourceCodeUrl:String = "https://github.com/Anto426/Dynamic-Island/blob/main/app/src/main/java/com/anto426/dynamicisland/plugins/media/MediaSessionPlugin.kt"
 
 ) : BasePlugin() {
+	override val nameRes: Int? get() = R.string.plugin_media_name
+	override val descriptionRes: Int? get() = R.string.plugin_media_description
 
 	lateinit var context: IslandOverlayService
 	private lateinit var mediaSessionManager: MediaSessionManager
@@ -116,6 +121,7 @@ class MediaSessionPlugin(
 			this.show(context)
 			// Reset gestione pausa
 			lastPausedShownAt = 0L
+			// Autohide removed for media: do not schedule or cancel timers
 			playingSession.cancelAutoHideJob()
 			return
 		}
@@ -130,8 +136,8 @@ class MediaSessionPlugin(
 			val shouldShowBriefly = now - lastPausedShownAt > 5_000
 			if (shouldShowBriefly) {
 				lastPausedShownAt = now
-				this.show(context, timeoutMs = 5_000)
-				pausedSession.startAutoHideJob(timeoutMs = 5_000)
+				// Show without auto-hide; rely on session updates to hide
+				this.show(context, timeoutMs = 0)
 			} else {
 				// Se abbiamo già mostrato di recente la pausa, non risollevare
 				this.hide(context)

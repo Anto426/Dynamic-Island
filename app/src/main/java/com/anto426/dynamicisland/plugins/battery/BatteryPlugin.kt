@@ -51,6 +51,8 @@ import java.util.concurrent.TimeUnit
 import androidx.core.content.edit
 import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.ui.island.PluginDefaults
+import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.mutableStateMapOf
 import com.anto426.dynamicisland.ui.island.SectionCard
 
 private enum class DisplayMode {
@@ -96,10 +98,12 @@ class BatteryPlugin(
 	override val version: String = "1.0.0",
 	override val permissions: ArrayList<String> = arrayListOf(),
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
-	override var pluginSettings: MutableMap<String, PluginSettingsItem> = mutableMapOf(),
+	override var pluginSettings: SnapshotStateMap<String, PluginSettingsItem> = mutableStateMapOf(),
 	override val sourceCodeUrl:String = "https://github.com/Anto426/Dynamic-Island/blob/main/app/src/main/java/com/anto426/dynamicisland/plugins/battery/BatteryPlugin.kt"
 
 ) : BasePlugin() {
+	override val nameRes: Int? get() = R.string.plugin_battery_name
+	override val descriptionRes: Int? get() = R.string.plugin_battery_description
 
 	private lateinit var context: IslandOverlayService
 	private lateinit var batteryManager: BatteryManager
@@ -198,14 +202,8 @@ class BatteryPlugin(
 			}
 		}, 500) // Ritardo di 500 millisecondi
 
-		// Inizializza le impostazioni del plugin
-		initializePluginSettings()
-
-		pluginSettings.values.forEach {
-			if (it is PluginSettingsItem.SwitchSettingsItem) {
-				it.value.value = it.isSettingEnabled(context, it.id)
-			}
-		}
+	// Popola (idempotente) le impostazioni in modo reattivo
+	initSettings(context)
 	}
 
 	@Composable
@@ -395,6 +393,15 @@ class BatteryPlugin(
 		}
 	}
 
+	// React to setting changes coming from the Settings UI
+	override fun onSettingsChanged(context: Context, key: String, value: Any?) {
+		when (key) {
+			"battery_show_temperature" -> (pluginSettings[key] as? PluginSettingsItem.SwitchSettingsItem)?.value?.value = (value as? Boolean) ?: false
+			"battery_low_notification" -> (pluginSettings[key] as? PluginSettingsItem.SwitchSettingsItem)?.value?.value = (value as? Boolean) ?: false
+			BATTERY_SHOW_PERCENTAGE -> (pluginSettings[key] as? PluginSettingsItem.SwitchSettingsItem)?.value?.value = (value as? Boolean) ?: true
+		}
+	}
+
 	override fun onDestroy() {
 		if (!::context.isInitialized) return
 		try {
@@ -435,14 +442,31 @@ class BatteryPlugin(
 		}
 	}
 
-	private fun initializePluginSettings() {
+	override fun initSettings(context: Context) {
+		// Evita di ricreare se già presenti
+		if (pluginSettings.isNotEmpty()) {
+			// Aggiorna i valori correnti da preferenze
+			pluginSettings.values.forEach { item ->
+				if (item is PluginSettingsItem.SwitchSettingsItem) {
+					item.value.value = item.isSettingEnabled(context, item.id)
+				}
+			}
+			return
+		}
 		// Impostazione per mostrare la temperatura
 		pluginSettings["battery_show_temperature"] = PluginSettingsItem.SwitchSettingsItem(
 			id = "battery_show_temperature",
 			title = "Mostra Temperatura",
 			description = "Visualizza la temperatura della batteria durante la ricarica",
-			value = mutableStateOf(true),
-			onValueChange = { context, enabled -> saveBooleanSetting(context, id, enabled) }
+			value = mutableStateOf(true)
+		)
+
+		// Impostazione per mostrare la percentuale nella vista compatta
+		pluginSettings[BATTERY_SHOW_PERCENTAGE] = PluginSettingsItem.SwitchSettingsItem(
+			id = BATTERY_SHOW_PERCENTAGE,
+			title = "Mostra Percentuale",
+			description = "Mostra la percentuale nella pillola compatta",
+			value = mutableStateOf(true)
 		)
 
 		// Impostazione per notifiche batteria bassa
@@ -450,8 +474,7 @@ class BatteryPlugin(
 			id = "battery_low_notification",
 			title = "Notifiche Batteria Bassa",
 			description = "Mostra notifiche quando la batteria è sotto il 20%",
-			value = mutableStateOf(true),
-			onValueChange = { context, enabled -> saveBooleanSetting(context, id, enabled) }
+			value = mutableStateOf(true)
 		)
 
 		// Impostazione per soglia batteria bassa personalizzata - COMMENTATA per ora
@@ -470,6 +493,13 @@ class BatteryPlugin(
 			}
 		)
 		*/
+
+		// Sincronizza i valori iniziali con le preferenze
+		pluginSettings.values.forEach { item ->
+			if (item is PluginSettingsItem.SwitchSettingsItem) {
+				item.value.value = item.isSettingEnabled(context, item.id)
+			}
+		}
 	}
 
 	private fun getBooleanSetting(context: Context, key: String, default: Boolean): Boolean {

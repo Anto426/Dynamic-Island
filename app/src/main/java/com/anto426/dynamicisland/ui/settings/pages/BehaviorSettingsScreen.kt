@@ -154,77 +154,7 @@ fun BehaviorSettingsScreen() {
                 }
             }
 
-            // Sezione: Auto-nascondimento
-            item {
-                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Text(
-                        text = stringResource(id = R.string.behavior_autohide_section),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                        ),
-                        shape = MaterialTheme.shapes.extraLarge
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            EnhancedSettingSwitch(
-                                title = stringResource(id = R.string.behavior_autohide_enabled_title),
-                                description = stringResource(id = R.string.behavior_autohide_enabled_desc),
-                                icon = Icons.Default.VisibilityOff,
-                                checked = IslandSettings.instance.autoHideEnabled,
-                                onCheckedChange = {
-                                    IslandSettings.instance.autoHideEnabled = it
-                                    IslandSettings.instance.applySettings(context)
-                                }
-                            )
-
-                            Text(
-                                text = stringResource(id = R.string.behavior_autohide_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-
-                            Spacer(modifier = Modifier.height(8.dp))
-
-                            EnhancedSliderItem(
-                                title = stringResource(id = R.string.behavior_autohide_opened_island_title),
-                                value = IslandSettings.instance.autoHideOpenedAfter / 1000f,
-                                range = 0.5f..60f,
-                                onValueChange = {
-                                    IslandSettings.instance.autoHideOpenedAfter = it * 1000
-                                    IslandSettings.instance.applySettings(context)
-                                },
-                                icon = Icons.Default.Schedule,
-                                unit = "s"
-                            )
-
-                            // Nuovo: auto-nascondimento per isola espansa
-                            EnhancedSliderItem(
-                                title = stringResource(id = R.string.behavior_autohide_expanded_island_title),
-                                value = IslandSettings.instance.autoHideExpandedAfter / 1000f,
-                                range = 1f..120f,
-                                onValueChange = {
-                                    IslandSettings.instance.autoHideExpandedAfter = it * 1000
-                                    IslandSettings.instance.applySettings(context)
-                                },
-                                icon = Icons.Default.Schedule,
-                                unit = "s"
-                            )
-                        }
-                    }
-                }
-            }
+            // Sezione Autohide rimossa
 
             // Sezione: Animazioni e feedback (spostata da Avanzate)
             item {

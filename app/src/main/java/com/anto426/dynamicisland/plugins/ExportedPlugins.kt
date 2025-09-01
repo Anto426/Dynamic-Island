@@ -35,6 +35,10 @@ class ExportedPlugins {
 
 		fun setupPlugins(context: Context) {
 			for (plugin in plugins) {
+				// Initialize lightweight settings so the UI can render immediately
+				plugin.initSettings(context)
+				// Load persisted priority
+				plugin.loadPriority(context)
 				plugin.permissions.forEach { permissionId ->
 					val permission = permissions[permissionId] ?: return@forEach
 					permission.granted.value = permission.checkPermission(context)

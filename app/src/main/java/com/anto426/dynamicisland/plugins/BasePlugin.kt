@@ -3,14 +3,15 @@ package com.anto426.dynamicisland.plugins
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.anto426.dynamicisland.model.SETTINGS_CHANGED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import androidx.core.content.edit
 import com.anto426.dynamicisland.plugins.PluginManager
+import androidx.annotation.StringRes
 
 abstract class BasePlugin {
 	abstract val id: String
@@ -21,7 +22,13 @@ abstract class BasePlugin {
 	abstract val sourceCodeUrl: Any
 	abstract val permissions: ArrayList<String>
 	abstract var enabled: MutableState<Boolean>
-	abstract var pluginSettings: MutableMap<String, PluginSettingsItem>
+	abstract var pluginSettings: SnapshotStateMap<String, PluginSettingsItem>
+
+	// Optional resource-backed strings for localization
+	@StringRes
+	open val nameRes: Int? = null
+	@StringRes
+	open val descriptionRes: Int? = null
 
 	// Priority model (persisted)
 	var priority: MutableState<PluginPriority> = androidx.compose.runtime.mutableStateOf(PluginPriority.MEDIUM)
@@ -52,6 +59,12 @@ abstract class BasePlugin {
 	abstract fun onRightSwipe()
 	abstract fun onLeftSwipe()
 
+	// Optional hook to populate settings so the Settings UI can render even if the plugin isn't started
+	open fun initSettings(context: Context) {}
+
+	// Optional hook called by settings UI when a specific plugin setting changes
+	open fun onSettingsChanged(context: Context, key: String, value: Any?) {}
+
 	@SuppressLint("SuspiciousIndentation")
     fun switchEnabled(context: Context, enabled: Boolean = !this.enabled.value): Boolean {
 
@@ -78,7 +91,6 @@ abstract class BasePlugin {
 
 	fun isPluginEnabled(context: Context): Boolean {
 		val preferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
-		Log.d("BasePlugin", "isPluginEnabled: ${preferences.getBoolean(id, false)}")
 		return preferences.getBoolean(id, false)
 	}
 

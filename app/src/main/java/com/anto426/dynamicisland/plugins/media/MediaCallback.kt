@@ -7,8 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// Timeout per la rimozione automatica in millisecondi (es. 2 minuti)
-private const val AUTO_HIDE_TIMEOUT = 120_000L
+// Autohide removed: keep media visible while relevant
 
 class MediaCallback(
 	val mediaController: MediaController,
@@ -18,7 +17,7 @@ class MediaCallback(
 ) : MediaController.Callback() {
 
 	val mediaStruct = MediaStruct()
-	// NUOVO: Job per la coroutine di auto-rimozione
+	// Autohide removed: keep reference for compatibility
 	private var autoHideJob: Job? = null
 
 	// NUOVO: Metodo per l'aggiornamento iniziale
@@ -44,13 +43,11 @@ class MediaCallback(
 	}
 
 	// NUOVO: Funzione chiamata dal plugin per avviare il timer di rimozione
-	fun startAutoHideJob(timeoutMs: Long = AUTO_HIDE_TIMEOUT) {
+	@Suppress("UNUSED_PARAMETER")
+	fun startAutoHideJob(timeoutMs: Long = 0L) {
+		// No-op: autohide removed
 		autoHideJob?.cancel()
-		autoHideJob = plugin.pluginScope.launch {
-			delay(timeoutMs)
-			// Dopo il timeout, ricontrolla lo stato
-			plugin.updateActiveMediaSession()
-		}
+		autoHideJob = null
 	}
 
 	fun cancelAutoHideJob() {
@@ -77,7 +74,7 @@ class MediaCallback(
 
 	override fun onSessionDestroyed() {
 		super.onSessionDestroyed()
-		autoHideJob?.cancel()
-		plugin.updateActiveMediaSession() // Aggiorna per rimuovere la sessione distrutta
+	autoHideJob?.cancel()
+	plugin.updateActiveMediaSession() // Aggiorna per rimuovere la sessione distrutta
 	}
 }

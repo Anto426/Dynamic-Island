@@ -21,6 +21,7 @@ object PluginManager {
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var service: IslandOverlayService? = null
+    private var lastTopId: String? = null
 
     // Map by plugin id
     private val activities = LinkedHashMap<String, PluginActivity>()
@@ -83,7 +84,11 @@ object PluginManager {
             .sortedWith(compareByDescending<PluginActivity> { it.priority.weight }
                 .thenByDescending { it.lastUpdatedAt })
             .firstOrNull()?.plugin
-        service?.setTopFromManager(top)
-        Log.d(TAG, "Top: ${top?.id} | all: ${activities.values.map { it.plugin.id to it.priority }}")
+        val newTopId = top?.id
+        if (newTopId != lastTopId) {
+            lastTopId = newTopId
+            service?.setTopFromManager(top)
+            Log.d(TAG, "Top: ${top?.id} | all: ${activities.values.map { it.plugin.id to it.priority }}")
+        }
     }
 }

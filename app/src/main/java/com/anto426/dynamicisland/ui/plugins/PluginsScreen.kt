@@ -177,14 +177,14 @@ private fun PluginCard(
 				verticalArrangement = Arrangement.spacedBy(4.dp)
 			) {
 				Text(
-					text = plugin.name,
+					text = plugin.nameRes?.let { stringResource(id = it) } ?: plugin.name,
 					style = MaterialTheme.typography.titleLarge,
 					color = MaterialTheme.colorScheme.onSurface,
 					fontWeight = FontWeight.SemiBold,
 					maxLines = 1
 				)
 				Text(
-					text = plugin.description,
+					text = plugin.descriptionRes?.let { stringResource(id = it) } ?: plugin.description,
 					style = MaterialTheme.typography.bodyMedium,
 					color = MaterialTheme.colorScheme.onSurfaceVariant,
 					lineHeight = 18.sp,
