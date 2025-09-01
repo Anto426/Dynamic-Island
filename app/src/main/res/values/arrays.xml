@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="supported_locales">
+        <item>en</item>
+        <item>ar</item>
+        <item>it</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>el</item>
+        <item>hi</item>
+        <item>ja</item>
+        <item>ko</item>
+        <item>nl</item>
+        <item>pt</item>
+        <item>ru</item>
+        <item>tr</item>
+        <item>zh</item>
+        <item>zh-CN</item>
+    </string-array>
+</resources>

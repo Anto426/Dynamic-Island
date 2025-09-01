@@ -62,7 +62,6 @@ fun AboutSettingsScreen() {
             java.io.File(it).lastModified()
         })
     )
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,7 +69,6 @@ fun AboutSettingsScreen() {
             verticalArrangement = Arrangement.spacedBy(24.dp),
             contentPadding = PaddingValues(vertical = 24.dp)
         ) {
-            // Header dell'app
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -86,7 +84,6 @@ fun AboutSettingsScreen() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Icona dell'app
                         Surface(
                             modifier = Modifier.size(80.dp),
                             shape = CircleShape,
@@ -100,8 +97,6 @@ fun AboutSettingsScreen() {
                                     .padding(16.dp)
                             )
                         }
-
-                        // Nome e versione
                         Text(
                             text = appName,
                             style = MaterialTheme.typography.headlineMedium,
@@ -109,13 +104,11 @@ fun AboutSettingsScreen() {
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             textAlign = TextAlign.Center
                         )
-
                         Text(
                             text = stringResource(id = R.string.about_version) + " $versionName",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
-
                         Text(
                             text = packageName,
                             style = MaterialTheme.typography.bodyMedium,
@@ -125,8 +118,6 @@ fun AboutSettingsScreen() {
                     }
                 }
             }
-
-            // Informazioni sull'app
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     Text(
@@ -345,7 +336,6 @@ fun EnhancedInfoItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Icona
         Surface(
             modifier = Modifier.size(40.dp),
             shape = CircleShape,
@@ -364,7 +354,6 @@ fun EnhancedInfoItem(
             }
         }
 
-        // Contenuto
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,

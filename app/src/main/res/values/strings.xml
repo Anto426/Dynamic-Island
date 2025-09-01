@@ -132,8 +132,8 @@
     <string name="theme_style_black_white">Black &amp; White</string>
     <string name="theme_style_quinacridone_magenta">Quinacridone Magenta</string>
 
-    <string name="settings_item_theme">Theme</string>
-    <string name="settings_item_theme_subtitle">Change the app theme</string>
+    <string name="settings_item_theme">Appearance &amp; Language</string>
+    <string name="settings_item_theme_subtitle">Theme, style, and language</string>
     <string name="settings_item_position_size">Position and size</string>
     <string name="settings_item_position_size_subtitle">Modify the position and size of the island</string>
     <string name="settings_item_enabled_apps">Enabled apps</string>
@@ -387,4 +387,12 @@
     <string name="media_album_art_desc">Album art</string>
     <string name="media_no_cover">No cover</string>
     <string name="badge_new">NEW</string>
+
+    <!-- Language selector -->
+    <string name="language_section_title">Language</string>
+    <string name="language_section_subtitle">Choose the app language</string>
+    <string name="language_option_system">System default</string>
+    <string name="language_option_en">English</string>
+    <string name="language_option_it">Italian</string>
+    <string name="language_change_applied">Language applied</string>
 </resources>

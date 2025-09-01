@@ -1,6 +1,9 @@
 package com.anto426.dynamicisland.ui.settings.pages
 
 import android.content.Context
+import android.os.Build
+import android.os.LocaleList
+import java.util.Locale
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -39,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.anto426.dynamicisland.R
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.STYLE
+import com.anto426.dynamicisland.model.LANGUAGE
 import com.anto426.dynamicisland.model.THEME
 import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.ui.settings.radioOptions
@@ -59,6 +63,9 @@ fun ThemeSettingsScreen() {
     val settingsPreferences = context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE)
     val (themeSelectedOption, onThemeOptionSelected) = remember { mutableStateOf(settingsPreferences.getString(THEME, "System")) }
     val (styleSelectedOption, onStyleOptionSelected) = remember { mutableStateOf(Theme.instance.themeStyle) }
+    val (languageSelectedOption, onLanguageOptionSelected) = remember {
+        mutableStateOf(settingsPreferences.getString(LANGUAGE, "system") ?: "system")
+    }
 
 
         LazyColumn(
@@ -263,6 +270,109 @@ fun ThemeSettingsScreen() {
                                             }
                                         }
                                     )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Sezione lingua
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Text(
+                        text = stringResource(id = R.string.language_section_title),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        ),
+                        shape = MaterialTheme.shapes.extraLarge
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.language_section_subtitle),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+
+                            // Supported locales from resources (kept in sync with res/values-xx folders)
+                            val supportedTags = remember { context.resources.getStringArray(com.anto426.dynamicisland.R.array.supported_locales).toList() }
+                            var expanded by remember { mutableStateOf(false) }
+                            val selectedLabel = remember(languageSelectedOption, supportedTags) {
+                                if (languageSelectedOption == "system") {
+                                    context.getString(R.string.language_option_system)
+                                } else {
+                                    try {
+                                        val locale = Locale.forLanguageTag(languageSelectedOption ?: "en")
+                                        // Show localized name in its own language
+                                        locale.getDisplayName(locale).replaceFirstChar { it.uppercase(locale) }
+                                    } catch (_: Throwable) {
+                                        languageSelectedOption ?: "en"
+                                    }
+                                }
+                            }
+
+                            ExposedDropdownMenuBox(
+                                expanded = expanded,
+                                onExpandedChange = { expanded = it }
+                            ) {
+                                OutlinedTextField(
+                                    readOnly = true,
+                                    value = selectedLabel,
+                                    onValueChange = {},
+                                    label = { Text(stringResource(id = R.string.language_section_subtitle)) },
+                                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth()
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    // System default option
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(id = R.string.language_option_system)) },
+                                        onClick = {
+                                            expanded = false
+                                            val code = "system"
+                                            onLanguageOptionSelected(code)
+                                            settingsPreferences.edit { putString(LANGUAGE, code) }
+                                            val localeManager = context.getSystemService(android.app.LocaleManager::class.java)
+                                            localeManager.applicationLocales = LocaleList.getEmptyLocaleList()
+                                            if (context is com.anto426.dynamicisland.MainActivity) context.recreate()
+                                        }
+                                    )
+
+                                    // Actual supported locales
+                                    supportedTags.forEach { tag ->
+                                        val locale = try { Locale.forLanguageTag(tag) } catch (_: Throwable) { null }
+                                        val label = if (locale != null) locale.getDisplayName(locale) else tag
+                                        DropdownMenuItem(
+                                            text = { Text(label) },
+                                            onClick = {
+                                                expanded = false
+                                                onLanguageOptionSelected(tag)
+                                                settingsPreferences.edit { putString(LANGUAGE, tag) }
+                                                val localeManager = context.getSystemService(android.app.LocaleManager::class.java)
+                                                localeManager.applicationLocales = LocaleList.forLanguageTags(tag)
+                                                if (context is com.anto426.dynamicisland.MainActivity) context.recreate()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

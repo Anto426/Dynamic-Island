@@ -3,6 +3,7 @@ package com.anto426.dynamicisland
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
@@ -42,6 +43,7 @@ import com.anto426.dynamicisland.updater.UpdateViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
+import com.anto426.dynamicisland.model.LANGUAGE
 
 class MainActivity : ComponentActivity() {
 
@@ -59,6 +61,18 @@ class MainActivity : ComponentActivity() {
 		instance = this
 
 		settingsPreferences = getSharedPreferences(SETTINGS_KEY, MODE_PRIVATE)
+
+		// Apply saved app language (Android 13+). minSdk is 34, so LocaleManager is available.
+		try {
+			val savedLang = settingsPreferences.getString(LANGUAGE, "system")
+			val localeManager = getSystemService(android.app.LocaleManager::class.java)
+			val locales = if (savedLang == null || savedLang == "system") {
+				LocaleList.getEmptyLocaleList()
+			} else {
+				LocaleList.forLanguageTags(savedLang)
+			}
+			localeManager.applicationLocales = locales
+		} catch (_: Throwable) { /* ignore */ }
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
 		invertTheme(true)
