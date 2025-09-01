@@ -290,9 +290,6 @@ fun AboutSettingsScreen() {
 
 }
 
-/**
- * Componente avanzato per gli elementi informativi con design moderno
- */
 @Composable
 fun EnhancedInfoItem(
     icon: ImageVector,
