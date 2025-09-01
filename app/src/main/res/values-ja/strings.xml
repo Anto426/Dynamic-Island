@@ -6,14 +6,14 @@
     <string name="plugin_author_prefix">作成者: </string>
     <string name="plugin_enable_title">プラグインを有効にする</string>
     <string name="plugin_enable_description_generic">このプラグインを有効または無効にします</string>
-    <string name="plugin_enable_description_needs_permissions">有効にするには権限を許可してください</string>
+    <string name="plugin_enable_description_needs_permissions">有効にするには権限を付与してください</string>
     <string name="plugin_info_title">プラグイン情報</string>
     <string name="plugin_version_title">バージョン</string>
     <string name="plugin_identifier_title">識別子</string>
     <string name="plugin_source_code_title">ソースコード</string>
     <string name="plugin_view_on_web">ウェブで表示</string>
     <string name="plugin_permissions_required_title">必要な権限</string>
-    <string name="plugin_permissions_granted_toast">権限が許可されました！プラグインを有効にできます。</string>
+    <string name="plugin_permissions_granted_toast">権限が付与されました！プラグインを有効にできます。</string>
     <string name="plugin_settings_title">プラグイン設定</string>
     <string name="overlay_service_description">Dynamic Islandのユーザー補助サービス</string>
 
@@ -22,44 +22,44 @@
 
     <string name="title_activity_disclosure">開示情報</string>
     <string name="welcome_title">Dynamic Islandへようこそ</string>
-    <string name="welcome_description">通知、音楽、通話などを受信するためにダイナミックアイランドを設定します。</string>
+    <string name="welcome_description">通知、音楽、通話などを受け取るためにダイナミックアイランドを設定します。</string>
     <string name="i_agree">同意して続行</string>
-    <string name="previous">戻る</string>
+    <string name="previous">前へ</string>
     <string name="disable_optimization">最適化を無効にする</string>
     <string name="ignore">無視</string>
     <string name="battery_optimization_description">Dynamic Islandがバックグラウンドで正しく動作するように、アプリのバッテリー最適化を無効にしてください。</string>
     <string name="battery_optimization_title">バッテリーの最適化</string>
-    <string name="tap_to_disable">タップして無効化</string>
-    <string name="service_active">サービスが有効です</string>
+    <string name="tap_to_disable">タップして無効にする</string>
+    <string name="service_active">サービスがアクティブです</string>
     <string name="get_started">開始する</string>
     <string name="no_plugins_description">現在有効なプラグインはありません。プラグイン設定に移動して有効にし、新機能のロックを解除してください。</string>
-    <string name="no_active_plugins">有効なプラグインがありません</string>
+    <string name="no_active_plugins">アクティブなプラグインはありません</string>
     <string name="understood">理解しました</string>
     <string name="read">読む</string>
-    <string name="informativa_description">続行する前に、プライバシーポリシーと利用規約を読んで同意してください。</string>
+    <string name="informativa_description">続行する前に、当社のプライバシーポリシーと利用規約を読んで同意してください。</string>
     <string name="informativa">開示情報</string>
     <string name="accessibility_permission_description">Dynamic Islandは、島とその機能を表示するためにユーザー補助の権限が必要です。</string>
     <string name="accessibility_permission_title">ユーザー補助の権限</string>
     <string name="next">次へ</string>
-    <string name="overlay_permission_title">他のアプリの上に表示する権限</string>
-    <string name="overlay_permission_description">Dynamic Islandは、他のアプリの上に表示するためにこの権限が必要です。</string>
-    <string name="tap_to_enable">タップして有効化</string>
+    <string name="overlay_permission_title">オーバーレイ表示の権限</string>
+    <string name="overlay_permission_description">Dynamic Islandは、他のアプリの上に表示するためにオーバーレイ表示の権限が必要です。</string>
+    <string name="tap_to_enable">タップして有効にする</string>
     <string name="service_disabled">サービスが無効です</string>
     <string name="repositories">リポジトリ</string>
     <string name="developer">開発者</string>
     <string name="no_description">説明はありません。</string>
 
     <string name="disclosure_welcome_title">Dynamic Islandへようこそ</string>
-    <string name="disclosure_welcome_description">iOSのように、Dynamic Islandは着信、通知、アラート、音楽、ナビゲーションなどに適応するインタラクティブなノッチを表示します。島をタップまたは長押しすると、追加機能にアクセスしたり、アプリを開いたりできます。</string>
-    <string name="disclosure_accessibility_title">ユーザー補助とオーバーレイ権限の使用</string>
-    <string name="disclosure_accessibility_description">Dynamic Islandは、島を表示するためにのみユーザー補助サービスを使用します。不要な権限を要求したり、個人情報を収集したりすることはありません。プライバシーポリシーはいつでも確認できます。</string>
+    <string name="disclosure_welcome_description">iOSのように、Dynamic Islandは着信、通知、アラート、音楽、ナビゲーションなどに適応するインタラクティブなノッチを表示します。島をタップまたは長押しして、追加機能にアクセスしたり、アプリを開いたりします。</string>
+    <string name="disclosure_accessibility_title">ユーザー補助とオーバーレイ表示権限の使用</string>
+    <string name="disclosure_accessibility_description">Dynamic Islandは、島を表示するためだけにユーザー補助サービスを使用します。不要な権限を要求したり、個人情報を収集したりすることはありません。プライバシーポリシーはいつでも確認できます。</string>
     <string name="disclosure_plugin_title">プラグインの権限</string>
-    <string name="disclosure_plugin_description">一部のプラグインは、正しく機能するために追加の権限が必要な場合があります。Dynamic Islandは、厳密に必要な権限のみを要求します。</string>
+    <string name="disclosure_plugin_description">一部のプラグインは、正しく機能するために追加の権限が必要になる場合があります。Dynamic Islandは、厳密に必要な権限のみを要求します。</string>
     <string name="disclosure_privacy_title">プライバシー</string>
-    <string name="disclosure_privacy_description">あなたのプライバシーは重要です。Dynamic Islandは個人データを収集、共有、追跡、販売しません。</string>
+    <string name="disclosure_privacy_description">お客様のプライバシーは重要です。Dynamic Islandは個人データを収集または共有せず、追跡もせず、いかなる情報も販売しません。</string>
     <string name="disclosure_privacy_link">プライバシーポリシーを読む</string>
     <string name="disclosure_tos_title">利用規約</string>
-    <string name="disclosure_tos_description">Dynamic Islandを使用することにより、利用規約に同意したことになります。このアプリは「現状有姿」で提供され、いかなる保証もありません。使用から生じるいかなる損害についても責任を負いません。</string>
+    <string name="disclosure_tos_description">Dynamic Islandを使用することにより、お客様は当社の利用規約に同意したことになります。アプリは保証なしで「現状のまま」提供されます。当社はその使用から生じるいかなる損害についても責任を負いません。</string>
     <string name="disclosure_tos_link">利用規約を読む</string>
 
     <string name="plugins_enabled_title">有効なプラグイン</string>
@@ -80,15 +80,15 @@
     <string name="developer_name">Anto426</string>
     <string name="about_github">GitHub</string>
     <string name="about_open_in_browser">ブラウザで開く</string>
-    <string name="about_copied_toast">%1$sをコピーしました！</string>
+    <string name="about_copied_toast">%1$s をコピーしました！</string>
 
     <string name="behavior_visual_title">視覚的な動作</string>
     <string name="behavior_show_on_lockscreen_title">ロック画面に表示</string>
     <string name="behavior_show_on_lockscreen_description">ロック画面と常時表示ディスプレイに島を表示します。</string>
-    <string name="behavior_show_in_landscape_title">横向きモードで表示</string>
+    <string name="behavior_show_in_landscape_title">横向きで表示</string>
     <string name="behavior_show_in_landscape_description">横向きモードでも島を表示します。</string>
     <string name="behavior_autohide_title">自動的に隠す</string>
-    <string name="behavior_autohide_opened_island_title">展開した島を隠すまでの時間</string>
+    <string name="behavior_autohide_opened_island_title">展開された島を隠すまでの時間</string>
     <string name="seconds_suffix">秒</string>
 
     <string name="position_title">位置</string>
@@ -124,7 +124,7 @@
     <string name="settings_enabled_apps_subtitle">島に表示できるアプリを選択します</string>
     <string name="settings_behavior_title">動作</string>
     <string name="settings_behavior_subtitle">島の動作をカスタマイズします</string>
-    <string name="settings_about_title">情報</string>
+    <string name="settings_about_title">概要</string>
     <string name="settings_about_subtitle">アプリに関する詳細</string>
     <string name="settings_dev_title">開発</string>
 
@@ -140,101 +140,112 @@
     <string name="settings_item_enabled_apps_subtitle">島に表示できるアプリを選択します</string>
     <string name="settings_item_behavior">動作</string>
     <string name="settings_item_behavior_subtitle">島の動作をカスタマイズします</string>
-    <string name="settings_item_about">情報</string>
+    <string name="settings_item_about">概要</string>
     <string name="settings_item_about_subtitle">アプリに関する詳細</string>
     <string name="settings_item_dev">開発</string>
-    <string name="settings_item_dev_subtitle">開発者向け情報</string>
+    <string name="settings_item_dev_subtitle">開発者情報</string>
     <string name="settings_item_updates">アップデート</string>
     <string name="settings_item_updates_subtitle">アップデートを確認してダウンロードします</string>
 
     <string name="disclosure_button_next">続行</string>
-    <string name="disclosure_button_previous">戻る</string>
+    <string name="disclosure_button_previous">前へ</string>
     <string name="disclosure_button_agree">同意する</string>
 
     <string name="advanced_settings_title">詳細設定</string>
     <string name="advanced_settings_description">アニメーション、フィードバック、動作をカスタマイズします</string>
+
     <string name="advanced_settings_animations">アニメーション</string>
     <string name="advanced_settings_enable_animations">アニメーションを有効にする</string>
-    <string name="advanced_settings_enable_animations_desc">トランジションで滑らかなアニメーションを表示します</string>
+    <string name="advanced_settings_enable_animations_desc">トランジションでスムーズなアニメーションを表示します</string>
+
     <string name="advanced_settings_feedback">フィードバック</string>
     <string name="advanced_settings_haptic">触覚フィードバック</string>
-    <string name="advanced_settings_haptic_desc">インタラクション時の軽い振動</string>
+    <string name="advanced_settings_haptic_desc">インタラクションのための軽い振動</string>
     <string name="advanced_settings_sounds">サウンド</string>
-    <string name="advanced_settings_sounds_desc">インタラクション時に効果音を再生します</string>
+    <string name="advanced_settings_sounds_desc">インタラクション時にサウンドエフェクトを再生します</string>
+
     <string name="advanced_settings_behavior">動作</string>
     <string name="advanced_settings_behavior_placeholder">まもなく島の高度な動作を変更できるようになります</string>
+
     <string name="advanced_settings_dynamic_theme">ダイナミックテーマ</string>
     <string name="advanced_settings_dynamic_theme_title">ダイナミックテーマを有効にする</string>
-    <string name="advanced_settings_dynamic_theme_desc">コンテキストに応じて色を自動的に適応させます</string>
+    <string name="advanced_settings_dynamic_theme_desc">コンテキストに基づいて色を自動的に適応させます</string>
 
     <string name="animation_click_label">クリックアニメーション</string>
-    <string name="settings_dev_subtitle">開発者向けの情報とデバッグ</string>
+    <string name="settings_dev_subtitle">開発者およびデバッグ用の情報</string>
     <string name="plugin_icon_content_description">プラグインアイコン</string>
 
     <string name="update_title">アップデート</string>
     <string name="update_settings_title">アップデート設定</string>
     <string name="back">戻る</string>
+
     <string name="update_status_section">アップデート状況</string>
     <string name="release_channel_section">リリースチャンネル</string>
     <string name="auto_controls_section">自動制御</string>
     <string name="manual_actions_section">手動操作</string>
     <string name="changelog_section">変更履歴</string>
     <string name="dynamic_theme_section">ダイナミックテーマ</string>
+
     <string name="app_up_to_date">アプリは最新です</string>
     <string name="app_up_to_date_desc">お使いのアプリは最新バージョンです</string>
     <string name="checking_updates">アップデートを確認中...</string>
     <string name="checking_updates_desc">新しいバージョンを確認しています</string>
     <string name="update_available">アップデートがあります</string>
-    <string name="update_available_desc">バージョン%1$sがダウンロード可能です</string>
+    <string name="update_available_desc">バージョン %1$s をダウンロードできます</string>
     <string name="update_error">確認エラー</string>
+
     <string name="current_version">現在のバージョン</string>
+
     <string name="channel_stable">安定版</string>
     <string name="channel_stable_desc">安定してテスト済みのバージョン</string>
     <string name="channel_beta">ベータ版</string>
     <string name="channel_beta_desc">テスト中の新機能</string>
     <string name="channel_alpha">アルファ版</string>
     <string name="channel_alpha_desc">実験的なバージョン</string>
+
     <string name="auto_update_title">自動アップデート</string>
     <string name="auto_update_desc">新しいバージョンを自動的に確認します</string>
     <string name="auto_download_title">自動ダウンロード</string>
     <string name="auto_download_desc">アップデートを自動的にダウンロードします</string>
+
     <string name="check_updates_button">アップデートを確認</string>
     <string name="download_update_button">アップデートをダウンロード</string>
     <string name="install_update_button">アップデートをインストール</string>
     <string name="downloading_progress">ダウンロード中...</string>
+
     <string name="changelog_version">バージョン %1$s (%2$s)</string>
-    <string name="copied_to_clipboard">「%1$s」をクリップボードにコピーしました！</string>
+
+    <string name="copied_to_clipboard">クリップボードに %1$s をコピーしました！</string>
     <string name="copy">コピー</string>
+
     <string name="dynamic_theme_title">ダイナミックテーマ</string>
     <string name="dynamic_theme_desc">色を自動的に適応させます</string>
     <string name="downloading">ダウンロード中</string>
     <string name="update_settings_section">アップデート設定</string>
     <string name="show_advanced_settings">詳細設定を表示</string>
     <string name="hide_advanced_settings">詳細設定を隠す</string>
-
     <string name="battery_charging_title">バッテリー充電中</string>
     <string name="temperature">温度</string>
     <string name="power_source">電源</string>
     <string name="health">健康状態</string>
     <string name="battery_low_title">バッテリー残量低下</string>
-    <string name="battery_remaining_subtitle">残り%1$d%%</string>
+    <string name="battery_remaining_subtitle">残り %1$d%%</string>
     <string name="battery_saver">バッテリーセーバー</string>
-    <string name="power_saver_active_desc">機能が制限される可能性があります</string>
+    <string name="power_saver_active_desc">機能が制限される場合があります</string>
     <string name="charging">充電中</string>
     <string name="low_battery">バッテリー残量低下</string>
     <string name="power_saver">省電力</string>
-
     <string name="configured">設定済み</string>
-    <string name="app_configured_ready">アプリは設定済みで、すぐに使用できます！</string>
+    <string name="app_configured_ready">アプリの設定が完了し、使用準備ができました！</string>
     <string name="update_card_title">アップデートがあります</string>
     <string name="download">ダウンロード</string>
     <string name="permissions_required">権限が必要です</string>
     <string name="configure_permissions_start">開始するために必要な権限を設定してください。</string>
 
     <string name="onboarding_welcome_title">Dynamic Islandへようこそ</string>
-    <string name="onboarding_welcome_description">すべてが正常に機能するように、必要な権限を設定しましょう。</string>
+    <string name="onboarding_welcome_description">すべてが完璧に機能するように、必要な権限を設定しましょう。</string>
     <string name="permission_accessibility_title">ユーザー補助サービス</string>
-    <string name="permission_accessibility_desc">他のアプリの上にDynamic Islandを表示し、操作を検出するために必要です。</string>
+    <string name="permission_accessibility_desc">他のアプリの上にDynamic Islandを表示し、インタラクションを検出するために必要です。</string>
     <string name="permission_category_system">システム</string>
     <string name="permission_overlay_title">他のアプリの上に表示</string>
     <string name="permission_overlay_desc">Dynamic Islandが現在の画面の上に表示されることを許可します。</string>
@@ -244,10 +255,10 @@
     <string name="permission_notification_listener_desc">アプリからの通知をDynamic Islandに表示するために必要です。</string>
     <string name="permission_category_notifications">通知</string>
     <string name="permission_post_notifications_title">通知の投稿</string>
-    <string name="permission_post_notifications_desc">アプリが重要な更新やアラートを表示することを許可します。</string>
+    <string name="permission_post_notifications_desc">アプリが重要なアップデートやアラートを表示することを許可します。</string>
     <string name="permission_vibrate_title">バイブレーション</string>
     <string name="permission_vibrate_desc">よりインタラクティブな体験のために触覚フィードバックを提供します。</string>
-    <string name="permission_storage_legacy_title">レガシー ストレージ</string>
+    <string name="permission_storage_legacy_title">レガシーストレージ</string>
     <string name="permission_storage_legacy_desc">古いAndroidバージョンでファイルにアクセスするために必要です。</string>
     <string name="permission_category_storage">ストレージ</string>
     <string name="permission_media_images_title">メディアと写真へのアクセス</string>
@@ -257,29 +268,30 @@
     <string name="permission_media_audio_title">音声へのアクセス</string>
     <string name="permission_media_audio_desc">プラグインが音声ファイルと対話することを許可します。</string>
     <string name="permission_unknown_sources_title">不明なアプリのインストール</string>
-    <string name="permission_unknown_sources_desc">アプリ内からダウンロードされたアプリの更新をインストールするために必要です。</string>
+    <string name="permission_unknown_sources_desc">アプリ内からダウンロードされたアプリのアップデートをインストールするために必要です。</string>
     <string name="permission_category_updates">アップデート</string>
     <string name="onboarding_step_counter">ステップ %1$d / %2$d</string>
-    <string name="onboarding_permission_granted">権限が許可されました</string>
-    <string name="permission_granted_label">許可済み</string>
+    <string name="onboarding_permission_granted">権限が付与されました</string>
+    <string name="permission_granted_label">付与済み</string>
     <string name="enable_in_settings">設定で有効にする</string>
     <string name="onboarding_finish">完了</string>
     <string name="onboarding_continue">続行</string>
-    <string name="onboarding_setup_complete_title">設定が完了しました！</string>
+    <string name="onboarding_setup_complete_title">設定完了！</string>
     <string name="onboarding_setup_complete_desc">準備が整いました。Dynamic Islandは現在アクティブです。</string>
-    <string name="plugins_enabled_count">%1$d件有効</string>
+    <string name="plugins_enabled_count">%1$d 件有効</string>
     <string name="go_to_details">詳細へ</string>
-
     <string name="search">検索</string>
     <string name="search_settings_placeholder">設定を検索...</string>
     <string name="clear_search">検索をクリア</string>
     <string name="no_results_found">結果が見つかりませんでした。</string>
-    <string name="try_different_keywords">別のキーワードで試してください。</string>
+    <string name="try_different_keywords">別のキーワードをお試しください。</string>
     <string name="reset_settings">設定をリセット</string>
-    <string name="behavior_visibility_section">表示</string>
+    <string name="behavior_visibility_section">可視性</string>
     <string name="behavior_autohide_section">自動的に隠す</string>
+    <string name="behavior_autohide_enabled_title">自動非表示を有効にする</string>
+    <string name="behavior_autohide_enabled_desc">アイドル時に遅延後に島を自動的に隠します</string>
+    <string name="behavior_autohide_expanded_island_title">展開された島を隠すまでの時間</string>
     <string name="behavior_animations_feedback_section">アニメーションとフィードバック</string>
-
     <string name="dev_error_connection">接続エラー。</string>
     <string name="dev_error_not_found">見つかりません。</string>
     <string name="dev_error_unknown">不明なエラーが発生しました。</string>
@@ -289,36 +301,41 @@
     <string name="dev_error_title">問題が発生しました</string>
     <string name="retry">再試行</string>
     <string name="dev_profile_title">プロフィール</string>
-    <string name="dev_updated_from_github">GitHubから更新済み</string>
+    <string name="dev_updated_from_github">GitHubから更新</string>
     <string name="dev_public_repos_title">公開リポジトリ</string>
-    <string name="dev_no_public_repos_title">公開リポジトリがありません</string>
+    <string name="dev_no_public_repos_title">公開リポジトリはありません</string>
     <string name="dev_no_public_repos_desc">このユーザーには公開リポジトリがありません。</string>
-    <string name="avatar_of">%1$sのアバター</string>
+    <string name="avatar_of">%1$s のアバター</string>
     <string name="open_profile">プロフィールを開く</string>
     <string name="copy_username">ユーザー名をコピー</string>
     <string name="stars">スター</string>
     <string name="open_repository">リポジトリを開く</string>
-
     <string name="enabled_apps_summary">Dynamic Islandを使用できるアプリを選択してください。</string>
+    <string name="enabled_apps_count">有効: %1$d/%2$d</string>
+    <string name="select_all">すべて選択</string>
+    <string name="clear_all">すべてクリア</string>
     <string name="style_title">スタイル</string>
+    <string name="size_width_compact">幅（コンパクト）</string>
+    <string name="size_height_compact">高さ（コンパクト）</string>
+    <string name="size_height_expanded">高さ（展開時）</string>
+    <string name="preview_controls">プレビュー</string>
+    <string name="preview_expand">展開</string>
     <string name="update_available_prompt">アップデートがあります！</string>
-    <string name="update_channel_description">アプリの更新のためのリリースチャンネルを選択してください。</string>
+    <string name="update_channel_description">アプリのアップデートのリリースチャンネルを選択してください。</string>
     <string name="permission_required_title">権限が必要です</string>
-    <string name="permission_required_text">この機能には許可されていない権限が必要です。</string>
+    <string name="permission_required_text">この機能には付与されていない権限が必要です。</string>
     <string name="update_notification_title">アップデートがあります</string>
     <string name="update_preparing_download">ダウンロードを準備中...</string>
-    <string name="update_download_channel_description">アプリの更新ダウンロードに関する通知。</string>
+    <string name="update_download_channel_description">アプリのアップデートダウンロードに関する通知。</string>
     <string name="settings_item_advanced">詳細</string>
     <string name="settings_item_advanced_subtitle">アニメーション、フィードバックなどをカスタマイズ</string>
-
     <string name="destination_plugin_settings">プラグイン設定</string>
     <string name="destination_advanced">詳細設定</string>
     <string name="destination_settings">設定</string>
     <string name="destination_home">ホーム</string>
     <string name="destination_plugins">プラグイン</string>
-    
     <string name="settings_reset_content_description">設定をデフォルトにリセット</string>
-    <string name="settings_no_results_subtitle">他の何かを検索してみてください</string>
+    <string name="settings_no_results_subtitle">何か別のものを検索してみてください</string>
     <string name="settings_no_results_title">結果が見つかりません</string>
     <string name="settings_clear_search_content_description">検索クエリをクリア</string>
     <string name="settings_search_placeholder">設定を検索</string>
@@ -328,15 +345,40 @@
     <string name="settings_section_appearance">外観</string>
     <string name="settings_search_results">検索結果</string>
     <string name="settings_section_behavior">動作</string>
-    <string name="behavior_autohide_enabled_title">Enable autohide</string>
-    <string name="behavior_autohide_enabled_desc">Automatically hide the island after a delay when idle</string>
-    <string name="behavior_autohide_expanded_island_title">Hide the expanded island after</string>
-    <string name="size_width_compact">Width (compact)</string>
-    <string name="size_height_compact">Height (compact)</string>
-    <string name="size_height_expanded">Height (expanded)</string>
-    <string name="preview_controls">Preview</string>
-    <string name="preview_expand">Expand</string>
-    <string name="select_all">Select all</string>
-    <string name="clear_all">Clear all</string>
-    <string name="enabled_apps_count">Enabled %1$d/%2$d</string>
+    <string name="silent_mode_title">サイレントモード</string>
+    <string name="silent_mode_desc">島からのすべての音をミュート</string>
+    <string name="low_power_mode_title">低電力モード</string>
+    <string name="low_power_mode_desc">アニメーションとエフェクトを減らしてバッテリーを節約</string>
+
+    <string name="plugin_battery_name">バッテリー</string>
+    <string name="plugin_battery_description">デバイスのバッテリー状態を表示します</string>
+    <string name="plugin_notification_name">通知</string>
+    <string name="plugin_notification_description">通知を表示し、操作できるようにします</string>
+    <string name="plugin_media_name">メディア</string>
+    <string name="plugin_media_description">現在再生中のものとメディアコントロールを表示します</string>
+    <string name="copy_title">%1$sをコピー</string>
+    <string name="open_link">リンクを開く</string>
+    <string name="plugin_status_title">プラグインのステータス</string>
+    <string name="error_open_link">リンクを開けません</string>
+    <string name="plugin_permissions_section">権限と機能</string>
+    <string name="permission_not_granted_label">付与されていません</string>
+    <string name="open_permission_settings">権限設定を開く</string>
+    <string name="settings_error_prefix">設定エラー: %1$s</string>
+    <string name="unknown_error">不明なエラー</string>
+
+    <string name="notification_default_title">通知</string>
+    <string name="actions_title">アクション</string>
+    <string name="notification_swipe_left_to_close">左にスワイプして閉じる</string>
+    <string name="notification_swipe_to_close">スワイプして閉じる</string>
+    <string name="send_reply">返信を送信</string>
+
+    <string name="media_blurred_background_desc">ぼかし背景</string>
+    <string name="media_album_cover_desc">アルバムカバー</string>
+    <string name="media_previous_track">前のトラック</string>
+    <string name="media_next_track">次のトラック</string>
+    <string name="media_pause">一時停止</string>
+    <string name="media_play">再生</string>
+    <string name="media_album_art_desc">アルバムアート</string>
+    <string name="media_no_cover">カバーなし</string>
+    <string name="badge_new">新着</string>
 </resources>
