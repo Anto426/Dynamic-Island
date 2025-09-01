@@ -427,7 +427,6 @@ class DownloadManager(private val context: Context) {
         if (!v.all { (it >= '0' && it <= '9') || (it >= 'a' && it <= 'f') }) return false
         // escludi pattern sospetti ripetuti
         val suspicious = listOf("b8f8")
-        if (suspicious.any { pat -> v.contains(pat.repeat(8)) }) return false
-        return true
+        return !suspicious.any { pat -> v.contains(pat.repeat(8)) }
     }
 }

@@ -38,7 +38,7 @@ import com.anto426.dynamicisland.R
 fun SettingsScreen(
     onSettingClicked: (SettingItem) -> Unit,
 ) {
-    val ctx = androidx.compose.ui.platform.LocalContext.current
+    androidx.compose.ui.platform.LocalContext.current
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     val isSearching = searchQuery.text.isNotEmpty()
 

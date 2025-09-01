@@ -81,7 +81,13 @@ fun PluginInfoItem(
             onClick != null -> onClick.invoke()
             isCopyable && clipboardManager != null -> {
                 clipboardManager.setPrimaryClip(ClipData.newPlainText(title, value))
-                Toast.makeText(context, "$title copiato negli appunti!", Toast.LENGTH_SHORT).show()
+                context?.let { ctx ->
+                    Toast.makeText(
+                        ctx,
+                        ctx.getString(R.string.copied_to_clipboard, title),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
@@ -106,7 +112,6 @@ fun PluginInfoItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Icona con miglior contrasto
         Surface(
             modifier = Modifier.size(44.dp),
             shape = CircleShape,
@@ -125,7 +130,6 @@ fun PluginInfoItem(
             }
         }
 
-        // Contenuto con miglior tipografia
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
@@ -142,11 +146,13 @@ fun PluginInfoItem(
             )
         }
 
-        // Icona azione con contentDescription migliorata
         if (isClickable) {
             Icon(
                 imageVector = if (isCopyable) Icons.Default.ContentCopy else Icons.AutoMirrored.Filled.OpenInNew,
-                contentDescription = if (isCopyable) "Copia $title" else "Apri collegamento",
+                contentDescription = if (isCopyable)
+                    stringResource(id = R.string.copy_title, title)
+                else
+                    stringResource(id = R.string.open_link),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)
             )
@@ -154,9 +160,7 @@ fun PluginInfoItem(
     }
 }
 
-/**
- * Componente per raggruppare impostazioni con un titolo migliorato
- */
+
 @Composable
 fun SettingGroup(
     title: String,
@@ -175,7 +179,6 @@ fun SettingGroup(
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp)
         )
 
-        // Contenuto del gruppo con miglior design
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -194,9 +197,7 @@ fun SettingGroup(
     }
 }
 
-/**
- * Schermata completamente ridisegnata per le impostazioni dei plugin con Material 3
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PluginSettingsScreen(
@@ -229,250 +230,208 @@ fun PluginSettingsScreen(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(24.dp)
     ) {
-            // Header del plugin con design moderno e migliorato
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                    ),
-                    shape = MaterialTheme.shapes.extraLarge,
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                shape = MaterialTheme.shapes.extraLarge,
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    // Icona del plugin migliorata
+                    Surface(
+                        modifier = Modifier.size(88.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.12f),
+                        shadowElevation = 4.dp
                     ) {
-                        // Icona del plugin migliorata
-                        Surface(
-                            modifier = Modifier.size(88.dp),
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.12f),
-                            shadowElevation = 4.dp
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Extension,
-                                    contentDescription = stringResource(id = R.string.plugin_icon_content_description),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                                    modifier = Modifier.size(36.dp)
-                                )
-                            }
-                        }
-
-                        // Nome e autore con miglior spaziatura
-                        Text(
-                            text = plugin.nameRes?.let { stringResource(id = it) } ?: plugin.name,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            textAlign = TextAlign.Center,
-                            lineHeight = 32.sp
-                        )
-
-                        Text(
-                            text = stringResource(id = R.string.plugin_author_prefix) + plugin.author,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center
-                        )
-
-                        // Descrizione con miglior leggibilità
-                        Text(
-                            text = plugin.descriptionRes?.let { stringResource(id = it) } ?: plugin.description,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
-                            textAlign = TextAlign.Center,
-                            lineHeight = 20.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
-                    }
-                }
-            }
-
-            // Controllo abilitazione plugin
-            item {
-                SettingGroup(
-                    title = "Stato Plugin"
-                ) {
-                    EnhancedSettingSwitch(
-                        title = stringResource(id = R.string.plugin_enable_title),
-                        description = if (plugin.allPermissionsGranted)
-                            stringResource(id = R.string.plugin_enable_description_generic)
-                        else
-                            stringResource(id = R.string.plugin_enable_description_needs_permissions),
-                        icon = Icons.Default.PowerSettingsNew,
-                        checked = plugin.enabled.value,
-                        onCheckedChange = { plugin.switchEnabled(context) }
-                    )
-                }
-            }
-
-            // Informazioni plugin
-            item {
-                SettingGroup(
-                    title = "Informazioni"
-                ) {
-                    PluginInfoItem(
-                        icon = Icons.Default.Info,
-                        title = stringResource(id = R.string.plugin_version_title),
-                        value = plugin.version,
-                        isCopyable = true,
-                        context = context
-                    )
-
-                    SettingsDivider()
-
-                    PluginInfoItem(
-                        icon = Icons.Default.Fingerprint,
-                        title = stringResource(id = R.string.plugin_identifier_title),
-                        value = plugin.id,
-                        isCopyable = true,
-                        context = context
-                    )
-
-                    run {
-                        val url = plugin.sourceCodeUrl.toString()
-                        if (url.isNotBlank()) {
-                            SettingsDivider()
-                            PluginInfoItem(
-                                icon = Icons.Default.Code,
-                                title = stringResource(id = R.string.plugin_source_code_title),
-                                value = stringResource(id = R.string.plugin_view_on_web),
-                                onClick = {
-                                    try {
-                                        uriHandler.openUri(url)
-                                    } catch (e: Exception) {
-                                        Toast.makeText(
-                                            context,
-                                            "Impossibile aprire il collegamento",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                },
-                                context = context
+                            Icon(
+                                imageVector = Icons.Default.Extension,
+                                contentDescription = stringResource(id = R.string.plugin_icon_content_description),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.size(36.dp)
                             )
                         }
                     }
+
+                    Text(
+                        text = plugin.nameRes?.let { stringResource(id = it) } ?: plugin.name,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 32.sp
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.plugin_author_prefix) + plugin.author,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                        textAlign = TextAlign.Center
+                    )
+
+                    // Descrizione con miglior leggibilità
+                    Text(
+                        text = plugin.descriptionRes?.let { stringResource(id = it) }
+                            ?: plugin.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
                 }
             }
+        }
 
-            // Permessi richiesti: spunta a sinistra (concesso/non concesso) e, se non concesso, freccia a destra per aprire impostazioni
-            if (plugin.permissions.isNotEmpty()) {
-                item {
-                    SettingGroup(
-                        title = "Permessi e Funzioni"
-                    ) {
-                        plugin.permissions.forEachIndexed { index, permissionKey ->
-                            if (permissionKey.isNotBlank()) {
-                                val perm = ExportedPlugins.permissions[permissionKey]
-                                val granted = perm?.granted?.value == true
+        item {
+            SettingGroup(
+                title = stringResource(id = R.string.plugin_status_title)
+            ) {
+                EnhancedSettingSwitch(
+                    title = stringResource(id = R.string.plugin_enable_title),
+                    description = if (plugin.allPermissionsGranted)
+                        stringResource(id = R.string.plugin_enable_description_generic)
+                    else
+                        stringResource(id = R.string.plugin_enable_description_needs_permissions),
+                    icon = Icons.Default.PowerSettingsNew,
+                    checked = plugin.enabled.value,
+                    onCheckedChange = { plugin.switchEnabled(context) }
+                )
+            }
+        }
 
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .let {
-                                            if (!granted && perm != null) {
-                                                it.clickable {
-                                                    try {
-                                                        context.startActivity(perm.requestIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                                                    } catch (_: Exception) { }
-                                                }
-                                            } else it
-                                        }
-                                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                                ) {
-                                    // Spunta stato permesso
-                                    Icon(
-                                        imageVector = if (granted) Icons.Default.CheckCircle else Icons.Default.Circle,
-                                        contentDescription = if (granted) "Permesso concesso" else "Permesso non concesso",
-                                        tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                                        modifier = Modifier.size(22.dp)
-                                    )
+        // Informazioni plugin
+        item {
+            SettingGroup(
+                title = stringResource(id = R.string.settings_section_information)
+            ) {
+                PluginInfoItem(
+                    icon = Icons.Default.Info,
+                    title = stringResource(id = R.string.plugin_version_title),
+                    value = plugin.version,
+                    isCopyable = true,
+                    context = context
+                )
 
-                    val permName = perm?.name ?: permissionKey
-                    val permDesc = perm?.description ?: ""
-                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                        text = permName,
-                                            style = MaterialTheme.typography.titleSmall,
-                                            fontWeight = FontWeight.Medium,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
-                                        Text(
-                        text = permDesc,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            maxLines = 2
-                                        )
-                                    }
+                SettingsDivider()
 
-                                    if (!granted && perm != null) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                            contentDescription = "Apri impostazioni permesso",
-                                            tint = MaterialTheme.colorScheme.primary,
-                                            modifier = Modifier.size(20.dp)
-                                        )
-                                    }
+                PluginInfoItem(
+                    icon = Icons.Default.Fingerprint,
+                    title = stringResource(id = R.string.plugin_identifier_title),
+                    value = plugin.id,
+                    isCopyable = true,
+                    context = context
+                )
+
+                run {
+                    val url = plugin.sourceCodeUrl.toString()
+                    if (url.isNotBlank()) {
+                        SettingsDivider()
+                        PluginInfoItem(
+                            icon = Icons.Default.Code,
+                            title = stringResource(id = R.string.plugin_source_code_title),
+                            value = stringResource(id = R.string.plugin_view_on_web),
+                            onClick = {
+                                try {
+                                    uriHandler.openUri(url)
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.error_open_link),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-
-                                if (index < plugin.permissions.size - 1) {
-                                    SettingsDivider()
-                                }
-                            }
-                        }
+                            },
+                            context = context
+                        )
                     }
                 }
             }
+        }
 
-            // Impostazioni specifiche del plugin con miglior gestione errori
-            if (plugin.pluginSettings.isNotEmpty()) {
-                item {
-                    SettingGroup(
-                        title = "Impostazioni Plugin"
-                    ) {
-                        plugin.pluginSettings.values.forEachIndexed { index, settings ->
-                            when (settings) {
-                                is PluginSettingsItem.SwitchSettingsItem -> {
-                                    // Legge il valore persistito e sincronizza lo stato della UI
-                                    var checked by remember(settings.id) {
-                                        mutableStateOf(settings.isSettingEnabled(context, settings.id))
-                                    }
-                                    EnhancedSettingSwitch(
-                                        title = settings.title,
-                                        description = settings.description,
-                                        icon = Icons.Default.Settings,
-                                        checked = checked,
-                                        onCheckedChange = { newValue ->
-                                            try {
-                                                settings.onValueChange(context, newValue)
-                                                // Notify plugin and service for real-time refresh
-                                                runCatching { plugin.onSettingsChanged(context, settings.id, newValue) }
-                                                context.sendBroadcast(Intent(SETTINGS_CHANGED))
-                                                // Aggiorna lo stato locale per un feedback immediato
-                                                checked = newValue
-                                            } catch (e: Exception) {
-                                                Toast.makeText(
-                                                    context,
-                                                    "Errore nell'impostazione: ${e.localizedMessage ?: "Errore sconosciuto"}",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+        if (plugin.permissions.isNotEmpty()) {
+            item {
+                SettingGroup(
+                    title = stringResource(id = R.string.plugin_permissions_section)
+                ) {
+                    plugin.permissions.forEachIndexed { index, permissionKey ->
+                        if (permissionKey.isNotBlank()) {
+                            val perm = ExportedPlugins.permissions[permissionKey]
+                            val granted = perm?.granted?.value == true
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .let {
+                                        if (!granted && perm != null) {
+                                            it.clickable {
+                                                try {
+                                                    context.startActivity(
+                                                        perm.requestIntent.addFlags(
+                                                            Intent.FLAG_ACTIVITY_NEW_TASK
+                                                        )
+                                                    )
+                                                } catch (_: Exception) {
+                                                }
                                             }
-                                        }
+                                        } else it
+                                    }
+                                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                // Spunta stato permesso
+                                Icon(
+                                    imageVector = if (granted) Icons.Default.CheckCircle else Icons.Default.Circle,
+                                    contentDescription = if (granted)
+                                        stringResource(id = R.string.permission_granted_label)
+                                    else
+                                        stringResource(id = R.string.permission_not_granted_label),
+                                    tint = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                                    modifier = Modifier.size(22.dp)
+                                )
+
+                                val permName = perm?.name ?: permissionKey
+                                val permDesc = perm?.description ?: ""
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = permName,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = permDesc,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2
+                                    )
+                                }
+
+                                if (!granted && perm != null) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                        contentDescription = stringResource(id = R.string.open_permission_settings),
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(20.dp)
                                     )
                                 }
                             }
 
-                            if (index < plugin.pluginSettings.values.size - 1) {
+                            if (index < plugin.permissions.size - 1) {
                                 SettingsDivider()
                             }
                         }
@@ -480,5 +439,60 @@ fun PluginSettingsScreen(
                 }
             }
         }
+
+        // Impostazioni specifiche del plugin con miglior gestione errori
+        if (plugin.pluginSettings.isNotEmpty()) {
+            item {
+                SettingGroup(
+                    title = stringResource(id = R.string.plugin_settings_title)
+                ) {
+                    plugin.pluginSettings.values.forEachIndexed { index, settings ->
+                        when (settings) {
+                            is PluginSettingsItem.SwitchSettingsItem -> {
+                                // Legge il valore persistito e sincronizza lo stato della UI
+                                var checked by remember(settings.id) {
+                                    mutableStateOf(settings.isSettingEnabled(context, settings.id))
+                                }
+                                EnhancedSettingSwitch(
+                                    title = settings.title,
+                                    description = settings.description,
+                                    icon = Icons.Default.Settings,
+                                    checked = checked,
+                                    onCheckedChange = { newValue ->
+                                        try {
+                                            settings.onValueChange(context, newValue)
+                                            // Notify plugin and service for real-time refresh
+                                            runCatching {
+                                                plugin.onSettingsChanged(
+                                                    context,
+                                                    settings.id,
+                                                    newValue
+                                                )
+                                            }
+                                            context.sendBroadcast(Intent(SETTINGS_CHANGED))
+                                            // Aggiorna lo stato locale per un feedback immediato
+                                            checked = newValue
+                                        } catch (e: Exception) {
+                                            val msg = e.localizedMessage
+                                                ?: context.getString(R.string.unknown_error)
+                                            Toast.makeText(
+                                                context,
+                                                context.getString(R.string.settings_error_prefix, msg),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                )
+                            }
+                        }
+
+                        if (index < plugin.pluginSettings.values.size - 1) {
+                            SettingsDivider()
+                        }
+                    }
+                }
+            }
+        }
     }
+}
 

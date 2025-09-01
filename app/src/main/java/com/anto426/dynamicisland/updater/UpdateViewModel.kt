@@ -376,10 +376,10 @@ class UpdateViewModel : ViewModel() {
                 // Fallback: copia in externalFilesDir/Download/MaterialYou-Dynamic-Island
                 val base = android.os.Environment.DIRECTORY_DOWNLOADS
                 val baseDir = context.getExternalFilesDir(base) ?: context.getExternalFilesDir(null)
-                val privateDir = if (baseDir != null) java.io.File(baseDir, "MaterialYou-Dynamic-Island") else context.filesDir
+                val privateDir = if (baseDir != null) File(baseDir, "MaterialYou-Dynamic-Island") else context.filesDir
                 if (!privateDir.exists()) privateDir.mkdirs()
 
-                val dest = java.io.File(privateDir, apkFile.name)
+                val dest = File(privateDir, apkFile.name)
                 // Copia solo se differente o non esiste
                 if (!dest.exists() || dest.length() != apkFile.length()) {
                     apkFile.inputStream().use { input ->

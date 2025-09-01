@@ -106,7 +106,7 @@ class IslandOverlayService : AccessibilityService() {
 				}
 				ACTION_SCREEN_ON -> {
 					Island.isScreenOn = true
-					val km = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+					val km = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
 					Island.isLocked = km.isKeyguardLocked
 					// Re-evaluate visibility/state on screen on
 					reevaluateState()

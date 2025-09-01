@@ -249,7 +249,7 @@ fun ThemeSettingsScreen() {
                                 color = MaterialTheme.colorScheme.onSurface
                             )
 
-                            @OptIn(kotlin.ExperimentalStdlibApi::class)
+                            @OptIn(ExperimentalStdlibApi::class)
                             Column(Modifier.selectableGroup()) {
                                 Theme.ThemeStyle.entries.forEach { themeStyle ->
                                     EnhancedStyleRadioButton(

@@ -36,9 +36,7 @@ import java.math.RoundingMode
 import kotlin.math.roundToInt
 import androidx.core.content.edit
 
-/**
- * Schermata completamente ridisegnata per la configurazione della posizione e delle dimensioni dell'isola.
- */
+
 @SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
