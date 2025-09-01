@@ -2,8 +2,6 @@
 
 An Android app that brings a customizable, iOS-style Dynamic Island with Material You design. Easy setup, multi-language UI, and in-app updates.
 
-Current version: 2.1.5 (code 12)
-
 ## 📥 Download
 
 - Stable download (APK):
