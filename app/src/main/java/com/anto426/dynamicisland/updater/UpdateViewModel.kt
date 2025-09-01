@@ -79,8 +79,7 @@ class UpdateViewModel : ViewModel() {
         if (hasUpdateAvailable) {
             val updateVersion = prefs.getString("update_version", null)
             val updateUrl = prefs.getString("update_url", null)
-            val updateSize = prefs.getLong("update_size", 0L)
-            val updateChecksum = prefs.getString("update_checksum", null)
+            // Dimensione e checksum non più utilizzati
             val updateChangelog = prefs.getString("update_changelog", null)
             val updateChannel = prefs.getString("update_channel", "stable")
             val updateVersionCode = prefs.getInt("update_version_code", 1)
@@ -106,8 +105,8 @@ class UpdateViewModel : ViewModel() {
                     releaseDate = updateReleaseDate,
                     minimumSupportedVersion = updateMinSupportedVersion,
                     forceUpdate = updateForceUpdate,
-                    checksum = updateChecksum,
-                    fileSize = updateSize,
+                    checksum = null,
+                    fileSize = null,
                     changelog = if (updateChangelog != null) {
                         listOf(LocalUpdateManager.ChangelogEntry(
                             version = updateVersion,
@@ -174,8 +173,6 @@ class UpdateViewModel : ViewModel() {
         putBoolean("has_update_available", true)
         putString("update_version", updateInfo.latestVersion)
         putString("update_url", updateInfo.downloadUrl)
-        putLong("update_size", updateInfo.fileSize ?: 0L)
-        putString("update_checksum", updateInfo.checksum)
         putString("update_changelog", updateInfo.changelog?.firstOrNull()?.changes?.firstOrNull() ?: "")
         putString("update_channel", updateInfo.channel)
         putInt("update_version_code", updateInfo.versionCode)
@@ -187,8 +184,6 @@ class UpdateViewModel : ViewModel() {
         putBoolean("has_update_available", false)
         remove("update_version")
         remove("update_url")
-        remove("update_size")
-        remove("update_checksum")
         remove("update_changelog")
         remove("update_channel")
         remove("update_version_code")
@@ -197,6 +192,9 @@ class UpdateViewModel : ViewModel() {
         remove("update_min_supported_version")
         remove("update_force_update")
             }
+            // Pulisci eventuali chiavi legacy non più utilizzate
+            remove("update_size")
+            remove("update_checksum")
         // commit sincrono
         commit()
         }
@@ -254,8 +252,6 @@ class UpdateViewModel : ViewModel() {
             val result = downloadManager.downloadFile(
                 url = updateInfo.downloadUrl,
                 fileName = fileName,
-                expectedSize = updateInfo.fileSize,
-                expectedChecksum = updateInfo.checksum,
                 callback = object : DownloadCallback {
                     override fun onProgress(state: DownloadManager.DownloadState) {
                         when (state) {
