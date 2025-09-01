@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">Dynamic Island a besoin de l\'autorisation de superposition pour s\'afficher par-dessus d\'autres applications.</string>
     <string name="tap_to_enable">Appuyez pour activer</string>
     <string name="service_disabled">Service désactivé</string>
-    <string name="repositories">Dépôts</string>
-    <string name="developer">Développeur</string>
     <string name="no_description">Aucune description disponible.</string>
 
     <string name="disclosure_welcome_title">Bienvenue sur Dynamic Island</string>

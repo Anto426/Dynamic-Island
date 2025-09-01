@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">Το Dynamic Island χρειάζεται άδεια επικάλυψης για να εμφανίζεται πάνω από άλλες εφαρμογές.</string>
     <string name="tap_to_enable">Πατήστε για ενεργοποίηση</string>
     <string name="service_disabled">Η υπηρεσία είναι απενεργοποιημένη</string>
-    <string name="repositories">Αποθετήρια</string>
-    <string name="developer">Προγραμματιστής</string>
     <string name="no_description">Δεν υπάρχει διαθέσιμη περιγραφή.</string>
 
     <string name="disclosure_welcome_title">Καλώς ορίσατε στο Dynamic Island</string>

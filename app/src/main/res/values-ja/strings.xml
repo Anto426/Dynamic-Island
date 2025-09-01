@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">Dynamic Islandは、他のアプリの上に表示するためにオーバーレイ表示の権限が必要です。</string>
     <string name="tap_to_enable">タップして有効にする</string>
     <string name="service_disabled">サービスが無効です</string>
-    <string name="repositories">リポジトリ</string>
-    <string name="developer">開発者</string>
     <string name="no_description">説明はありません。</string>
 
     <string name="disclosure_welcome_title">Dynamic Islandへようこそ</string>

@@ -45,8 +45,8 @@
     <string name="overlay_permission_description">Dynamic Island needs overlay permission to display over other apps.</string>
     <string name="tap_to_enable">Tap to enable</string>
     <string name="service_disabled">Service disabled</string>
-    <string name="repositories">Repositories</string>
-    <string name="developer">Developer</string>
+    <string name="repositories" translatable="false">https://github.com/Anto426/Dynamic-Island</string>
+    <string name="developer" translatable="false">https://github.com/Anto426</string>
     <string name="no_description">No description available.</string>
 
     <string name="disclosure_welcome_title">Welcome to Dynamic Island</string>

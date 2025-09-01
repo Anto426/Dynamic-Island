@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">डायनामिक आइलैंड को अन्य ऐप्स पर प्रदर्शित करने के लिए ओवरले अनुमति की आवश्यकता है।</string>
     <string name="tap_to_enable">सक्षम करने के लिए टैप करें</string>
     <string name="service_disabled">सेवा अक्षम</string>
-    <string name="repositories">रिपॉजिटरी</string>
-    <string name="developer">डेवलपर</string>
     <string name="no_description">कोई विवरण उपलब्ध नहीं है।</string>
 
     <string name="disclosure_welcome_title">डायनामिक आइलैंड में आपका स्वागत है</string>

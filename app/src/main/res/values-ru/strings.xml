@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">Dynamic Island нуждается в разрешении на наложение для отображения поверх других приложений.</string>
     <string name="tap_to_enable">Нажмите, чтобы включить</string>
     <string name="service_disabled">Служба отключена</string>
-    <string name="repositories">Репозитории</string>
-    <string name="developer">Разработчик</string>
     <string name="no_description">Описание недоступно.</string>
 
     <string name="disclosure_welcome_title">Добро пожаловать в Dynamic Island</string>

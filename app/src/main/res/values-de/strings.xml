@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">Dynamic Island benötigt die Berechtigung, über anderen Apps eingeblendet zu werden.</string>
     <string name="tap_to_enable">Zum Aktivieren tippen</string>
     <string name="service_disabled">Dienst deaktiviert</string>
-    <string name="repositories">Repositories</string>
-    <string name="developer">Entwickler</string>
     <string name="no_description">Keine Beschreibung verfügbar.</string>
 
     <string name="disclosure_welcome_title">Willkommen bei Dynamic Island</string>

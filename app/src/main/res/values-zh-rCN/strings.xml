@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">灵动岛需要在其他应用上层显示，因此需要悬浮窗权限。</string>
     <string name="tap_to_enable">点击以启用</string>
     <string name="service_disabled">服务已禁用</string>
-    <string name="repositories">代码仓库</string>
-    <string name="developer">开发者</string>
     <string name="no_description">无可用描述。</string>
 
     <string name="disclosure_welcome_title">欢迎使用灵动岛</string>

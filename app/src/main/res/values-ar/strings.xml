@@ -45,8 +45,6 @@
     <string name="overlay_permission_description">يحتاج Dynamic Island إلى إذن الظهور فوق التطبيقات الأخرى لعرضه فوقها.</string>
     <string name="tap_to_enable">انقر للتفعيل</string>
     <string name="service_disabled">الخدمة معطلة</string>
-    <string name="repositories">المستودعات</string>
-    <string name="developer">المطور</string>
     <string name="no_description">لا يوجد وصف متاح.</string>
 
     <string name="disclosure_welcome_title">أهلاً بك في Dynamic Island</string>
