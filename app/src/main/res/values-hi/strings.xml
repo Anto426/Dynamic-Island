@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">एल्बम आर्ट</string>
     <string name="media_no_cover">कोई कवर नहीं</string>
     <string name="badge_new">नया</string>
+
+    <string name="language_section_title">भाषा</string>
+    <string name="language_section_subtitle">ऐप की भाषा चुनें</string>
+    <string name="language_option_system">सिस्टम डिफ़ॉल्ट</string>
+    <string name="language_option_en">अंग्रेज़ी</string>
+    <string name="language_option_it">इतालवी</string>
+    <string name="language_change_applied">भाषा लागू की गई</string>
 </resources>

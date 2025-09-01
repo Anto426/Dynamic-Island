@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">Εξώφυλλο άλμπουμ</string>
     <string name="media_no_cover">Χωρίς εξώφυλλο</string>
     <string name="badge_new">ΝΕΟ</string>
+
+    <string name="language_section_title">Γλώσσα</string>
+    <string name="language_section_subtitle">Επιλέξτε τη γλώσσα της εφαρμογής</string>
+    <string name="language_option_system">Προεπιλογή συστήματος</string>
+    <string name="language_option_en">Αγγλικά</string>
+    <string name="language_option_it">Ιταλικά</string>
+    <string name="language_change_applied">Η γλώσσα εφαρμόστηκε</string>
 </resources>

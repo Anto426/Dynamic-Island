@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">アルバムアート</string>
     <string name="media_no_cover">カバーなし</string>
     <string name="badge_new">新着</string>
+
+    <string name="language_section_title">言語</string>
+    <string name="language_section_subtitle">アプリの言語を選択</string>
+    <string name="language_option_system">システムのデフォルト</string>
+    <string name="language_option_en">英語</string>
+    <string name="language_option_it">イタリア語</string>
+    <string name="language_change_applied">言語が適用されました</string>
 </resources>

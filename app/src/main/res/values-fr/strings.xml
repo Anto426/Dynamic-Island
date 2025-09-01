@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">Illustration de l\'album</string>
     <string name="media_no_cover">Pas de pochette</string>
     <string name="badge_new">NOUVEAU</string>
+
+    <string name="language_section_title">Langue</string>
+    <string name="language_section_subtitle">Choisir la langue de l\'application</string>
+    <string name="language_option_system">Par défaut du système</string>
+    <string name="language_option_en">Anglais</string>
+    <string name="language_option_it">Italien</string>
+    <string name="language_change_applied">Langue appliquée</string>
 </resources>

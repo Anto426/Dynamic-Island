@@ -380,4 +380,11 @@
     <string name="media_album_art_desc">Обложка альбома</string>
     <string name="media_no_cover">Нет обложки</string>
     <string name="badge_new">НОВОЕ</string>
+
+    <string name="language_section_title">Язык</string>
+    <string name="language_section_subtitle">Выберите язык приложения</string>
+    <string name="language_option_system">Системный по умолчанию</string>
+    <string name="language_option_en">Английский</string>
+    <string name="language_option_it">Итальянский</string>
+    <string name="language_change_applied">Язык применен</string>
 </resources>

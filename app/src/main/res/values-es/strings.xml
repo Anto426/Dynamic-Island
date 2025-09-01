@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">Carátula del álbum</string>
     <string name="media_no_cover">Sin portada</string>
     <string name="badge_new">NUEVO</string>
+
+    <string name="language_section_title">Idioma</string>
+    <string name="language_section_subtitle">Elige el idioma de la aplicación</string>
+    <string name="language_option_system">Predeterminado del sistema</string>
+    <string name="language_option_en">Inglés</string>
+    <string name="language_option_it">Italiano</string>
+    <string name="language_change_applied">Idioma aplicado</string>
 </resources>

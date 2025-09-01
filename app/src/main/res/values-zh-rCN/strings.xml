@@ -380,4 +380,11 @@
     <string name="media_album_art_desc">专辑封面</string>
     <string name="media_no_cover">无封面</string>
     <string name="badge_new">新</string>
+
+    <string name="language_section_title">语言</string>
+    <string name="language_section_subtitle">选择应用语言</string>
+    <string name="language_option_system">系统默认</string>
+    <string name="language_option_en">英语</string>
+    <string name="language_option_it">意大利语</string>
+    <string name="language_change_applied">语言已应用</string>
 </resources>

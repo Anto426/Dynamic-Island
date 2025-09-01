@@ -380,4 +380,11 @@
     <string name="media_album_art_desc">Albumhoes</string>
     <string name="media_no_cover">Geen hoes</string>
     <string name="badge_new">NIEUW</string>
+
+    <string name="language_section_title">Taal</string>
+    <string name="language_section_subtitle">Kies de taal van de app</string>
+    <string name="language_option_system">Systeemstandaard</string>
+    <string name="language_option_en">Engels</string>
+    <string name="language_option_it">Italiaans</string>
+    <string name="language_change_applied">Taal toegepast</string>
 </resources>

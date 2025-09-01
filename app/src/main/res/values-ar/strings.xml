@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">صورة الألبوم</string>
     <string name="media_no_cover">لا يوجد غلاف</string>
     <string name="badge_new">جديد</string>
+
+    <string name="language_section_title">اللغة</string>
+    <string name="language_section_subtitle">اختر لغة التطبيق</string>
+    <string name="language_option_system">افتراضي النظام</string>
+    <string name="language_option_en">الإنجليزية</string>
+    <string name="language_option_it">الإيطالية</string>
+    <string name="language_change_applied">تم تطبيق اللغة</string>
 </resources>

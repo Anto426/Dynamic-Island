@@ -379,4 +379,11 @@
     <string name="media_album_art_desc">Album-Cover</string>
     <string name="media_no_cover">Kein Cover</string>
     <string name="badge_new">NEU</string>
+
+    <string name="language_section_title">Sprache</string>
+    <string name="language_section_subtitle">App-Sprache auswählen</string>
+    <string name="language_option_system">Systemstandard</string>
+    <string name="language_option_en">Englisch</string>
+    <string name="language_option_it">Italienisch</string>
+    <string name="language_change_applied">Sprache angewendet</string>
 </resources>
