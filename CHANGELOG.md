@@ -40,7 +40,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.2] - 2025-08-30
 
 ### 🐛 Fixed
-- **Download and Installation Issues**
+
+## [2.1.5] - 2025-09-01
+
+### 🔧 Changed
+- Updater: removed checksum/hash and file size verification end-to-end
+- Simplified downloader API and validation logic
+
+### 🐛 Fixed
+- Stabilized update flow and background permissions handling
+
+### 🌐 I18n/UI
+- Continued string resource cleanup and localization polish
+
+### 📦 Release
+- Version bumped to 2.1.5 (code 12)
   - Fixed permission errors (EACCES) by adding fallback to private external storage
   - Improved checksum validation to skip invalid placeholder files
   - Enhanced error handling for download failures
