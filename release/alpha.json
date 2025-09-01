@@ -9,42 +9,6 @@
   "force_update": false,
   
   "changelog": [
-    {
-      "version": "2.1.2",
-      "date": "2025-08-30",
-      "changes": [
-        "🐛 Correzioni download e installazione: permessi EACCES, validazione checksum, auto-install",
-        "🔧 Sistema aggiornamenti migliorato: UI pulsante installazione, FileProvider, gestione errori",
-        "✨ Nuove funzionalità: pulizia automatica APK, notifiche aggiornamenti, localizzazioni complete",
-        "🎨 UI/UX migliorata: schermi localizzati, temi raffinati, navigazione ottimizzata",
-        "🏗️ Refactoring: rimossi componenti obsoleti, ottimizzazioni build e configurazione",
-        "🌐 Internazionalizzazione: traduzioni per 10+ lingue, risorse stringa centralizzate",
-        "📦 Build ottimizzato: Gradle tweaks, manifest pulito, lint baseline"
-      ]
-    },
-    {
-      "version": "2.1.1",
-      "date": "2025-08-29",
-      "changes": [
-        "Sistema di aggiornamenti completamente rinnovato",
-        "Controllo automatico degli aggiornamenti all'avvio",
-        "Badge di notifica nella barra di navigazione",
-        "Interfaccia utente migliorata con Material You",
-        "Gestione stato persistente degli aggiornamenti",
-        "Architettura MVVM per migliore gestione dello stato",
-        "Correzioni di errori e miglioramenti di performance"
-      ]
-    },
-    {
-      "version": "2.0.0",
-      "date": "2024-07-15",
-      "changes": [
-        "Riscrittura completa dell'interfaccia utente",
-        "Implementazione Material Design 3",
-        "Nuovo sistema di impostazioni organizzato",
-        "Miglioramenti significativi alle prestazioni",
-        "Supporto completo per Dynamic Island"
-      ]
-    }
+    
   ]
 }
