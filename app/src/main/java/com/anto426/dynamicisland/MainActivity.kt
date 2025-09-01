@@ -140,7 +140,7 @@ class MainActivity : ComponentActivity() {
 										) {
 											Icon(
 												Icons.AutoMirrored.Filled.ArrowBack,
-												contentDescription = "Back",
+												contentDescription = stringResource(R.string.back),
 												modifier = Modifier.size(24.dp)
 											)
 										}

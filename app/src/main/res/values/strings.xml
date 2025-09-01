@@ -358,4 +358,33 @@
     <string name="plugin_notification_description">Shows notifications and lets you interact with them</string>
     <string name="plugin_media_name">Media</string>
     <string name="plugin_media_description">Shows what’s currently playing and media controls</string>
+
+    <!-- Strings for PluginSettingsScreen hardcoded replacements -->
+    <string name="copy_title">Copy %1$s</string>
+    <string name="open_link">Open link</string>
+    <string name="plugin_status_title">Plugin status</string>
+    <string name="error_open_link">Unable to open link</string>
+    <string name="plugin_permissions_section">Permissions &amp; Features</string>
+    <string name="permission_not_granted_label">Not granted</string>
+    <string name="open_permission_settings">Open permission settings</string>
+    <string name="settings_error_prefix">Setting error: %1$s</string>
+    <string name="unknown_error">Unknown error</string>
+    
+    <!-- Plugin Notification localized strings -->
+    <string name="notification_default_title">Notification</string>
+    <string name="actions_title">Actions</string>
+    <string name="notification_swipe_left_to_close">Swipe left to close</string>
+    <string name="notification_swipe_to_close">Swipe to close</string>
+    <string name="send_reply">Send reply</string>
+
+    <!-- Media plugin content descriptions -->
+    <string name="media_blurred_background_desc">Blurred background</string>
+    <string name="media_album_cover_desc">Album cover</string>
+    <string name="media_previous_track">Previous track</string>
+    <string name="media_next_track">Next track</string>
+    <string name="media_pause">Pause</string>
+    <string name="media_play">Play</string>
+    <string name="media_album_art_desc">Album art</string>
+    <string name="media_no_cover">No cover</string>
+    <string name="badge_new">NEW</string>
 </resources>

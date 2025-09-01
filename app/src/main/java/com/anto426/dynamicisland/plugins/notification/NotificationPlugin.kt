@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.anto426.dynamicisland.island.IslandSettings
 import com.anto426.dynamicisland.model.ACTION_OPEN_CLOSE
 import com.anto426.dynamicisland.model.NOTIFICATION_POSTED
@@ -174,7 +175,7 @@ class NotificationPlugin(
 					verticalArrangement = Arrangement.spacedBy(4.dp)
 				) {
 					Text(
-						text = meta.title ?: "Notifica",
+						text = meta.title ?: stringResource(R.string.notification_default_title),
 						style = MaterialTheme.typography.titleLarge,
 						fontWeight = FontWeight.SemiBold,
 						color = MaterialTheme.colorScheme.onSurface,
@@ -197,7 +198,7 @@ class NotificationPlugin(
 
 			// Azioni disponibili
 			if (meta.actions.isNotEmpty()) {
-				SectionCard(title = "Azioni", modifier = Modifier.fillMaxWidth()) {
+				SectionCard(title = stringResource(R.string.actions_title), modifier = Modifier.fillMaxWidth()) {
 					NotificationActions(meta)
 				}
 			}
@@ -212,12 +213,12 @@ class NotificationPlugin(
 			) {
 				Icon(
 					imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-					contentDescription = "Scorri a sinistra per chiudere",
+					contentDescription = stringResource(R.string.notification_swipe_left_to_close),
 					tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
 					modifier = Modifier.size(16.dp)
 				)
 				Text(
-					text = "Scorri per chiudere",
+					text = stringResource(R.string.notification_swipe_to_close),
 					style = MaterialTheme.typography.bodySmall,
 					color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
 				)
@@ -254,7 +255,7 @@ class NotificationPlugin(
 					sendReply(replyAction, replyText.text)
 					removeNotificationAndUpdateState(meta.id)
 				}) {
-					Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Invia risposta")
+					Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.send_reply))
 				}
 			} else {
 				meta.actions.forEach { action ->

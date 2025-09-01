@@ -32,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
 import com.anto426.dynamicisland.plugins.BasePlugin
@@ -201,7 +202,7 @@ class MediaSessionPlugin(
 		if (cover != null) {
 			Image(
 				bitmap = cover.asImageBitmap(),
-				contentDescription = "Blurred Background",
+				contentDescription = stringResource(R.string.media_blurred_background_desc),
 				modifier = Modifier.fillMaxSize().blur(radius = MediaPluginDefaults.BackgroundBlurRadius),
 				contentScale = ContentScale.Crop
 			)
@@ -222,7 +223,7 @@ class MediaSessionPlugin(
 				if (currentCover != null) {
 					Image(
 						bitmap = currentCover.asImageBitmap(),
-						contentDescription = "Album Cover",
+						contentDescription = stringResource(R.string.media_album_cover_desc),
 						modifier = Modifier.fillMaxSize(),
 						contentScale = ContentScale.Crop
 					)
@@ -231,7 +232,7 @@ class MediaSessionPlugin(
 						contentAlignment = Alignment.Center,
 						modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)
 					) {
-						Icon(Icons.Default.MusicNote, "No Cover", modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+						Icon(Icons.Default.MusicNote, stringResource(R.string.media_no_cover), modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
 					}
 				}
 			}
@@ -332,9 +333,9 @@ class MediaSessionPlugin(
 					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
 				)
 			) {
-				Icon(
-					Icons.Default.SkipPrevious,
-					contentDescription = "Traccia precedente",
+					Icon(
+						Icons.Default.SkipPrevious,
+						contentDescription = stringResource(R.string.media_previous_track),
 					Modifier.size(28.dp)
 				)
 			}
@@ -356,7 +357,7 @@ class MediaSessionPlugin(
 				) { playing ->
 					Icon(
 						if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
-						contentDescription = if (playing) "Pausa" else "Play",
+						contentDescription = if (playing) stringResource(R.string.media_pause) else stringResource(R.string.media_play),
 						Modifier.size(36.dp)
 					)
 				}
@@ -370,9 +371,9 @@ class MediaSessionPlugin(
 					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
 				)
 			) {
-				Icon(
-					Icons.Default.SkipNext,
-					contentDescription = "Traccia successiva",
+					Icon(
+						Icons.Default.SkipNext,
+						contentDescription = stringResource(R.string.media_next_track),
 					Modifier.size(28.dp)
 				)
 			}
@@ -396,7 +397,7 @@ class MediaSessionPlugin(
 				if (art != null) {
 					Image(
 						bitmap = art.asImageBitmap(),
-						contentDescription = "Album Art",
+						contentDescription = stringResource(R.string.media_album_art_desc),
 						modifier = Modifier.fillMaxSize().clip(CircleShape),
 						contentScale = ContentScale.Crop
 					)
