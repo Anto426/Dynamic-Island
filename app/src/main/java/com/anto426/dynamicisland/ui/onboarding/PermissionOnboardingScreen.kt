@@ -15,6 +15,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -48,6 +49,8 @@ import androidx.core.net.toUri
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.LinearProgressIndicator
 
 data class PermissionItemData(
@@ -116,7 +119,7 @@ private fun IntroScreen(onContinue: () -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -266,7 +269,6 @@ private fun PermissionOnboardingScreen(
                 )
             }
         }
-
     }
 }
 
@@ -286,7 +288,7 @@ private fun PermissionStepContent(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = 24.dp, vertical = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -318,7 +320,7 @@ private fun PermissionStepContent(
                 )
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         LinearProgressIndicator(
             progress = { (step.toFloat() / totalSteps.coerceAtLeast(1)) },
             modifier = Modifier
@@ -326,7 +328,8 @@ private fun PermissionStepContent(
                 .height(4.dp)
                 .clip(RoundedCornerShape(2.dp)),
             color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap
         )
         Spacer(modifier = Modifier.height(16.dp))
         PermissionCard(
@@ -362,38 +365,77 @@ private fun PermissionCard(permission: PermissionItemData, isGranted: Boolean, o
         Column(
             modifier = Modifier.padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // Icon circle with gentle elevation
-            Surface(
-                modifier = Modifier.size(80.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shadowElevation = 6.dp
+            // Icon circle with gentle elevation and gradient background
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(100.dp)
             ) {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(
-                        imageVector = permission.icon,
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .background(
+                            brush = Brush.radialGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                    Color.Transparent
+                                )
+                            ),
+                            shape = CircleShape
+                        )
+                        .align(Alignment.Center)
+                )
+
+                Surface(
+                    modifier = Modifier.size(72.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shadowElevation = 6.dp
+                ) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                        Icon(
+                            imageVector = permission.icon,
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
-            Text(text = permission.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
-            Text(text = permission.description, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, lineHeight = 22.sp)
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = permission.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = permission.description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                lineHeight = 22.sp
+            )
+
             Button(
                 onClick = onGrantClick,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 enabled = !isGranted,
-                colors = ButtonDefaults.buttonColors(disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                )
             ) {
                 if (isGranted) {
                     Icon(Icons.Rounded.Check, contentDescription = stringResource(id = R.string.onboarding_permission_granted))
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                Text(text = if (isGranted) stringResource(id = R.string.permission_granted_label) else stringResource(id = R.string.enable_in_settings), fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = if (isGranted) stringResource(id = R.string.permission_granted_label) else stringResource(id = R.string.enable_in_settings),
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     }
@@ -416,8 +458,8 @@ private fun CelebrationScreen() {
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(28.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier.padding(32.dp)
             ) {
                 Icon(
                     imageVector = Icons.Rounded.CheckCircle,
