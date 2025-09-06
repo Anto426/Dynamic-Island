@@ -40,7 +40,7 @@ sealed class IslandViewState : IslandState {
 			get() = IslandSettings.instance.height.dp
 
 		override val width: Dp
-			get() = configuration.screenWidthDp.dp - xPosition * 2
+			get() = configuration.screenWidthDp.dp
 
 		override val cornerPercentage: Float
 			get() = IslandSettings.instance.cornerRadius.toFloat()

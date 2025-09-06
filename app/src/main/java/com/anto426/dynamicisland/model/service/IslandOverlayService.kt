@@ -197,6 +197,14 @@ class IslandOverlayService : AccessibilityService() {
 				// Autohide removed
 			}
 
+			// Ensure the window can grow to full screen width when Expanded
+			LaunchedEffect(islandState.state) {
+				params.width = if (islandState.state == IslandStates.Expanded) MATCH_PARENT else WRAP_CONTENT
+				try {
+					windowManager.updateViewLayout(composeView, params)
+				} catch (_: Exception) { }
+			}
+
 			IslandApp(
 				islandOverlayService = this,
 			)

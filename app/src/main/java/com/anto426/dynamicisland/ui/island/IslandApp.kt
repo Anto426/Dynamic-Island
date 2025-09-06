@@ -1,7 +1,14 @@
 package com.anto426.dynamicisland.ui.island
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
 import androidx.compose.animation.core.Spring.StiffnessLow
@@ -32,6 +39,7 @@ import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
 import android.graphics.Color
+import androidx.compose.material3.surfaceColorAtElevation
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -121,9 +129,10 @@ fun IslandApp(
 			Box(
 				modifier = Modifier
 					.padding(top = islandView.yPosition)
+					.then(if (islandView.state == IslandStates.Expanded) Modifier.padding(horizontal = 65.dp) else Modifier)
 					.fillMaxWidth()
 					.height(height)
-					.offset(x = islandView.xPosition),
+					.offset(x = if (islandView.state == IslandStates.Expanded) 0.dp else islandView.xPosition),
 				contentAlignment = when (IslandSettings.instance.gravity) {
 					IslandGravity.Center -> Alignment.TopCenter
 					IslandGravity.Left -> Alignment.TopStart
@@ -133,7 +142,9 @@ fun IslandApp(
 				Card(
 					shape = RoundedCornerShape(cornerPercentage),
 					modifier = Modifier
-						.width(width)
+						.let { m ->
+							if (islandView.state == IslandStates.Expanded) m.fillMaxWidth() else m.width(width)
+						}
 						.height(height)
 						.graphicsLayer(
 							scaleX = scale,
@@ -177,27 +188,43 @@ fun IslandApp(
 						pressedElevation = 20.dp
 					)
 				) {
-					Crossfade(
-						targetState = islandOverlayService.islandState.state,
-						animationSpec = tween(300),
-						label = "IslandStateCrossfade"
-					) { state ->
-						when (state) {
-							IslandStates.Opened -> {
-								IslandOpenedContent(
-									leftContent = { bindedPlugin?.LeftOpenedComposable() },
-									rightContent = { bindedPlugin?.RightOpenedComposable() }
-								)
+					val pluginKey = bindedPlugin?.id ?: "none"
+					AnimatedContent(
+						targetState = pluginKey,
+						transitionSpec = {
+							// Animate only when both old and new are real plugins and animations are enabled
+							val animate = islandOverlayService.shouldAnimate()
+							if (!animate || initialState == "none" || targetState == "none") {
+								fadeIn(animationSpec = tween(0)) togetherWith fadeOut(animationSpec = tween(0))
+							} else {
+								(slideInHorizontally { it / 2 } + fadeIn()) togetherWith (slideOutHorizontally { -it / 2 } + fadeOut())
 							}
+							.using(SizeTransform(clip = false))
+						},
+						label = "TopPluginSwitch"
+					) { _ ->
+						Crossfade(
+							targetState = islandOverlayService.islandState.state,
+							animationSpec = tween(if (islandOverlayService.shouldAnimate()) 300 else 0),
+							label = "IslandStateCrossfade"
+						) { state ->
+							when (state) {
+								IslandStates.Opened -> {
+									IslandOpenedContent(
+										leftContent = { bindedPlugin?.LeftOpenedComposable() },
+										rightContent = { bindedPlugin?.RightOpenedComposable() }
+									)
+								}
 
-							IslandStates.Expanded -> {
-								IslandExpandedContent(
-									service = islandOverlayService,
-									content = { bindedPlugin?.Composable() }
-								)
+								IslandStates.Expanded -> {
+									IslandExpandedContent(
+										service = islandOverlayService,
+										content = { bindedPlugin?.Composable() }
+									)
+								}
+
+								else -> {}
 							}
-
-							else -> {}
 						}
 					}
 				}
@@ -246,7 +273,7 @@ private fun IslandExpandedContent(
 	Column(
 		modifier = Modifier
 			.fillMaxSize()
-			.padding(top = 30.dp), // leggero padding per evitare la fotocamera in alto quando espansa
+			.padding(top = 30.dp),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Box(
@@ -267,6 +294,13 @@ private fun CloseHandle(
 	modifier: Modifier = Modifier,
 	onClick: () -> Unit
 ) {
+	// Derive color by "diffusing" from surrounding content and surface (tonal elevation aware)
+	val tonalElevation = androidx.compose.material3.LocalAbsoluteTonalElevation.current
+	val surfaceAtElevation = MaterialTheme.colorScheme.surfaceColorAtElevation(tonalElevation)
+	val contentColor = androidx.compose.material3.LocalContentColor.current
+	val handleColor = androidx.compose.ui.graphics.lerp(surfaceAtElevation, contentColor, 0.6f)
+		.copy(alpha = 0.7f)
+
 	Box(
 		modifier = modifier
 			.fillMaxWidth()
@@ -278,14 +312,13 @@ private fun CloseHandle(
 			.background(androidx.compose.ui.graphics.Color.Transparent)
 			.padding(vertical = 16.dp),
 		contentAlignment = Alignment.Center
-		
 	) {
 		Box(
 			modifier = Modifier
 				.width(48.dp)
 				.height(6.dp)
 				.clip(RoundedCornerShape(3.dp))
-				.background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+				.background(handleColor)
 		)
 	}
 }
