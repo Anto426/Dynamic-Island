@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object PluginDefaults {
-    val ContentPadding = 20.dp
+    val ContentPadding = 12.dp
     val SectionShape = RoundedCornerShape(20.dp)
 }
 
@@ -34,7 +34,7 @@ fun SectionCard(
         colors = CardDefaults.cardColors(containerColor = containerColor),
         shape = PluginDefaults.SectionShape
     ) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (!title.isNullOrBlank()) {
                 Text(
                     text = title,
