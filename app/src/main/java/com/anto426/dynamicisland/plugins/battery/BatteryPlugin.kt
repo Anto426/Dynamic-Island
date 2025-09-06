@@ -177,13 +177,12 @@ class BatteryPlugin(
             displayMode = newDisplayMode
             when (newDisplayMode) {
                 DisplayMode.LOW_BATTERY -> {
-                    // Cap battery below notifications
-                    priority.value = PluginPriority.HIGH
+                    priority.value = PluginPriority.MEDIUM
                     show(context)
                 }
 
                 DisplayMode.CHARGING -> {
-                    priority.value = PluginPriority.CRITICAL
+                    priority.value = PluginPriority.MEDIUM
                     show(context)
                 }
 

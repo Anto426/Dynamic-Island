@@ -122,8 +122,8 @@ class MediaSessionPlugin(
 
 		if (playingSession != null) {
 			activeCallback = playingSession
-			// Media stays at CRITICAL to be under notifications
-			priority.value = PluginPriority.CRITICAL
+			// Media stays at HIGH to be under notifications
+			priority.value = PluginPriority.HIGH
 			this.show(context)
 			// Reset gestione pausa
 			lastPausedShownAt = 0L

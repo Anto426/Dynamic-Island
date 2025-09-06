@@ -112,7 +112,6 @@ class NotificationPlugin(
 
 	private fun testNotification() {
 		Log.d(TAG, "Testing notification display")
-		// Create a test notification meta
 		val testIcon = context.packageManager.getApplicationIcon(context.packageName)
 		notificationMeta = NotificationMeta(
 			title = "Test Notification",
@@ -123,10 +122,8 @@ class NotificationPlugin(
 			actions = emptyList(),
 			statusBarNotification = null
 		)
-	// Start auto-hide via manager as well as local backup
 		val timeout = if (isAutoHideEnabled(context)) DEFAULT_AUTO_HIDE_MS else 0L
 		startAutoHide(timeout)
-	// Force highest priority for notifications
 	priority.value = PluginPriority.CRITICAL
 		Log.d(TAG, "Showing test notification")
 		show(context, timeoutMs = timeout)
