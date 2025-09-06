@@ -62,7 +62,7 @@ class MediaSessionPlugin(
 	override val description: String = "Show the current media session playing", // Not shown, use descriptionRes
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override val id: String = "MediaSessionPlugin",
-	override val name: String = "MediaSession", // Not shown, use nameRes
+	override val name: String = "MediaSession",  
 	override val permissions: ArrayList<String> = arrayListOf(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
 	override var pluginSettings: SnapshotStateMap<String, PluginSettingsItem> = mutableStateMapOf(),
 	override val version: String = "1.0.0",
@@ -122,8 +122,8 @@ class MediaSessionPlugin(
 
 		if (playingSession != null) {
 			activeCallback = playingSession
-			// Media stays at MEDIUM to be under notifications
-			priority.value = PluginPriority.MEDIUM
+			// Media stays at CRITICAL to be under notifications
+			priority.value = PluginPriority.CRITICAL
 			this.show(context)
 			// Reset gestione pausa
 			lastPausedShownAt = 0L
