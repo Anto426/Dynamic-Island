@@ -308,7 +308,7 @@ fun ThemeSettingsScreen() {
                             )
 
                             // Supported locales from resources (kept in sync with res/values-xx folders)
-                            val supportedTags = remember { context.resources.getStringArray(com.anto426.dynamicisland.R.array.supported_locales).toList() }
+                            val supportedTags = remember { context.resources.getStringArray(R.array.supported_locales).toList() }
                             var expanded by remember { mutableStateOf(false) }
                             val selectedLabel = remember(languageSelectedOption, supportedTags) {
                                 if (languageSelectedOption == "system") {

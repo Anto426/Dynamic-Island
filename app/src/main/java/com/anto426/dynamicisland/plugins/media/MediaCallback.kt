@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 class MediaCallback(
 	val mediaController: MediaController,
 	private val plugin: MediaSessionPlugin,
-	// NUOVO: Callback per notificare il plugin principale di un cambiamento
 	private val onStateChanged: () -> Unit
 ) : MediaController.Callback() {
 

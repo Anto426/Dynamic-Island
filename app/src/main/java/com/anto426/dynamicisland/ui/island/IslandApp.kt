@@ -1,17 +1,18 @@
 package com.anto426.dynamicisland.ui.island
 
+import android.graphics.Color
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
+import androidx.compose.animation.core.Spring.StiffnessLow
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.*
-import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
-import androidx.compose.animation.core.Spring.StiffnessLow
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,15 +20,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,287 +40,277 @@ import com.anto426.dynamicisland.island.*
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.ui.theme.DynamicIslandTheme
 import com.anto426.dynamicisland.ui.theme.Theme
-import android.graphics.Color
-import androidx.compose.material3.surfaceColorAtElevation
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IslandApp(
-	islandOverlayService: IslandOverlayService
-) {
-	val context = LocalContext.current
-	Theme.instance.Init()
-	LaunchedEffect(Unit) {
-		IslandSettings.instance.loadSettings(context = context)
-	}
+fun IslandApp(islandOverlayService: IslandOverlayService) {
+    val context = LocalContext.current
+    Theme.instance.Init()
+    LaunchedEffect(Unit) { IslandSettings.instance.loadSettings(context = context) }
 
-	val islandView = islandOverlayService.islandState
-	val bindedPlugin = islandOverlayService.bindedPlugins.firstOrNull()
+    val islandView = islandOverlayService.islandState
+    val bindedPlugin = islandOverlayService.bindedPlugins.firstOrNull()
 
-	val height by animateDpAsState(
-		targetValue = islandView.height,
-		animationSpec = if (islandOverlayService.shouldAnimate()) {
-			spring(
-				dampingRatio = DampingRatioMediumBouncy,
-				stiffness = StiffnessLow
-			)
-		} else {
-			spring(
-				dampingRatio = 1.0f,  // No bouncy
-				stiffness = 10000f    // High stiffness
-			)
-		},
-		label = "IslandHeight"
-	)
-	val width by animateDpAsState(
-		targetValue = islandView.width,
-		animationSpec = if (islandOverlayService.shouldAnimate()) {
-			spring(
-				dampingRatio = DampingRatioMediumBouncy,
-				stiffness = StiffnessLow
-			)
-		} else {
-			spring(
-				dampingRatio = 1.0f,  // No bouncy
-				stiffness = 10000f    // High stiffness
-			)
-		},
-		label = "IslandWidth"
-	)
-	val cornerPercentage by animateFloatAsState(
-		targetValue = islandView.cornerPercentage,
-		animationSpec = if (islandOverlayService.shouldAnimate()) {
-			tween(
-				durationMillis = 400,
-				easing = EaseOutCubic
-			)
-		} else {
-			tween(durationMillis = 0)
-		},
-		label = "IslandCorner"
-	)
+    val height by
+            animateDpAsState(
+                    targetValue = islandView.height,
+                    animationSpec =
+                            if (islandOverlayService.shouldAnimate()) {
+                                spring(
+                                        dampingRatio = DampingRatioMediumBouncy,
+                                        stiffness = StiffnessLow
+                                )
+                            } else {
+                                spring(
+                                        dampingRatio = 1.0f, // No bouncy
+                                        stiffness = 10000f // High stiffness
+                                )
+                            },
+                    label = "IslandHeight"
+            )
+    val width by
+            animateDpAsState(
+                    targetValue = islandView.width,
+                    animationSpec =
+                            if (islandOverlayService.shouldAnimate()) {
+                                spring(
+                                        dampingRatio = DampingRatioMediumBouncy,
+                                        stiffness = StiffnessLow
+                                )
+                            } else {
+                                spring(
+                                        dampingRatio = 1.0f, // No bouncy
+                                        stiffness = 10000f // High stiffness
+                                )
+                            },
+                    label = "IslandWidth"
+            )
+    val cornerPercentage by
+            animateFloatAsState(
+                    targetValue = islandView.cornerPercentage,
+                    animationSpec =
+                            if (islandOverlayService.shouldAnimate()) {
+                                tween(durationMillis = 400, easing = EaseOutCubic)
+                            } else {
+                                tween(durationMillis = 0)
+                            },
+                    label = "IslandCorner"
+            )
 
-	// Aggiungiamo animazione di scala per effetti più dinamici
-	val scale by animateFloatAsState(
-		targetValue = when (islandView.state) {
-			IslandStates.Closed -> 1f
-			IslandStates.Opened -> if (islandOverlayService.shouldAnimate()) 1.05f else 1f
-			IslandStates.Expanded -> 1f
-		},
-		animationSpec = if (islandOverlayService.shouldAnimate()) {
-			spring(
-				dampingRatio = DampingRatioMediumBouncy,
-				stiffness = 1500f  // Medium stiffness
-			)
-		} else {
-			spring(
-				dampingRatio = 1.0f,  // No bouncy
-				stiffness = 10000f    // High stiffness
-			)
-		},
-		label = "IslandScale"
-	)
+    // Aggiungiamo animazione di scala per effetti più dinamici
+    val scale by
+            animateFloatAsState(
+                    targetValue =
+                            when (islandView.state) {
+                                IslandStates.Closed -> 1f
+                                IslandStates.Opened ->
+                                        if (islandOverlayService.shouldAnimate()) 1.05f else 1f
+                                IslandStates.Expanded -> 1f
+                            },
+                    animationSpec =
+                            if (islandOverlayService.shouldAnimate()) {
+                                spring(
+                                        dampingRatio = DampingRatioMediumBouncy,
+                                        stiffness = 1500f // Medium stiffness
+                                )
+                            } else {
+                                spring(
+                                        dampingRatio = 1.0f, // No bouncy
+                                        stiffness = 10000f // High stiffness
+                                )
+                            },
+                    label = "IslandScale"
+            )
 
-	AnimatedVisibility(
-		visible = Island.isVisible || Island.shouldShowOnLockScreen,
-	) {
-		DynamicIslandTheme(
-			darkTheme = if (islandOverlayService.invertedTheme) !Theme.instance.isDarkTheme else Theme.instance.isDarkTheme,
-			style = Theme.instance.themeStyle
-		) {
-			Box(
-				modifier = Modifier
-					.padding(top = islandView.yPosition)
-					.then(if (islandView.state == IslandStates.Expanded) Modifier.padding(horizontal = 65.dp) else Modifier)
-					.fillMaxWidth()
-					.height(height)
-					.offset(x = if (islandView.state == IslandStates.Expanded) 0.dp else islandView.xPosition),
-				contentAlignment = when (IslandSettings.instance.gravity) {
-					IslandGravity.Center -> Alignment.TopCenter
-					IslandGravity.Left -> Alignment.TopStart
-					IslandGravity.Right -> Alignment.TopEnd
-				}
-			) {
-				Card(
-					shape = RoundedCornerShape(cornerPercentage),
-					modifier = Modifier
-						.let { m ->
-							if (islandView.state == IslandStates.Expanded) m.fillMaxWidth() else m.width(width)
-						}
-						.height(height)
-						.graphicsLayer(
-							scaleX = scale,
-							scaleY = scale
-						)
-						.combinedClickable(
-							interactionSource = remember { MutableInteractionSource() },
-							indication = null,
-							onClick = {
-								bindedPlugin?.onClick()
-								islandOverlayService.performHapticFeedback()
-								islandOverlayService.playSound()
-							},
-							onLongClick = {
-								if (bindedPlugin?.canExpand() == true) {
-									islandOverlayService.expand()
-									islandOverlayService.performHapticFeedback()
-								}
-							}
-						)
-						.let {
-							if (IslandSettings.instance.showBorders) {
-								it.border(
-									width = 2.dp,
-									color = MaterialTheme.colorScheme.primary,
-									shape = RoundedCornerShape(cornerPercentage)
-								)
-							} else {
-								it
-							}
-						},
-					colors = CardDefaults.cardColors(
-						containerColor = MaterialTheme.colorScheme.surface,
-					),
-					elevation = CardDefaults.cardElevation(
-						defaultElevation = when (islandView.state) {
-							IslandStates.Closed -> 4.dp
-							IslandStates.Opened -> 12.dp
-							IslandStates.Expanded -> 16.dp
-						},
-						pressedElevation = 20.dp
-					)
-				) {
-					val pluginKey = bindedPlugin?.id ?: "none"
-					AnimatedContent(
-						targetState = pluginKey,
-						transitionSpec = {
-							// Animate only when both old and new are real plugins and animations are enabled
-							val animate = islandOverlayService.shouldAnimate()
-							if (!animate || initialState == "none" || targetState == "none") {
-								fadeIn(animationSpec = tween(0)) togetherWith fadeOut(animationSpec = tween(0))
-							} else {
-								(slideInHorizontally { it / 2 } + fadeIn()) togetherWith (slideOutHorizontally { -it / 2 } + fadeOut())
-							}
-							.using(SizeTransform(clip = false))
-						},
-						label = "TopPluginSwitch"
-					) { _ ->
-						Crossfade(
-							targetState = islandOverlayService.islandState.state,
-							animationSpec = tween(if (islandOverlayService.shouldAnimate()) 300 else 0),
-							label = "IslandStateCrossfade"
-						) { state ->
-							when (state) {
-								IslandStates.Opened -> {
-									IslandOpenedContent(
-										leftContent = { bindedPlugin?.LeftOpenedComposable() },
-										rightContent = { bindedPlugin?.RightOpenedComposable() }
-									)
-								}
-
-								IslandStates.Expanded -> {
-									IslandExpandedContent(
-										service = islandOverlayService,
-										content = { bindedPlugin?.Composable() }
-									)
-								}
-
-								else -> {}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+    AnimatedVisibility(
+            visible = Island.isVisible || Island.shouldShowOnLockScreen,
+    ) {
+        DynamicIslandTheme(
+                darkTheme =
+                        if (islandOverlayService.invertedTheme) !Theme.instance.isDarkTheme
+                        else Theme.instance.isDarkTheme,
+                style = Theme.instance.themeStyle
+        ) {
+            Box(
+                    modifier =
+                            Modifier.padding(top = islandView.yPosition)
+                                    .then(
+                                            if (islandView.state == IslandStates.Expanded)
+                                                    Modifier.padding(horizontal = 65.dp)
+                                            else Modifier
+                                    )
+                                    .fillMaxWidth()
+                                    .height(height)
+                                    .offset(
+                                            x =
+                                                    if (islandView.state == IslandStates.Expanded)
+                                                            0.dp
+                                                    else islandView.xPosition
+                                    ),
+                    contentAlignment =
+                            when (IslandSettings.instance.gravity) {
+                                IslandGravity.Center -> Alignment.TopCenter
+                                IslandGravity.Left -> Alignment.TopStart
+                                IslandGravity.Right -> Alignment.TopEnd
+                            }
+            ) {
+                Card(
+                        shape = RoundedCornerShape(cornerPercentage),
+                        modifier =
+                                Modifier.let { m ->
+                                    if (islandView.state == IslandStates.Expanded) m.fillMaxWidth()
+                                    else m.width(width)
+                                }
+                                        .height(height)
+                                        .graphicsLayer(scaleX = scale, scaleY = scale)
+                                        .combinedClickable(
+                                                interactionSource =
+                                                        remember { MutableInteractionSource() },
+                                                indication = null,
+                                                onClick = {
+                                                    bindedPlugin?.onClick()
+                                                    islandOverlayService.performHapticFeedback()
+                                                    islandOverlayService.playSound()
+                                                },
+                                                onLongClick = {
+                                                    if (bindedPlugin?.canExpand() == true) {
+                                                        islandOverlayService.expand()
+                                                        islandOverlayService.performHapticFeedback()
+                                                    }
+                                                }
+                                        )
+                                        .let {
+                                            if (IslandSettings.instance.showBorders) {
+                                                it.border(
+                                                        width = 2.dp,
+                                                        color = MaterialTheme.colorScheme.primary,
+                                                        shape = RoundedCornerShape(cornerPercentage)
+                                                )
+                                            } else {
+                                                it
+                                            }
+                                        },
+                        colors =
+                                CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surface,
+                                ),
+                        elevation =
+                                CardDefaults.cardElevation(
+                                        defaultElevation =
+                                                when (islandView.state) {
+                                                    IslandStates.Closed -> 4.dp
+                                                    IslandStates.Opened -> 12.dp
+                                                    IslandStates.Expanded -> 16.dp
+                                                },
+                                        pressedElevation = 20.dp
+                                )
+                ) {
+                    val pluginKey = bindedPlugin?.id ?: "none"
+                    AnimatedContent(
+                            targetState = pluginKey,
+                            transitionSpec = {
+                                val animate = islandOverlayService.shouldAnimate()
+                                if (!animate || initialState == "none" || targetState == "none") {
+                                            fadeIn(animationSpec = tween(0)) togetherWith
+                                                    fadeOut(animationSpec = tween(0))
+                                        } else {
+                                            (slideInHorizontally { it / 2 } + fadeIn()) togetherWith
+                                                    (slideOutHorizontally { -it / 2 } + fadeOut())
+                                        }
+                                        .using(SizeTransform(clip = false))
+                            },
+                            label = "TopPluginSwitch"
+                    ) { _ ->
+                        Crossfade(
+                                targetState = islandOverlayService.islandState.state,
+                                animationSpec =
+                                        tween(if (islandOverlayService.shouldAnimate()) 300 else 0),
+                                label = "IslandStateCrossfade"
+                        ) { state ->
+                            when (state) {
+                                IslandStates.Opened -> {
+                                    IslandOpenedContent(
+                                            leftContent = { bindedPlugin?.LeftOpenedComposable() },
+                                            rightContent = { bindedPlugin?.RightOpenedComposable() }
+                                    )
+                                }
+                                IslandStates.Expanded -> {
+                                    IslandExpandedContent(
+                                            service = islandOverlayService,
+                                            content = { bindedPlugin?.Composable() }
+                                    )
+                                }
+                                else -> {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
 private fun IslandOpenedContent(
-	leftContent: @Composable () -> Unit,
-	rightContent: @Composable () -> Unit
+        leftContent: @Composable () -> Unit,
+        rightContent: @Composable () -> Unit
 ) {
-	Row(
-		modifier = Modifier
-			.fillMaxSize()
-			.padding(4.dp),
-		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.SpaceBetween
-	) {
-		val contentModifier = Modifier
-			.fillMaxHeight()
-			.weight(1f)
+    Row(
+            modifier = Modifier.fillMaxSize().padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val contentModifier = Modifier.fillMaxHeight().weight(1f)
 
-		// Removed unnecessary nested Crossfades
-		Box(
-			modifier = contentModifier,
-			contentAlignment = Alignment.Center
-		) {
-			leftContent()
-		}
-		Box(
-			modifier = contentModifier,
-			contentAlignment = Alignment.Center
-		) {
-			rightContent()
-		}
-	}
+        Box(modifier = contentModifier, contentAlignment = Alignment.Center) { leftContent() }
+        Box(modifier = contentModifier, contentAlignment = Alignment.Center) { rightContent() }
+    }
 }
 
 @Composable
-private fun IslandExpandedContent(
-	service: IslandOverlayService,
-	content: @Composable () -> Unit
-) {
-	Column(
-		modifier = Modifier
-			.fillMaxSize()
-			.padding(top = 30.dp),
-		horizontalAlignment = Alignment.CenterHorizontally
-	) {
-		Box(
-			modifier = Modifier.weight(1f).fillMaxWidth(),
-			contentAlignment = Alignment.Center
-		) {
-			// Removed unnecessary nested Crossfade
-			content()
-		}
-		CloseHandle(
-			onClick = { service.shrink() }
-		)
-	}
+private fun IslandExpandedContent(service: IslandOverlayService, content: @Composable () -> Unit) {
+    Column(
+            modifier = Modifier.fillMaxSize().padding(top = 30.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+            // Removed unnecessary nested Crossfade
+            content()
+        }
+        CloseHandle(onClick = { service.shrink() })
+    }
 }
 
 @Composable
-private fun CloseHandle(
-	modifier: Modifier = Modifier,
-	onClick: () -> Unit
-) {
-	// Derive color by "diffusing" from surrounding content and surface (tonal elevation aware)
-	val tonalElevation = androidx.compose.material3.LocalAbsoluteTonalElevation.current
-	val surfaceAtElevation = MaterialTheme.colorScheme.surfaceColorAtElevation(tonalElevation)
-	val contentColor = androidx.compose.material3.LocalContentColor.current
-	val handleColor = androidx.compose.ui.graphics.lerp(surfaceAtElevation, contentColor, 0.6f)
-		.copy(alpha = 0.7f)
+private fun CloseHandle(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val tonalElevation = androidx.compose.material3.LocalAbsoluteTonalElevation.current
+    val surfaceAtElevation = MaterialTheme.colorScheme.surfaceColorAtElevation(tonalElevation)
+    val contentColor = androidx.compose.material3.LocalContentColor.current
+    val handleColor =
+            androidx.compose
+                    .ui
+                    .graphics
+                    .lerp(surfaceAtElevation, contentColor, 0.6f)
+                    .copy(alpha = 0.7f)
 
-	Box(
-		modifier = modifier
-			.fillMaxWidth()
-			.clickable(
-				interactionSource = remember { MutableInteractionSource() },
-				indication = null,
-				onClick = onClick
-			)
-			.background(androidx.compose.ui.graphics.Color.Transparent)
-			.padding(vertical = 16.dp),
-		contentAlignment = Alignment.Center
-	) {
-		Box(
-			modifier = Modifier
-				.width(48.dp)
-				.height(6.dp)
-				.clip(RoundedCornerShape(3.dp))
-				.background(handleColor)
-		)
-	}
+    Box(
+            modifier =
+                    modifier.fillMaxWidth()
+                            .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = onClick
+                            )
+                            .background(androidx.compose.ui.graphics.Color.Transparent)
+                            .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+    ) {
+        Box(
+                modifier =
+                        Modifier.width(48.dp)
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(3.dp))
+                                .background(handleColor)
+        )
+    }
 }

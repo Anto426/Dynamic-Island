@@ -194,7 +194,7 @@ class MediaSessionPlugin(
 			) {
 				val boxMaxWidth = this.maxWidth
 				val boxMaxHeight = this.maxHeight
-				val isWide = boxMaxWidth >= 520.dp
+                boxMaxWidth >= 520.dp
 				val isCompact = boxMaxWidth < 360.dp
 				val isShort = boxMaxHeight < 240.dp
 				val isUltraShort = boxMaxHeight < 180.dp
@@ -237,7 +237,6 @@ class MediaSessionPlugin(
 							isShort -> 0.74f
 							else -> 0.82f
 						}
-						// Cap artwork by available height and absolute limit to keep everything centered and visible
 						val artWidth = targetMaxWidth * widthFactor
 						val artHeightCap = boxMaxHeight * (if (isUltraShort) 0.28f else if (isShort) 0.36f else 0.46f)
 						val absoluteMax = when {
