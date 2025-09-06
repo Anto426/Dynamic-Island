@@ -9,12 +9,14 @@ import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.provider.Settings
 import android.util.Log
+import android.os.SystemClock
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.res.stringResource
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 import com.anto426.dynamicisland.model.service.NotificationService
@@ -39,6 +42,7 @@ import com.anto426.dynamicisland.plugins.BasePlugin
 import com.anto426.dynamicisland.plugins.PluginPriority
 import com.anto426.dynamicisland.plugins.PluginSettingsItem
 import com.anto426.dynamicisland.ui.island.PluginDefaults
+import com.anto426.dynamicisland.ui.island.SectionCard
 import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -55,10 +59,10 @@ private object MediaPluginDefaults {
 
 class MediaSessionPlugin(
 	override val author: String = "Anto426",
-	override val description: String = "Show the current media session playing",
+	override val description: String = "Show the current media session playing", // Not shown, use descriptionRes
 	override var enabled: MutableState<Boolean> = mutableStateOf(false),
 	override val id: String = "MediaSessionPlugin",
-	override val name: String = "MediaSession",
+	override val name: String = "MediaSession", // Not shown, use nameRes
 	override val permissions: ArrayList<String> = arrayListOf(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
 	override var pluginSettings: SnapshotStateMap<String, PluginSettingsItem> = mutableStateMapOf(),
 	override val version: String = "1.0.0",
@@ -118,7 +122,8 @@ class MediaSessionPlugin(
 
 		if (playingSession != null) {
 			activeCallback = playingSession
-			if (priority.value.ordinal < PluginPriority.MEDIUM.ordinal) priority.value = PluginPriority.MEDIUM
+			// Media stays at MEDIUM to be under notifications
+			priority.value = PluginPriority.MEDIUM
 			this.show(context)
 			// Reset gestione pausa
 			lastPausedShownAt = 0L
@@ -131,14 +136,15 @@ class MediaSessionPlugin(
 		val pausedSession = meaningful.firstOrNull {
 			it.mediaStruct.playbackState.value?.state == PlaybackState.STATE_PAUSED
 		}
-		if (pausedSession != null) {
+	if (pausedSession != null) {
 			activeCallback = pausedSession
 			val now = System.currentTimeMillis()
 			val shouldShowBriefly = now - lastPausedShownAt > 5_000
 			if (shouldShowBriefly) {
 				lastPausedShownAt = now
 				// Show without auto-hide; rely on session updates to hide
-				this.show(context, timeoutMs = 0)
+		priority.value = PluginPriority.MEDIUM
+		this.show(context, timeoutMs = 0)
 			} else {
 				// Se abbiamo già mostrato di recente la pausa, non risollevare
 				this.hide(context)
@@ -166,36 +172,114 @@ class MediaSessionPlugin(
 
 	@SuppressLint("DefaultLocale")
 	private fun formatTime(millis: Long): String {
-		if (millis < 0) return "00:00"
+		if (millis < 0) return context.getString(R.string.media_time_zero)
 		val minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
 		val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(minutes)
-		return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+		return String.format(Locale.getDefault(), context.getString(R.string.media_time_format), minutes, seconds)
 	}
 
 	@Composable
 	override fun Composable() {
 		val mediaCallback = activeCallback ?: return
 		val mediaStruct by remember { derivedStateOf { mediaCallback.mediaStruct } }
+        val appLabel = remember(mediaCallback) { getAppNameSafe(mediaCallback.mediaController.packageName) }
+	val transportControls = remember(mediaCallback) { mediaCallback.mediaController.transportControls }
+	val state by remember { mediaStruct.playbackState }
+	val isPlaying by remember { derivedStateOf { mediaStruct.isPlaying() } }
 
 		Box(modifier = Modifier.fillMaxSize()) {
 			PlayerBackground(cover = mediaStruct.cover.value)
-			Column(
+			BoxWithConstraints(
 				modifier = Modifier
 					.fillMaxSize()
-					.padding(PluginDefaults.ContentPadding),
-				horizontalAlignment = Alignment.CenterHorizontally,
-				verticalArrangement = Arrangement.SpaceAround
+					.padding(PluginDefaults.ContentPadding)
 			) {
-				PlayerArtwork(
-					modifier = Modifier.fillMaxWidth(0.9f).aspectRatio(1f),
-					cover = mediaStruct.cover.value
-				)
-				TrackDetails(title = mediaStruct.title.value, artist = mediaStruct.artist.value)
-				PlayerScrubber(mediaStruct = mediaStruct, transportControls = mediaCallback.mediaController.transportControls)
-				PlayerControls(isPlaying = mediaStruct.isPlaying(), transportControls = mediaCallback.mediaController.transportControls)
+				val boxMaxWidth = this.maxWidth
+				val boxMaxHeight = this.maxHeight
+				val isWide = boxMaxWidth >= 520.dp
+				val isCompact = boxMaxWidth < 360.dp
+				val isShort = boxMaxHeight < 240.dp
+				val isUltraShort = boxMaxHeight < 180.dp
+
+				val sideBtn = when {
+					isUltraShort || isCompact -> 40.dp
+					isShort -> 44.dp
+					else -> 52.dp
+				}
+				val mainBtn = when {
+					isUltraShort || isCompact -> 56.dp
+					isShort -> 68.dp
+					else -> 78.dp
+				}
+				val iconSize = when {
+					isUltraShort || isCompact -> 24.dp
+					isShort -> 28.dp
+					else -> 32.dp
+				}
+				val vSpace = when {
+					isUltraShort -> 6.dp
+					isShort -> 8.dp
+					else -> 10.dp
+				}
+
+				// Always use a centered column with a max content width
+				val targetMaxWidth = when {
+					boxMaxWidth >= 600.dp -> 420.dp
+					boxMaxWidth >= 500.dp -> 380.dp
+					else -> boxMaxWidth * 0.9f
+				}
+				Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+					Column(
+						modifier = Modifier.widthIn(max = targetMaxWidth),
+						horizontalAlignment = Alignment.CenterHorizontally,
+						verticalArrangement = Arrangement.spacedBy(vSpace)
+					) {
+						val widthFactor = when {
+							isCompact -> 0.62f
+							isShort -> 0.74f
+							else -> 0.82f
+						}
+						// Cap artwork by available height and absolute limit to keep everything centered and visible
+						val artWidth = targetMaxWidth * widthFactor
+						val artHeightCap = boxMaxHeight * (if (isUltraShort) 0.28f else if (isShort) 0.36f else 0.46f)
+						val absoluteMax = when {
+							isUltraShort -> 112.dp
+							isShort -> 128.dp
+							else -> 144.dp
+						}
+						val artCandidate = if (artWidth < artHeightCap) artWidth else artHeightCap
+						val artSize = if (artCandidate < absoluteMax) artCandidate else absoluteMax
+						PlayerArtwork(
+							modifier = Modifier.size(artSize),
+							cover = mediaStruct.cover.value
+						)
+						AssistChip(
+							onClick = { mediaCallback.mediaController.sessionActivity?.send(0) },
+							label = { Text(appLabel, style = MaterialTheme.typography.labelMedium) },
+							leadingIcon = { Icon(Icons.Default.MusicNote, contentDescription = null) },
+							colors = AssistChipDefaults.assistChipColors(
+								containerColor = MaterialTheme.colorScheme.surfaceContainer,
+								labelColor = MaterialTheme.colorScheme.onSurface,
+								leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+							)
+						)
+						TrackDetails(title = mediaStruct.title.value, artist = mediaStruct.artist.value, compact = true)
+						SectionCard(modifier = Modifier.fillMaxWidth(), containerColor = MaterialTheme.colorScheme.surfaceContainer) {
+							PlayerScrubber(mediaStruct = mediaStruct, transportControls = transportControls, showLabels = !isUltraShort)
+							Spacer(Modifier.height(4.dp))
+							PlayerControls(isPlaying = isPlaying, actions = state?.actions ?: 0L, transportControls = transportControls, sideButtonSize = sideBtn, mainButtonSize = mainBtn, centerIconSize = iconSize)
+						}
+					}
+				}
 			}
 		}
 	}
+
+	private fun getAppNameSafe(packageName: String): String = runCatching {
+		val pm = context.packageManager
+		val ai = pm.getApplicationInfo(packageName, 0)
+		pm.getApplicationLabel(ai).toString()
+	}.getOrElse { packageName }
 
 	@Composable
 	private fun PlayerBackground(cover: Bitmap?) {
@@ -220,7 +304,7 @@ class MediaSessionPlugin(
 				label = "CoverArtAnimation",
 				transitionSpec = { fadeIn(tween(600)) togetherWith fadeOut(tween(600)) }
 			) { currentCover ->
-				if (currentCover != null) {
+		if (currentCover != null) {
 					Image(
 						bitmap = currentCover.asImageBitmap(),
 						contentDescription = stringResource(R.string.media_album_cover_desc),
@@ -232,7 +316,7 @@ class MediaSessionPlugin(
 						contentAlignment = Alignment.Center,
 						modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)
 					) {
-						Icon(Icons.Default.MusicNote, stringResource(R.string.media_no_cover), modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+			Icon(Icons.Default.MusicNote, stringResource(R.string.media_no_cover), modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
 					}
 				}
 			}
@@ -241,7 +325,7 @@ class MediaSessionPlugin(
 
 	@OptIn(ExperimentalAnimationApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 	@Composable
-	private fun TrackDetails(modifier: Modifier = Modifier, title: String, artist: String) {
+	private fun TrackDetails(modifier: Modifier = Modifier, title: String, artist: String, compact: Boolean = false) {
 		Column(
 			modifier = modifier.fillMaxWidth(),
 			horizontalAlignment = Alignment.CenterHorizontally
@@ -249,101 +333,155 @@ class MediaSessionPlugin(
 			AnimatedContent(targetState = title, label = "TitleAnimation", transitionSpec = {
 				slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
 			}) { text ->
-				Text(text, style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold), maxLines = 1, modifier = Modifier.basicMarquee())
+				val titleStyle = if (compact) MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+				Text(
+					text,
+					style = titleStyle,
+					maxLines = 1,
+					modifier = Modifier.fillMaxWidth().basicMarquee(),
+					textAlign = androidx.compose.ui.text.style.TextAlign.Center
+				)
 			}
 			Spacer(modifier = Modifier.height(4.dp))
 			AnimatedContent(targetState = artist, label = "ArtistAnimation", transitionSpec = {
 				slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
 			}) { text ->
-				Text(text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, modifier = Modifier.basicMarquee())
+				val artistStyle = if (compact) MaterialTheme.typography.labelSmall else MaterialTheme.typography.bodySmall
+				Text(
+					text,
+					style = artistStyle,
+					color = MaterialTheme.colorScheme.onSurfaceVariant,
+					maxLines = 1,
+					modifier = Modifier.fillMaxWidth().basicMarquee(),
+					textAlign = androidx.compose.ui.text.style.TextAlign.Center
+				)
 			}
 		}
 	}
 
 	@Composable
-	private fun PlayerScrubber(mediaStruct: MediaStruct, transportControls: MediaController.TransportControls) {
+	private fun PlayerScrubber(mediaStruct: MediaStruct, transportControls: MediaController.TransportControls, showLabels: Boolean = true) {
 		var sliderPosition by remember { mutableFloatStateOf(0f) }
 		var isDragging by remember { mutableStateOf(false) }
 		val duration by remember { mediaStruct.duration }
-		// CORREZIONE 3: Aggiunto operatore safe-call (?.) e valore di default (?:)
-		val elapsed by remember { derivedStateOf { mediaStruct.playbackState.value?.position ?: 0L } }
+		val playbackState by remember { mediaStruct.playbackState }
+		var elapsed by remember { mutableLongStateOf(0L) }
 
-		LaunchedEffect(elapsed, isDragging) {
-			if (!isDragging) {
-				sliderPosition = if (duration > 0) elapsed.toFloat() / duration else 0f
+		fun calcEffective(state: PlaybackState?, duration: Long): Long {
+			if (state == null) return 0L
+			var pos = state.position
+			if (state.state == PlaybackState.STATE_PLAYING) {
+				val delta = SystemClock.elapsedRealtime() - state.lastPositionUpdateTime
+				pos += (delta * state.playbackSpeed).toLong()
+			}
+			return if (duration > 0) pos.coerceIn(0L, duration) else maxOf(0L, pos)
+		}
+
+		LaunchedEffect(playbackState, duration) {
+			// ticker updating elapsed when playing
+			while (true) {
+				elapsed = calcEffective(playbackState, duration)
+				if (!isDragging) {
+					sliderPosition = if (duration > 0) elapsed.toFloat() / duration else 0f
+				}
+				delay(250)
 			}
 		}
 
 		Column(horizontalAlignment = Alignment.CenterHorizontally) {
-			Slider(
-				value = sliderPosition,
-				onValueChange = {
-					isDragging = true
-					sliderPosition = it
-				},
-				onValueChangeFinished = {
-					transportControls.seekTo((sliderPosition * duration).roundToLong())
-					isDragging = false
-				},
-				modifier = Modifier.fillMaxWidth(),
-				colors = SliderDefaults.colors(
-					thumbColor = MaterialTheme.colorScheme.primary,
-					activeTrackColor = MaterialTheme.colorScheme.primary,
-					inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
-				)
-			)
-			Row(
-				Modifier
-					.fillMaxWidth()
-					.padding(horizontal = 8.dp),
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				val currentTime = if (isDragging) (sliderPosition * duration).toLong() else elapsed
-				Text(
-					formatTime(currentTime),
-					style = MaterialTheme.typography.labelSmall.copy(
-						color = MaterialTheme.colorScheme.onSurfaceVariant
+			if (duration > 0L) {
+				Slider(
+					value = sliderPosition,
+					onValueChange = {
+						isDragging = true
+						sliderPosition = it
+					},
+					onValueChangeFinished = {
+						transportControls.seekTo((sliderPosition * duration).roundToLong())
+						isDragging = false
+					},
+					modifier = Modifier.fillMaxWidth(),
+					colors = SliderDefaults.colors(
+						thumbColor = MaterialTheme.colorScheme.primary,
+						activeTrackColor = MaterialTheme.colorScheme.primary,
+						inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
 					)
 				)
-				Spacer(modifier = Modifier.weight(1f))
-				Text(
-					formatTime(duration),
-					style = MaterialTheme.typography.labelSmall.copy(
-						color = MaterialTheme.colorScheme.onSurfaceVariant
+			} else {
+				AssistChip(
+					onClick = {},
+					label = { Text("Live") },
+					leadingIcon = { Icon(Icons.Default.WifiTethering, contentDescription = null) },
+					colors = AssistChipDefaults.assistChipColors(
+						containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+						labelColor = MaterialTheme.colorScheme.onSurface,
+						leadingIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
 					)
 				)
+			}
+			if (showLabels) {
+				Row(
+					Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 8.dp),
+					verticalAlignment = Alignment.CenterVertically
+				) {
+					val currentTime = if (isDragging) (sliderPosition * duration).toLong() else elapsed
+					Text(
+						formatTime(currentTime),
+						style = MaterialTheme.typography.labelSmall.copy(
+							color = MaterialTheme.colorScheme.onSurfaceVariant
+						)
+					)
+					Spacer(modifier = Modifier.weight(1f))
+					Text(
+						if (duration > 0L) formatTime(duration) else "—",
+						style = MaterialTheme.typography.labelSmall.copy(
+							color = MaterialTheme.colorScheme.onSurfaceVariant
+						)
+					)
+				}
 			}
 		}
 	}
 
 	@Composable
-	private fun PlayerControls(isPlaying: Boolean, transportControls: MediaController.TransportControls) {
+	private fun PlayerControls(
+		isPlaying: Boolean,
+		actions: Long,
+		transportControls: MediaController.TransportControls,
+		sideButtonSize: Dp,
+		mainButtonSize: Dp,
+		centerIconSize: Dp
+	) {
 		Row(
 			Modifier
 				.fillMaxWidth()
-				.padding(horizontal = 8.dp),
+				.padding(horizontal = 4.dp),
 			Arrangement.SpaceEvenly,
 			Alignment.CenterVertically
 		) {
+			val canPrev = (actions and PlaybackState.ACTION_SKIP_TO_PREVIOUS) != 0L
+			val canNext = (actions and PlaybackState.ACTION_SKIP_TO_NEXT) != 0L
 			// Pulsante precedente con feedback visivo
 			FilledTonalIconButton(
-				onClick = { transportControls.skipToPrevious() },
-				modifier = Modifier.size(56.dp),
+				onClick = { if (canPrev) transportControls.skipToPrevious() },
+				modifier = Modifier.size(sideButtonSize),
 				colors = IconButtonDefaults.filledTonalIconButtonColors(
 					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
 				)
-			) {
+			, enabled = canPrev) {
 					Icon(
 						Icons.Default.SkipPrevious,
 						contentDescription = stringResource(R.string.media_previous_track),
-					Modifier.size(28.dp)
+					Modifier.size(centerIconSize * 0.78f)
 				)
 			}
 
 			// Pulsante play/pause principale
 			FilledIconButton(
 				onClick = { if (isPlaying) transportControls.pause() else transportControls.play() },
-				modifier = Modifier.size(80.dp),
+				modifier = Modifier.size(mainButtonSize),
 				colors = IconButtonDefaults.filledIconButtonColors(
 					containerColor = MaterialTheme.colorScheme.primary
 				)
@@ -358,23 +496,23 @@ class MediaSessionPlugin(
 					Icon(
 						if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
 						contentDescription = if (playing) stringResource(R.string.media_pause) else stringResource(R.string.media_play),
-						Modifier.size(36.dp)
+						Modifier.size(centerIconSize)
 					)
 				}
 			}
 
 			// Pulsante successivo con feedback visivo
 			FilledTonalIconButton(
-				onClick = { transportControls.skipToNext() },
-				modifier = Modifier.size(56.dp),
+				onClick = { if (canNext) transportControls.skipToNext() },
+				modifier = Modifier.size(sideButtonSize),
 				colors = IconButtonDefaults.filledTonalIconButtonColors(
 					containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
 				)
-			) {
+			, enabled = canNext) {
 					Icon(
 						Icons.Default.SkipNext,
 						contentDescription = stringResource(R.string.media_next_track),
-					Modifier.size(28.dp)
+					Modifier.size(centerIconSize * 0.78f)
 				)
 			}
 		}
