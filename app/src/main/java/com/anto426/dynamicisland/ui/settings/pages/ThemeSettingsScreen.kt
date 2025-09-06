@@ -335,7 +335,7 @@ fun ThemeSettingsScreen() {
                                     label = { Text(stringResource(id = R.string.language_section_subtitle)) },
                                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                                     modifier = Modifier
-                                        .menuAnchor()
+                                        .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
                                         .fillMaxWidth()
                                 )
 

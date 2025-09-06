@@ -143,9 +143,7 @@ class ExportedPlugins {
 				requestIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
 			}
 			for (plugin in plugins) {
-				// Initialize lightweight settings so the UI can render immediately
 				plugin.initSettings(context)
-				// Load persisted priority
 				plugin.loadPriority(context)
 				plugin.permissions.forEach { permissionId ->
 					val permission = permissions[permissionId] ?: return@forEach

@@ -3,6 +3,7 @@ package com.anto426.dynamicisland.ui.settings.pages
 import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.animation.*
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -98,7 +99,7 @@ data class DeveloperInfo(val profile: GitHubUser, val repositories: List<GitHubR
 
 // FIX: Creiamo un tipo per l'errore che può contenere o un ID di risorsa o una stringa grezza
 sealed class ErrorType {
-    data class StringResource(@StringRes val id: Int) : ErrorType()
+    data class StringResource(@param:StringRes val id: Int) : ErrorType()
     data class RawString(val message: String) : ErrorType()
 }
 
@@ -210,7 +211,7 @@ fun DeveloperScreen(username: String = "Anto426", viewModel: DeveloperViewModel 
 
     AnimatedContent(
         targetState = state,
-        transitionSpec = { fadeIn() with fadeOut() },
+        transitionSpec = { fadeIn().togetherWith(fadeOut()) },
         modifier = Modifier.fillMaxSize(),
         label = "developer_screen_animation"
     ) { targetState ->
@@ -294,7 +295,7 @@ fun DeveloperProfileCard(profile: GitHubUser) {
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Button(onClick = { val url = "https://github.com/${profile.login}"; val intent = Intent(Intent.ACTION_VIEW, url.toUri()); context.startActivity(intent) }, modifier = Modifier.weight(1f), shape = MaterialTheme.shapes.large) {
-                    Icon(Icons.Default.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(id = R.string.open_profile))
                 }

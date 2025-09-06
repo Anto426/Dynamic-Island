@@ -14,7 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.foundation.background
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
+import androidx.compose.ui.graphics.toArgb
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.STYLE
 import com.anto426.dynamicisland.model.THEME
@@ -88,50 +92,21 @@ class Theme {
 fun DynamicIslandTheme(
 	darkTheme: Boolean = isSystemInDarkTheme(),
 	style: Theme.ThemeStyle = Theme.instance.themeStyle,
-	// Dynamic color is available on Android 12+
 	content: @Composable () -> Unit
 ) {
-	/**
-	 * Enhanced Material You Theme with:
-	 * - Dynamic color scheme based on system wallpaper
-	 * - Improved typography with proper Material 3 scaling
-	 * - Rich gradient backgrounds using primary/secondary/tertiary colors
-	 * - Transparent system bars with adaptive icon colors
-	 * - Support for multiple theme styles (Material You, Black, Quinacridone Magenta)
-	 */
-
 	val context = LocalContext.current
-	val systemUiController = rememberSystemUiController()
-
+	val activity = context as? ComponentActivity
 	SideEffect {
-		systemUiController.setSystemBarsColor(
-			color = Color.Transparent,
-			darkIcons = when(style) {
-				Theme.ThemeStyle.MaterialYou -> {
-					!darkTheme
-				}
-				Theme.ThemeStyle.Black -> {
-					false // White icons on black
-				}
-				Theme.ThemeStyle.QuinacridoneMagenta -> {
-					!darkTheme
-				}
-			}
-		)
-		systemUiController.setNavigationBarColor(
-			color = Color.Transparent,
-			darkIcons = when(style) {
-				Theme.ThemeStyle.MaterialYou -> {
-					!darkTheme
-				}
-				Theme.ThemeStyle.Black -> {
-					false
-				}
-				Theme.ThemeStyle.QuinacridoneMagenta -> {
-					!darkTheme
-				}
-			}
-		)
+		activity?.let { act ->
+			// edge-to-edge without deprecated setters
+			val scrim = Color.Transparent.toArgb()
+			act.enableEdgeToEdge(
+				statusBarStyle = if (darkTheme) SystemBarStyle.dark(scrim) else SystemBarStyle.light(scrim, scrim),
+				navigationBarStyle = if (darkTheme) SystemBarStyle.dark(scrim) else SystemBarStyle.light(scrim, scrim)
+			)
+			// Ensure content draws under system bars
+			WindowCompat.setDecorFitsSystemWindows(act.window, false)
+		}
 	}
 
 	MaterialTheme(

@@ -23,9 +23,7 @@ object PluginManager {
     private var service: IslandOverlayService? = null
     private var lastTopId: String? = null
 
-    // Map by plugin id
     private val activities = LinkedHashMap<String, PluginActivity>()
-    // Individual timers
     private val timers = HashMap<String, kotlinx.coroutines.Job>()
 
     fun attach(service: IslandOverlayService) {

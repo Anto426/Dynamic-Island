@@ -24,19 +24,14 @@ abstract class BasePlugin {
 	abstract var enabled: MutableState<Boolean>
 	abstract var pluginSettings: SnapshotStateMap<String, PluginSettingsItem>
 
-	// Optional resource-backed strings for localization
 	@StringRes
 	open val nameRes: Int? = null
 	@StringRes
 	open val descriptionRes: Int? = null
 
-	// Priority model (persisted)
 	var priority: MutableState<PluginPriority> = androidx.compose.runtime.mutableStateOf(PluginPriority.MEDIUM)
-	// Track last time this plugin requested to show (used as tie-breaker)
 	var lastUpdatedAt: MutableState<Long> = androidx.compose.runtime.mutableStateOf(0L)
-	// Whether this plugin currently wants to be visible in the island
 	var wantsToShow: MutableState<Boolean> = androidx.compose.runtime.mutableStateOf(false)
-	// Whether plugin resources are started (managed by PluginEngine)
 	var isStarted: MutableState<Boolean> = androidx.compose.runtime.mutableStateOf(false)
 
 	val active get() = enabled.value && allPermissionsGranted
@@ -59,16 +54,13 @@ abstract class BasePlugin {
 	abstract fun onRightSwipe()
 	abstract fun onLeftSwipe()
 
-	// Optional hook to populate settings so the Settings UI can render even if the plugin isn't started
 	open fun initSettings(context: Context) {}
 
-	// Optional hook called by settings UI when a specific plugin setting changes
 	open fun onSettingsChanged(context: Context, key: String, value: Any?) {}
 
 	@SuppressLint("SuspiciousIndentation")
     fun switchEnabled(context: Context, enabled: Boolean = !this.enabled.value): Boolean {
 
-		// Check if all permissions are granted
 		return if (allPermissionsGranted || !enabled) {
             context.getSharedPreferences(SETTINGS_KEY, Context.MODE_PRIVATE).edit {
                 putBoolean(id, enabled)
@@ -85,7 +77,6 @@ abstract class BasePlugin {
 
 	val allPermissionsGranted: Boolean
 		get() = permissions.all { permission ->
-			// Check if permission is granted
 			ExportedPlugins.permissions[permission]?.granted?.value ?: false
 		}
 
@@ -105,7 +96,6 @@ abstract class BasePlugin {
 		priority.value = PluginPriority.fromString(preferences.getString("${id}_priority", null))
 	}
 
-	// Helper to notify that plugin wants to show/hide and refresh ordering
 	@Suppress("UNUSED_PARAMETER")
 	fun show(service: IslandOverlayService, timeoutMs: Long = 0L) {
 		wantsToShow.value = true

@@ -249,31 +249,25 @@ class IslandOverlayService : AccessibilityService() {
 			recomposer.runRecomposeAndApplyChanges()
 		}
 
-		// Add the view to the window
 		windowManager.addView(composeView, params)
 	}
 
 	fun addPlugin(plugin: BasePlugin) {
-	// Update recency
 	plugin.lastUpdatedAt.value = System.currentTimeMillis()
 
-	// Push or move to top in active stack
 	activeStack.removeIf { it.id == plugin.id }
 	activeStack.addFirst(plugin)
 
-	// Refresh visible list from stack applying priority ordering
 	refreshVisibleFromStack()
 	}
 	fun removePlugin(plugin: BasePlugin) {
 		Log.d("OverlayService", "Plugin with id ${plugin.id} removed")
-		// Remove from stack and visible list, then restore next appropriate
 		activeStack.removeIf { it.id == plugin.id }
 		bindedPlugins.removeIf { it.id == plugin.id }
 		refreshVisibleFromStack()
 	}
 
 	private fun refreshVisibleFromStack() {
-		// Select the top-most plugin by priority then recency from the stack
 		val top = activeStack
 			.distinctBy { it.id }
 			.sortedWith(compareByDescending<BasePlugin> { it.priority.value.weight }
@@ -288,7 +282,6 @@ class IslandOverlayService : AccessibilityService() {
 				IslandViewState.Closed
 			} else IslandViewState.Opened
 		} else IslandViewState.Closed
-	// Autohide removed
 
 		Log.d("OverlayService", "Top plugin: ${top?.id} | stack: ${activeStack.map { it.id to it.priority.value }}")
 	}
@@ -296,7 +289,6 @@ class IslandOverlayService : AccessibilityService() {
 	fun expand() { islandState = IslandViewState.Expanded(configuration = resources.configuration) }
 	fun shrink() { islandState = IslandViewState.Opened }
 
-	// Metodi per gestire le nuove impostazioni avanzate
 	fun performHapticFeedback() {
 		if (IslandSettings.instance.hapticFeedback) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -314,11 +306,9 @@ class IslandOverlayService : AccessibilityService() {
 	}
 
 	fun shouldAnimate(): Boolean {
-		// Honor animations toggle; low power mode suppresses animations without changing the stored value
 		return IslandSettings.instance.animationsEnabled && !IslandSettings.instance.lowPowerMode
 	}
 
-	// Autohide removed: no delay-based closing
 
 	override fun onUnbind(intent: Intent?): Boolean {
 		instance = null
@@ -339,21 +329,17 @@ class IslandOverlayService : AccessibilityService() {
 	override fun onAccessibilityEvent(event: AccessibilityEvent?) {}
 	override fun onInterrupt() {}
 
-		// Called by PluginManager to set the top plugin deterministically
 		fun setTopFromManager(top: BasePlugin?) {
 			bindedPlugins.clear()
 			if (top != null) bindedPlugins.add(top)
-			// Respect lock-screen visibility preference
 			islandState = if (top != null) {
 				if (Island.isLocked && !IslandSettings.instance.showOnLockScreen) {
 					IslandViewState.Closed
 				} else IslandViewState.Opened
 			} else IslandViewState.Closed
-			// Autohide removed
 		}
 
 	private fun reevaluateState() {
-		// Recompute state after lock/unlock or screen events
 		val hasPlugin = bindedPlugins.firstOrNull() != null
 		islandState = if (hasPlugin) {
 			if (Island.isLocked && !IslandSettings.instance.showOnLockScreen) {

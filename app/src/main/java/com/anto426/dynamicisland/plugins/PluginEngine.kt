@@ -6,10 +6,7 @@ import com.anto426.dynamicisland.model.SETTINGS_CHANGED
 import com.anto426.dynamicisland.model.SETTINGS_KEY
 import com.anto426.dynamicisland.model.service.IslandOverlayService
 
-/**
- * Central lifecycle manager for plugins.
- * Ensures enable/disable is respected and resources are created/destroyed exactly once.
- */
+
 object PluginEngine {
     private const val TAG = "PluginEngine"
 
@@ -36,7 +33,6 @@ object PluginEngine {
 
     fun sync(context: Context) {
         val srv = service ?: return
-        // Refresh permission/enabled cache
         ExportedPlugins.setupPlugins(context)
         ExportedPlugins.plugins.forEach { plugin ->
             val shouldRun = plugin.active

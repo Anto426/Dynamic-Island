@@ -257,7 +257,7 @@ fun HomeScreen(
 						switchAccessibility = { switchAccessibilityService() }
 					)
 
-					Divider(color = MaterialTheme.colorScheme.outlineVariant)
+					HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
 					PermissionItem(
 						title = stringResource(R.string.overlay_permission_title),
@@ -274,7 +274,7 @@ fun HomeScreen(
 						}
 					)
 
-					Divider(color = MaterialTheme.colorScheme.outlineVariant)
+					HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
 					PermissionItem(
 						title = stringResource(R.string.accessibility_permission_title),
