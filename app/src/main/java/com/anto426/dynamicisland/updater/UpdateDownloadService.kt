@@ -1,34 +1,36 @@
 package com.anto426.dynamicisland.updater
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.content.ClipData
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.anto426.dynamicisland.R
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-/**
- * Servizio per scaricare e installare gli aggiornamenti APK
- */
-class UpdateDownloadService : IntentService("UpdateDownloadService") {
+
+class UpdateDownloadService : Service() {
 
     companion object {
         private const val TAG = "UpdateDownloadService"
         private const val CHANNEL_ID = "download_channel"
         private const val NOTIFICATION_ID = 1002
 
-        // Azioni del servizio
         const val ACTION_START_DOWNLOAD = "com.anto426.dynamicisland.START_DOWNLOAD"
         const val ACTION_INSTALL_APK = "com.anto426.dynamicisland.INSTALL_APK"
 
@@ -46,7 +48,7 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
                 putExtra(EXTRA_DOWNLOAD_URL, downloadUrl)
                 putExtra(EXTRA_VERSION, version)
             }
-            context.startService(intent)
+            ContextCompat.startForegroundService(context, intent)
         }
 
         /**
@@ -57,13 +59,14 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
                 action = ACTION_INSTALL_APK
                 putExtra(EXTRA_APK_PATH, apkPath)
             }
-            context.startService(intent)
+            ContextCompat.startForegroundService(context, intent)
         }
     }
 
     private val client = OkHttpClient()
     private lateinit var notificationManager: NotificationManager
     private lateinit var notificationBuilder: NotificationCompat.Builder
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onCreate() {
         super.onCreate()
@@ -72,23 +75,41 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
         startForeground(NOTIFICATION_ID, createInitialNotification())
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START_DOWNLOAD -> {
                 val downloadUrl = intent.getStringExtra(EXTRA_DOWNLOAD_URL)
                 val version = intent.getStringExtra(EXTRA_VERSION)
-
                 if (downloadUrl != null && version != null) {
-                    downloadAndInstallApk(downloadUrl, version)
+                    serviceScope.launch {
+                        downloadAndInstallApk(downloadUrl, version)
+                        stopSelf(startId)
+                    }
+                } else {
+                    stopSelf(startId)
                 }
             }
             ACTION_INSTALL_APK -> {
                 val apkPath = intent.getStringExtra(EXTRA_APK_PATH)
                 if (apkPath != null) {
-                    installApk(apkPath)
+                    serviceScope.launch {
+                        installApk(apkPath)
+                        stopSelf(startId)
+                    }
+                } else {
+                    stopSelf(startId)
                 }
             }
+            else -> stopSelf(startId)
         }
+        return START_NOT_STICKY
+    }
+
+    override fun onBind(intent: Intent?) = null
+
+    override fun onDestroy() {
+        serviceScope.cancel()
+        super.onDestroy()
     }
 
     /**
@@ -153,7 +174,6 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
                         output.write(buffer, 0, bytes)
                         bytesRead += bytes
 
-                        // Aggiorna la notifica con il progresso
                         if (contentLength > 0) {
                             val progress = ((bytesRead * 100) / contentLength).toInt()
                             updateNotification(
@@ -206,13 +226,11 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
             }
 
             // Per Android 8.0+ potrebbe essere necessario un permesso aggiuntivo
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (!packageManager.canRequestPackageInstalls()) {
-                    Log.w(TAG, "Permesso di installazione non concesso")
-                    // Mostra una notifica per richiedere il permesso
-                    showInstallPermissionNotification()
-                    return
-                }
+            if (!packageManager.canRequestPackageInstalls()) {
+                Log.w(TAG, "Permesso di installazione non concesso")
+                // Mostra una notifica per richiedere il permesso
+                showInstallPermissionNotification()
+                return
             }
 
             startActivity(installIntent)
@@ -275,16 +293,14 @@ class UpdateDownloadService : IntentService("UpdateDownloadService") {
      * Crea il canale di notifica
      */
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Download Aggiornamenti",
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                description = getString(R.string.update_download_channel_description)
-            }
-
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Download Aggiornamenti",
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = getString(R.string.update_download_channel_description)
         }
+
+        notificationManager.createNotificationChannel(channel)
     }
 }
