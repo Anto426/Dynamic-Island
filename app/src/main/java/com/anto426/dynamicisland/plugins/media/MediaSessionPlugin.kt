@@ -142,11 +142,9 @@ class MediaSessionPlugin(
 			val shouldShowBriefly = now - lastPausedShownAt > 5_000
 			if (shouldShowBriefly) {
 				lastPausedShownAt = now
-				// Show without auto-hide; rely on session updates to hide
 		priority.value = PluginPriority.MEDIUM
 		this.show(context, timeoutMs = 0)
 			} else {
-				// Se abbiamo già mostrato di recente la pausa, non risollevare
 				this.hide(context)
 			}
 		} else {

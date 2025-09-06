@@ -249,7 +249,6 @@ class MainActivity : ComponentActivity() {
 												},
 												label = {
 													Text(
-														// FIX: Use stringResource to convert the Int ID to a String
 														text = stringResource(id = destination.title),
 														style = MaterialTheme.typography.labelSmall.copy(
 															fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
