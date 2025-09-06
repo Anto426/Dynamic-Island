@@ -386,4 +386,37 @@
     <string name="language_option_en">Anglais</string>
     <string name="language_option_it">Italien</string>
     <string name="language_change_applied">Langue appliquée</string>
+
+    <string name="battery_health_good">Bon</string>
+    <string name="battery_health_overheat">Surchauffe</string>
+    <string name="battery_health_dead">Morte</string>
+    <string name="battery_health_over_voltage">Surtension</string>
+    <string name="battery_health_failure">Échec</string>
+    <string name="battery_health_unknown">Inconnu</string>
+
+    <string name="battery_source_ac">Courant alternatif</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Sans fil</string>
+    <string name="battery_source_not_charging">Pas en charge</string>
+
+    <string name="battery_calculating">Calcul en cours…</string>
+    <string name="charge_time_h_m">%1$d h %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Presque pleine</string>
+
+    <string name="battery_setting_show_temperature_title">Afficher la température</string>
+    <string name="battery_setting_show_temperature_desc">Afficher la température de la batterie pendant la charge</string>
+    <string name="battery_setting_show_percentage_title">Afficher le pourcentage</string>
+    <string name="battery_setting_show_percentage_desc">Afficher le pourcentage dans la pilule compacte</string>
+    <string name="battery_setting_low_notification_title">Notifications de batterie faible</string>
+    <string name="battery_setting_low_notification_desc">Notifier lorsque la batterie est en dessous de 20%</string>
+
+    <string name="notification_now">maintenant</string>
+
+    <string name="auto_hide_title">Masquer automatiquement les notifications</string>
+    <string name="auto_hide_desc">Rejeter après un court délai d\'inactivité</string>
+    <string name="show_app_name_title">Afficher le nom de l\'application</string>
+    <string name="show_app_name_desc">Afficher le nom de l\'application dans l\'en-tête</string>
+    <string name="show_body_compact_title">Afficher le corps en vue compacte</string>
+    <string name="show_body_compact_desc">Afficher une ligne du corps du message en vue compacte</string>
 </resources>

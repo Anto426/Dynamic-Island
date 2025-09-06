@@ -376,6 +376,15 @@
     <string name="notification_swipe_left_to_close">Swipe left to close</string>
     <string name="notification_swipe_to_close">Swipe to close</string>
     <string name="send_reply">Send reply</string>
+    <string name="notification_now">now</string>
+
+    <!-- Notification plugin settings -->
+    <string name="auto_hide_title">Auto-hide notifications</string>
+    <string name="auto_hide_desc">Dismiss after a short delay when idle</string>
+    <string name="show_app_name_title">Show app name</string>
+    <string name="show_app_name_desc">Display the application name in the header</string>
+    <string name="show_body_compact_title">Show body in compact</string>
+    <string name="show_body_compact_desc">Display one line of the message body in compact view</string>
 
     <!-- Media plugin content descriptions -->
     <string name="media_blurred_background_desc">Blurred background</string>
@@ -388,6 +397,10 @@
     <string name="media_no_cover">No cover</string>
     <string name="badge_new">NEW</string>
 
+    <!-- Media plugin localized values -->
+    <string name="media_time_format" translatable="false">%02d:%02d</string>
+    <string name="media_time_zero" translatable="false">00:00</string>
+
     <!-- Language selector -->
     <string name="language_section_title">Language</string>
     <string name="language_section_subtitle">Choose the app language</string>
@@ -395,4 +408,29 @@
     <string name="language_option_en">English</string>
     <string name="language_option_it">Italian</string>
     <string name="language_change_applied">Language applied</string>
+
+    <!-- Battery plugin localized values -->
+    <string name="battery_health_good">Good</string>
+    <string name="battery_health_overheat">Overheated</string>
+    <string name="battery_health_dead">Dead</string>
+    <string name="battery_health_over_voltage">Over voltage</string>
+    <string name="battery_health_failure">Failure</string>
+    <string name="battery_health_unknown">Unknown</string>
+
+    <string name="battery_source_ac">AC power</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Wireless</string>
+    <string name="battery_source_not_charging">Not charging</string>
+
+    <string name="battery_calculating">Calculating…</string>
+    <string name="charge_time_h_m">%1$d h %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Almost full</string>
+
+    <string name="battery_setting_show_temperature_title">Show temperature</string>
+    <string name="battery_setting_show_temperature_desc">Display battery temperature while charging</string>
+    <string name="battery_setting_show_percentage_title">Show percentage</string>
+    <string name="battery_setting_show_percentage_desc">Show percentage in the compact pill</string>
+    <string name="battery_setting_low_notification_title">Low battery notifications</string>
+    <string name="battery_setting_low_notification_desc">Notify when battery is below 20%</string>
 </resources>

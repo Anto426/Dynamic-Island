@@ -386,4 +386,36 @@
     <string name="language_option_en">Αγγλικά</string>
     <string name="language_option_it">Ιταλικά</string>
     <string name="language_change_applied">Η γλώσσα εφαρμόστηκε</string>
+
+    <string name="battery_health_good">Καλή</string>
+    <string name="battery_health_overheat">Υπερθέρμανση</string>
+    <string name="battery_health_dead">Νεκρή</string>
+    <string name="battery_health_over_voltage">Υπέρταση</string>
+    <string name="battery_health_failure">Αποτυχία</string>
+    <string name="battery_health_unknown">Άγνωστο</string>
+
+    <string name="battery_source_ac">Ρεύμα AC</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Ασύρματη</string>
+    <string name="battery_source_not_charging">Δεν φορτίζει</string>
+
+    <string name="battery_calculating">Υπολογισμός…</string>
+    <string name="charge_time_h_m">%1$d ώ %2$d λ</string>
+    <string name="charge_time_m">%1$d λ</string>
+    <string name="battery_almost_full">Σχεδόν γεμάτη</string>
+
+    <string name="battery_setting_show_temperature_title">Εμφάνιση θερμοκρασίας</string>
+    <string name="battery_setting_show_temperature_desc">Εμφάνιση θερμοκρασίας μπαταρίας κατά τη φόρτιση</string>
+    <string name="battery_setting_show_percentage_title">Εμφάνιση ποσοστού</string>
+    <string name="battery_setting_show_percentage_desc">Εμφάνιση ποσοστού στο συμπαγές χάπι</string>
+    <string name="battery_setting_low_notification_title">Ειδοποιήσεις χαμηλής μπαταρίας</string>
+    <string name="battery_setting_low_notification_desc">Ειδοποίηση όταν η μπαταρία είναι κάτω από 20%</string>
+
+    <string name="notification_now">τώρα</string>
+    <string name="auto_hide_title">Αυτόματη απόκρυψη ειδοποιήσεων</string>
+    <string name="auto_hide_desc">Παράβλεψη μετά από σύντομη καθυστέρηση όταν είναι σε αδράνεια</string>
+    <string name="show_app_name_title">Εμφάνιση ονόματος εφαρμογής</string>
+    <string name="show_app_name_desc">Εμφάνιση του ονόματος της εφαρμογής στην επικεφαλίδα</string>
+    <string name="show_body_compact_title">Εμφάνιση σώματος σε συμπαγή προβολή</string>
+    <string name="show_body_compact_desc">Εμφάνιση μιας γραμμής του σώματος του μηνύματος σε συμπαγή προβολή</string>
 </resources>

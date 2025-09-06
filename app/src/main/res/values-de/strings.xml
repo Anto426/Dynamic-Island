@@ -386,4 +386,37 @@
     <string name="language_option_en">Englisch</string>
     <string name="language_option_it">Italienisch</string>
     <string name="language_change_applied">Sprache angewendet</string>
+
+    <string name="battery_health_good">Gut</string>
+    <string name="battery_health_overheat">Überhitzt</string>
+    <string name="battery_health_dead">Defekt</string>
+    <string name="battery_health_over_voltage">Überspannung</string>
+    <string name="battery_health_failure">Fehler</string>
+    <string name="battery_health_unknown">Unbekannt</string>
+
+    <string name="battery_source_ac">Netzstrom</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Kabellos</string>
+    <string name="battery_source_not_charging">Lädt nicht</string>
+
+    <string name="battery_calculating">Berechne…</string>
+    <string name="charge_time_h_m">%1$d h %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Fast voll</string>
+
+    <string name="battery_setting_show_temperature_title">Temperatur anzeigen</string>
+    <string name="battery_setting_show_temperature_desc">Akkutemperatur während des Ladevorgangs anzeigen</string>
+    <string name="battery_setting_show_percentage_title">Prozentsatz anzeigen</string>
+    <string name="battery_setting_show_percentage_desc">Prozentsatz in der kompakten Pille anzeigen</string>
+    <string name="battery_setting_low_notification_title">Benachrichtigungen bei niedrigem Akkustand</string>
+    <string name="battery_setting_low_notification_desc">Benachrichtigen, wenn der Akku unter 20 % fällt</string>
+
+    <string name="notification_now">jetzt</string>
+
+    <string name="auto_hide_title">Benachrichtigungen automatisch ausblenden</string>
+    <string name="auto_hide_desc">Bei Inaktivität nach kurzer Verzögerung schließen</string>
+    <string name="show_app_name_title">App-Namen anzeigen</string>
+    <string name="show_app_name_desc">Zeigt den Anwendungsnamen in der Kopfzeile an</string>
+    <string name="show_body_compact_title">Text in Kompaktansicht anzeigen</string>
+    <string name="show_body_compact_desc">Zeigt eine Zeile des Nachrichtentextes in der Kompaktansicht an</string>
 </resources>

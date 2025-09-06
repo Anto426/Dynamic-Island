@@ -387,4 +387,37 @@
     <string name="language_option_en">İngilizce</string>
     <string name="language_option_it">İtalyanca</string>
     <string name="language_change_applied">Dil uygulandı</string>
+
+    <string name="battery_health_good">İyi</string>
+    <string name="battery_health_overheat">Aşırı ısındı</string>
+    <string name="battery_health_dead">Bitti</string>
+    <string name="battery_health_over_voltage">Aşırı voltaj</string>
+    <string name="battery_health_failure">Arıza</string>
+    <string name="battery_health_unknown">Bilinmiyor</string>
+
+    <string name="battery_source_ac">AC gücü</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Kablosuz</string>
+    <string name="battery_source_not_charging">Şarj olmuyor</string>
+
+    <string name="battery_calculating">Hesaplanıyor…</string>
+    <string name="charge_time_h_m">%1$d sa %2$d dk</string>
+    <string name="charge_time_m">%1$d dk</string>
+    <string name="battery_almost_full">Neredeyse dolu</string>
+
+    <string name="battery_setting_show_temperature_title">Sıcaklığı göster</string>
+    <string name="battery_setting_show_temperature_desc">Şarj olurken pil sıcaklığını göster</string>
+    <string name="battery_setting_show_percentage_title">Yüzdeyi göster</string>
+    <string name="battery_setting_show_percentage_desc">Yüzdeyi kompakt hap içinde göster</string>
+    <string name="battery_setting_low_notification_title">Düşük pil bildirimleri</string>
+    <string name="battery_setting_low_notification_desc">Pil %20\'nin altına düştüğünde bildir</string>
+
+    <string name="notification_now">şimdi</string>
+
+    <string name="auto_hide_title">Bildirimleri otomatik gizle</string>
+    <string name="auto_hide_desc">Boştayken kısa bir gecikmeden sonra kapat</string>
+    <string name="show_app_name_title">Uygulama adını göster</string>
+    <string name="show_app_name_desc">Uygulama adını başlıkta göster</string>
+    <string name="show_body_compact_title">İçeriği kompakt görünümde göster</string>
+    <string name="show_body_compact_desc">Mesaj gövdesinin bir satırını kompakt görünümde göster</string>
 </resources>

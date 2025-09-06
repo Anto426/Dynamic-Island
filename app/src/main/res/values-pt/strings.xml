@@ -387,4 +387,21 @@
     <string name="language_option_en">Inglês</string>
     <string name="language_option_it">Italiano</string>
     <string name="language_change_applied">Idioma aplicado</string>
+
+    <string name="battery_health_good">Bom</string>
+    <string name="battery_health_overheat">Superaquecido</string>
+    <string name="battery_health_dead">Descarregada</string>
+    <string name="battery_health_over_voltage">Sobretensão</string>
+    <string name="battery_health_failure">Falha</string>
+    <string name="battery_health_unknown">Desconhecido</string>
+
+    <string name="battery_source_ac">Alimentação CA</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Sem fio</string>
+    <string name="battery_source_not_charging">Não está carregando</string>
+
+    <string name="battery_calculating">Calculando…</string>
+    <string name="charge_time_h_m">%1$d h %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Quase cheia</string>
 </resources>

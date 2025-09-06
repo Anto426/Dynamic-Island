@@ -386,4 +386,37 @@
     <string name="language_option_en">الإنجليزية</string>
     <string name="language_option_it">الإيطالية</string>
     <string name="language_change_applied">تم تطبيق اللغة</string>
+
+    <string name="battery_health_good">جيدة</string>
+    <string name="battery_health_overheat">محمومة</string>
+    <string name="battery_health_dead">فارغة</string>
+    <string name="battery_health_over_voltage">جهد زائد</string>
+    <string name="battery_health_failure">فشل</string>
+    <string name="battery_health_unknown">غير معروف</string>
+
+    <string name="battery_source_ac">طاقة مترددة</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">لاسلكي</string>
+    <string name="battery_source_not_charging">لا يشحن</string>
+
+    <string name="battery_calculating">جارٍ الحساب…</string>
+    <string name="charge_time_h_m">%1$d س %2$d د</string>
+    <string name="charge_time_m">%1$d د</string>
+    <string name="battery_almost_full">ممتلئة تقريبًا</string>
+
+    <string name="battery_setting_show_temperature_title">إظهار درجة الحرارة</string>
+    <string name="battery_setting_show_temperature_desc">عرض درجة حرارة البطارية أثناء الشحن</string>
+    <string name="battery_setting_show_percentage_title">إظهار النسبة المئوية</string>
+    <string name="battery_setting_show_percentage_desc">إظهار النسبة المئوية في الكبسولة المدمجة</string>
+    <string name="battery_setting_low_notification_title">إشعارات البطارية المنخفضة</string>
+    <string name="battery_setting_low_notification_desc">إعلام عندما تكون البطارية أقل من 20%</string>
+
+    <string name="notification_now">الآن</string>
+
+    <string name="auto_hide_title">إخفاء الإشعارات تلقائيًا</string>
+    <string name="auto_hide_desc">إغلاق بعد تأخير قصير عند عدم النشاط</string>
+    <string name="show_app_name_title">إظهار اسم التطبيق</string>
+    <string name="show_app_name_desc">عرض اسم التطبيق في العنوان</string>
+    <string name="show_body_compact_title">إظهار المحتوى في العرض المصغر</string>
+    <string name="show_body_compact_desc">عرض سطر واحد من نص الرسالة في العرض المصغر</string>
 </resources>

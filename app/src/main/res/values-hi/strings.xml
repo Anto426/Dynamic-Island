@@ -386,4 +386,36 @@
     <string name="language_option_en">अंग्रेज़ी</string>
     <string name="language_option_it">इतालवी</string>
     <string name="language_change_applied">भाषा लागू की गई</string>
+
+    <string name="battery_health_good">अच्छा</string>
+    <string name="battery_health_overheat">ज़्यादा गरम</string>
+    <string name="battery_health_dead">मृत</string>
+    <string name="battery_health_over_voltage">ओवर वोल्टेज</string>
+    <string name="battery_health_failure">विफलता</string>
+    <string name="battery_health_unknown">अज्ञात</string>
+
+    <string name="battery_source_ac">एसी पावर</string>
+    <string name="battery_source_usb">यूएसबी</string>
+    <string name="battery_source_wireless">वायरलेस</string>
+    <string name="battery_source_not_charging">चार्ज नहीं हो रहा है</string>
+
+    <string name="battery_calculating">गणना हो रही है…</string>
+    <string name="charge_time_h_m">%1$d घ %2$d मि</string>
+    <string name="charge_time_m">%1$d मि</string>
+    <string name="battery_almost_full">लगभग भरा हुआ</string>
+
+    <string name="battery_setting_show_temperature_title">तापमान दिखाएं</string>
+    <string name="battery_setting_show_temperature_desc">चार्ज करते समय बैटरी का तापमान प्रदर्शित करें</string>
+    <string name="battery_setting_show_percentage_title">प्रतिशत दिखाएं</string>
+    <string name="battery_setting_show_percentage_desc">कॉम्पैक्ट पिल में प्रतिशत दिखाएं</string>
+    <string name="battery_setting_low_notification_title">कम बैटरी सूचनाएं</string>
+    <string name="battery_setting_low_notification_desc">जब बैटरी 20% से कम हो तो सूचित करें</string>
+    <string name="notification_now">अभी</string>
+
+    <string name="auto_hide_title">सूचनाएं स्वतः छिपाएं</string>
+    <string name="auto_hide_desc">निष्क्रिय होने पर थोड़ी देर बाद खारिज करें</string>
+    <string name="show_app_name_title">ऐप का नाम दिखाएं</string>
+    <string name="show_app_name_desc">हेडर में एप्लिकेशन का नाम प्रदर्शित करें</string>
+    <string name="show_body_compact_title">संक्षिप्त दृश्य में मुख्य भाग दिखाएं</string>
+    <string name="show_body_compact_desc">संक्षिप्त दृश्य में संदेश के मुख्य भाग की एक पंक्ति प्रदर्शित करें</string>
 </resources>

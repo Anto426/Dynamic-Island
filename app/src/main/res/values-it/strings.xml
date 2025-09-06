@@ -386,4 +386,37 @@
     <string name="language_option_en">Inglese</string>
     <string name="language_option_it">Italiano</string>
     <string name="language_change_applied">Lingua applicata</string>
+
+    <string name="battery_health_good">Buono</string>
+    <string name="battery_health_overheat">Surriscaldata</string>
+    <string name="battery_health_dead">Esaurita</string>
+    <string name="battery_health_over_voltage">Sovratensione</string>
+    <string name="battery_health_failure">Guasto</string>
+    <string name="battery_health_unknown">Sconosciuto</string>
+
+    <string name="battery_source_ac">Alimentazione CA</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Wireless</string>
+    <string name="battery_source_not_charging">Non in carica</string>
+
+    <string name="battery_calculating">Calcolo in corso…</string>
+    <string name="charge_time_h_m">%1$d h %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Quasi carica</string>
+
+    <string name="battery_setting_show_temperature_title">Mostra temperatura</string>
+    <string name="battery_setting_show_temperature_desc">Mostra la temperatura della batteria durante la ricarica</string>
+    <string name="battery_setting_show_percentage_title">Mostra percentuale</string>
+    <string name="battery_setting_show_percentage_desc">Mostra la percentuale nella pillola compatta</string>
+    <string name="battery_setting_low_notification_title">Notifiche batteria scarica</string>
+    <string name="battery_setting_low_notification_desc">Notifica quando la batteria è sotto il 20%</string>
+
+    <string name="notification_now">adesso</string>
+
+    <string name="auto_hide_title">Nascondi notifiche automaticamente</string>
+    <string name="auto_hide_desc">Chiudi dopo un breve ritardo in caso di inattività</string>
+    <string name="show_app_name_title">Mostra nome app</string>
+    <string name="show_app_name_desc">Mostra il nome dell\'applicazione nell\'intestazione</string>
+    <string name="show_body_compact_title">Mostra corpo in vista compatta</string>
+    <string name="show_body_compact_desc">Mostra una riga del corpo del messaggio in vista compatta</string>
 </resources>

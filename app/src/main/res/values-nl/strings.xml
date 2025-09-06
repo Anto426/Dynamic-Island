@@ -387,4 +387,37 @@
     <string name="language_option_en">Engels</string>
     <string name="language_option_it">Italiaans</string>
     <string name="language_change_applied">Taal toegepast</string>
+
+    <string name="battery_health_good">Goed</string>
+    <string name="battery_health_overheat">Oververhit</string>
+    <string name="battery_health_dead">Leeg</string>
+    <string name="battery_health_over_voltage">Overspanning</string>
+    <string name="battery_health_failure">Storing</string>
+    <string name="battery_health_unknown">Onbekend</string>
+
+    <string name="battery_source_ac">Netstroom</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Draadloos</string>
+    <string name="battery_source_not_charging">Laadt niet op</string>
+
+    <string name="battery_calculating">Berekenen…</string>
+    <string name="charge_time_h_m">%1$d u %2$d min</string>
+    <string name="charge_time_m">%1$d min</string>
+    <string name="battery_almost_full">Bijna vol</string>
+
+    <string name="battery_setting_show_temperature_title">Temperatuur tonen</string>
+    <string name="battery_setting_show_temperature_desc">Batterijtemperatuur weergeven tijdens het opladen</string>
+    <string name="battery_setting_show_percentage_title">Percentage tonen</string>
+    <string name="battery_setting_show_percentage_desc">Percentage weergeven in de compacte pil</string>
+    <string name="battery_setting_low_notification_title">Meldingen voor lage batterij</string>
+    <string name="battery_setting_low_notification_desc">Melden wanneer de batterij onder de 20% is</string>
+
+    <string name="notification_now">nu</string>
+
+    <string name="auto_hide_title">Meldingen automatisch verbergen</string>
+    <string name="auto_hide_desc">Sluiten na een korte vertraging bij inactiviteit</string>
+    <string name="show_app_name_title">App-naam weergeven</string>
+    <string name="show_app_name_desc">Toon de applicatienaam in de koptekst</string>
+    <string name="show_body_compact_title">Hoofdtekst compact weergeven</string>
+    <string name="show_body_compact_desc">Eén regel van de berichttekst weergeven in compacte weergave</string>
 </resources>

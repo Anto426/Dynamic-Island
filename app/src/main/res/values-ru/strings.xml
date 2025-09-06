@@ -387,4 +387,37 @@
     <string name="language_option_en">Английский</string>
     <string name="language_option_it">Итальянский</string>
     <string name="language_change_applied">Язык применен</string>
+
+    <string name="battery_health_good">Хорошее</string>
+    <string name="battery_health_overheat">Перегрев</string>
+    <string name="battery_health_dead">Разряжена</string>
+    <string name="battery_health_over_voltage">Перенапряжение</string>
+    <string name="battery_health_failure">Сбой</string>
+    <string name="battery_health_unknown">Неизвестно</string>
+
+    <string name="battery_source_ac">Питание от сети</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">Беспроводная</string>
+    <string name="battery_source_not_charging">Не заряжается</string>
+
+    <string name="battery_calculating">Расчет…</string>
+    <string name="charge_time_h_m">%1$d ч %2$d мин</string>
+    <string name="charge_time_m">%1$d мин</string>
+    <string name="battery_almost_full">Почти полная</string>
+
+    <string name="battery_setting_show_temperature_title">Показывать температуру</string>
+    <string name="battery_setting_show_temperature_desc">Отображать температуру батареи во время зарядки</string>
+    <string name="battery_setting_show_percentage_title">Показывать процент</string>
+    <string name="battery_setting_show_percentage_desc">Показывать процент в компактной таблетке</string>
+    <string name="battery_setting_low_notification_title">Уведомления о низком заряде батареи</string>
+    <string name="battery_setting_low_notification_desc">Уведомлять, когда заряд батареи ниже 20%</string>
+
+    <string name="notification_now">сейчас</string>
+
+    <string name="auto_hide_title">Автоматически скрывать уведомления</string>
+    <string name="auto_hide_desc">Скрывать после короткой задержки при бездействии</string>
+    <string name="show_app_name_title">Показывать имя приложения</string>
+    <string name="show_app_name_desc">Отображать имя приложения в заголовке</string>
+    <string name="show_body_compact_title">Показывать текст в компактном виде</string>
+    <string name="show_body_compact_desc">Отображать одну строку текста сообщения в компактном виде</string>
 </resources>

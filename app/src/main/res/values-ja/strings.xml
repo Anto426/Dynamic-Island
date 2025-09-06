@@ -386,4 +386,37 @@
     <string name="language_option_en">英語</string>
     <string name="language_option_it">イタリア語</string>
     <string name="language_change_applied">言語が適用されました</string>
+
+    <string name="battery_health_good">良好</string>
+    <string name="battery_health_overheat">過熱</string>
+    <string name="battery_health_dead">故障</string>
+    <string name="battery_health_over_voltage">過電圧</string>
+    <string name="battery_health_failure">失敗</string>
+    <string name="battery_health_unknown">不明</string>
+
+    <string name="battery_source_ac">AC電源</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">ワイヤレス</string>
+    <string name="battery_source_not_charging">充電していません</string>
+
+    <string name="battery_calculating">計算中…</string>
+    <string name="charge_time_h_m">%1$d時間%2$d分</string>
+    <string name="charge_time_m">%1$d分</string>
+    <string name="battery_almost_full">ほぼ満充電</string>
+
+    <string name="battery_setting_show_temperature_title">温度を表示</string>
+    <string name="battery_setting_show_temperature_desc">充電中にバッテリー温度を表示</string>
+    <string name="battery_setting_show_percentage_title">パーセンテージを表示</string>
+    <string name="battery_setting_show_percentage_desc">コンパクトなピルにパーセンテージを表示</string>
+    <string name="battery_setting_low_notification_title">低バッテリー通知</string>
+    <string name="battery_setting_low_notification_desc">バッテリーが20%未満になったときに通知</string>
+
+    <string name="notification_now">たった今</string>
+
+    <string name="auto_hide_title">通知を自動的に隠す</string>
+    <string name="auto_hide_desc">アイドル状態が続いた場合、少し遅れて非表示にします</string>
+    <string name="show_app_name_title">アプリ名を表示</string>
+    <string name="show_app_name_desc">ヘッダーにアプリケーション名を表示します</string>
+    <string name="show_body_compact_title">コンパクト表示で本文を表示</string>
+    <string name="show_body_compact_desc">コンパクト表示でメッセージ本文を1行表示します</string>
 </resources>

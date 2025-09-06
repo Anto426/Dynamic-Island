@@ -387,4 +387,37 @@
     <string name="language_option_en">英语</string>
     <string name="language_option_it">意大利语</string>
     <string name="language_change_applied">语言已应用</string>
+
+    <string name="battery_health_good">良好</string>
+    <string name="battery_health_overheat">过热</string>
+    <string name="battery_health_dead">没电</string>
+    <string name="battery_health_over_voltage">过压</string>
+    <string name="battery_health_failure">故障</string>
+    <string name="battery_health_unknown">未知</string>
+
+    <string name="battery_source_ac">交流电源</string>
+    <string name="battery_source_usb">USB</string>
+    <string name="battery_source_wireless">无线</string>
+    <string name="battery_source_not_charging">未在充电</string>
+
+    <string name="battery_calculating">计算中…</string>
+    <string name="charge_time_h_m">%1$d小时%2$d分钟</string>
+    <string name="charge_time_m">%1$d分钟</string>
+    <string name="battery_almost_full">即将充满</string>
+
+    <string name="battery_setting_show_temperature_title">显示温度</string>
+    <string name="battery_setting_show_temperature_desc">充电时显示电池温度</string>
+    <string name="battery_setting_show_percentage_title">显示百分比</string>
+    <string name="battery_setting_show_percentage_desc">在紧凑的药丸中显示百分比</string>
+    <string name="battery_setting_low_notification_title">低电量通知</string>
+    <string name="battery_setting_low_notification_desc">当电池电量低于20%时通知</string>
+
+    <string name="notification_now">刚刚</string>
+
+    <string name="auto_hide_title">自动隐藏通知</string>
+    <string name="auto_hide_desc">空闲一小段时间后自动关闭</string>
+    <string name="show_app_name_title">显示应用名称</string>
+    <string name="show_app_name_desc">在标题栏中显示应用名称</string>
+    <string name="show_body_compact_title">在紧凑视图中显示正文</string>
+    <string name="show_body_compact_desc">在紧凑视图中显示一行消息正文</string>
 </resources>
