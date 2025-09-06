@@ -12,8 +12,8 @@ android {
         applicationId = "com.anto426.dynamicisland"
         minSdk = 34
         targetSdk = 36
-        versionCode = 14
-        versionName = '2.1.7'
+        versionCode = 15
+        versionName = '2.1.8'
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -45,12 +45,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
-    }
-
-    packaging {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
     }
 }
 
