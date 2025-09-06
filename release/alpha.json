@@ -10,14 +10,10 @@
   
   "changelog": [
     {
-      "version": "2.1.7",
+      "version": "2.1.8",
       "date": "2025-09-06",
       "changes": [
-        "🎵 Media: compact centered layout, artwork caps, better scrubber",
-        "🔔 Notifications: redesigned card UI, actions & reply flow",
-        "� Battery: slightly reduced text size for better fit",
-        "� UI: tighter paddings in island components",
-        "🌍 i18n: updated strings across locales"
+        "🛠 General: various bug fixes and performance improvements"
       ]
     }
   ]
