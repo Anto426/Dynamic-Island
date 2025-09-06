@@ -27,10 +27,8 @@ class ExportedPlugins {
 				description = "",
 				requestIntent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS),
 			) { override fun checkPermission(context: Context) : Boolean {
-					val contentResolver = context.contentResolver
-					val enabledNotificationListeners = Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
-					val packageName = packageName
-					return enabledNotificationListeners != null && enabledNotificationListeners.contains(packageName)
+					// Check if NotificationService is running as a proxy for permission granted
+					return com.anto426.dynamicisland.model.service.NotificationService.getInstance() != null
 				} },
 			Settings.ACTION_ACCESSIBILITY_SETTINGS to object : PluginPermission(
 				name = "",

@@ -40,6 +40,7 @@ object PluginEngine {
         ExportedPlugins.setupPlugins(context)
         ExportedPlugins.plugins.forEach { plugin ->
             val shouldRun = plugin.active
+            Log.d(TAG, "Plugin ${plugin.id}: enabled=${plugin.enabled.value}, permissionsGranted=${plugin.allPermissionsGranted}, active=$shouldRun, started=${plugin.isStarted.value}")
             if (shouldRun && !(plugin.isStarted.value)) {
                 runCatching { plugin.onCreate(srv) }
                     .onSuccess {
