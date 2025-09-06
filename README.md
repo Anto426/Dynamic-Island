@@ -1,5 +1,7 @@
 # Material You Dynamic Island
 
+[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/BmQaaARra5)
+
 An Android app that brings a customizable, iOS-style Dynamic Island with Material You design. Easy setup, multi-language UI, and in-app updates.
 
 ## 📥 Download
