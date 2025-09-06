@@ -1,21 +1,22 @@
 ﻿{
   "channel": "stable",
-  "latest_version": "2.1.6",
-  "version_code": 13,
+  "latest_version": "2.1.7",
+  "version_code": 14,
   "download_url": "https://github.com/Anto426/Dynamic-Island/raw/refs/heads/main/release/res/app-debug.apk",
   "release_notes": "Rimozione verifica checksum/dimensione e miglioramenti stabilità/localizzazione.",
-  "release_date": "2025-09-01",
+  "release_date": "2025-09-06",
   "minimum_supported_version": "2.1.0",
   "force_update": false,
   "changelog": [
     {
-      "version": "2.1.6",
-      "date": "2025-09-01",
+      "version": "2.1.7",
+      "date": "2025-09-06",
       "changes": [
-        "🔧 Updater: removed checksum/size verification, simplified API",
-        "🐛 Improved stability of the update flow",
-        "🌐 String and localization cleanup",
-        "📑 Added language selector in settings"
+        "🎵 Media: compact centered layout, artwork caps, better scrubber",
+        "🔔 Notifications: redesigned card UI, actions & reply flow",
+        "� Battery: slightly reduced text size for better fit",
+        "� UI: tighter paddings in island components",
+        "🌍 i18n: updated strings across locales"
       ]
     }
   ]
