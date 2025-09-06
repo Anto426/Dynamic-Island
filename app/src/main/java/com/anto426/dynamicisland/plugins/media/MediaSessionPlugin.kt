@@ -261,7 +261,7 @@ class MediaSessionPlugin(
 							)
 						)
 						TrackDetails(title = mediaStruct.title.value, artist = mediaStruct.artist.value, compact = true)
-						SectionCard(modifier = Modifier.fillMaxWidth(), containerColor = MaterialTheme.colorScheme.surfaceContainer) {
+						SectionCard(modifier = Modifier.fillMaxWidth(), containerColor = Color.Transparent) {
 							PlayerScrubber(mediaStruct = mediaStruct, transportControls = transportControls, showLabels = !isUltraShort)
 							Spacer(Modifier.height(4.dp))
 							PlayerControls(isPlaying = isPlaying, actions = state?.actions ?: 0L, transportControls = transportControls, sideButtonSize = sideBtn, mainButtonSize = mainBtn, centerIconSize = iconSize)
