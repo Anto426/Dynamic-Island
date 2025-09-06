@@ -25,7 +25,7 @@ data class NotificationMeta(
 	val iconDrawable: Drawable,
 	val packageName: String,
 	val actions: List<Notification.Action>,
-	val statusBarNotification: StatusBarNotification
+	val statusBarNotification: StatusBarNotification?
 ) {
 	/**
 	 * Ottiene il nome visualizzabile dell'applicazione che ha inviato la notifica.

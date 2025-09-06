@@ -32,7 +32,11 @@ class NotificationService : NotificationListenerService() {
 	private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context, intent: Intent) {
 
-			val statusBarNotification = notifications.firstOrNull { it.id == intent.getIntExtra("id", 0) } ?: return
+			val key = intent.getStringExtra("key")
+			val id = intent.getIntExtra("id", 0)
+			val statusBarNotification = notifications.firstOrNull { sbn ->
+				if (!key.isNullOrEmpty()) sbn.key == key else sbn.id == id
+			} ?: return
 			Log.d("NotificationService", "onReceive: ${statusBarNotification.id}, ${statusBarNotification.id}, ${statusBarNotification.notification.actions?.size}")
 			val notification = statusBarNotification.notification
 
@@ -42,8 +46,8 @@ class NotificationService : NotificationListenerService() {
 					cancelNotification(statusBarNotification.key)
 				}
 
-				// Start content intent from notification
-				notification.contentIntent.send()
+				// Start content intent from notification (may be null)
+				runCatching { notification.contentIntent?.send() }
 			}
 			if (intent.action == ACTION_CLOSE) {
 				// Logic to remove notification
@@ -99,6 +103,7 @@ class NotificationService : NotificationListenerService() {
 		Log.d("NotificationService", "Posted: ${notifications.size}")
 
 		sendBroadcast(Intent(NOTIFICATION_POSTED).apply {
+			setPackage(packageName)
 			putExtra("id", statusBarNotification.id)
 			putExtra("package_name", statusBarNotification.packageName)
 			putExtra("category", notification.category)
@@ -113,7 +118,10 @@ class NotificationService : NotificationListenerService() {
 			)?.toString() ?: ""
 			putExtra("title", title)
 			putExtra("body", body)
+			// Include the unique key to allow exact matching
+			putExtra("key", statusBarNotification.key)
 		})
+		Log.d("NotificationService", "Sent broadcast NOTIFICATION_POSTED for ${statusBarNotification.key}")
 	}
 
 	override fun onNotificationRemoved(statusBarNotification: StatusBarNotification) {
@@ -125,8 +133,12 @@ class NotificationService : NotificationListenerService() {
 
 		// Send broadcast
 		sendBroadcast(Intent(NOTIFICATION_REMOVED).apply {
+			setPackage(packageName)
 			putExtra("id", statusBarNotification.id)
+			// Include the unique key as well
+			putExtra("key", statusBarNotification.key)
 		})
+		Log.d("NotificationService", "Sent broadcast NOTIFICATION_REMOVED for ${statusBarNotification.key}")
 	}
 
 	override fun onDestroy() {
