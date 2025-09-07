@@ -73,7 +73,7 @@ An Android app that brings a customizable, iOS-style Dynamic Island with Materia
 
 ## ✅ Requirements
 
-- Android 14 or newer (minSdk 34)
+- Android 14 or newer (minSdk 32)
 - Required permissions: Accessibility, Display over other apps, Notifications (where needed), Install unknown apps (for in-app updates)
 
 ## 📲 Install (APK)
