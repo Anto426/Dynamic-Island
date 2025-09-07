@@ -42,10 +42,6 @@ android {
     buildFeatures {
         compose = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
 }
 
 dependencies {
@@ -85,7 +81,6 @@ dependencies {
     // -------------------- Coil & Lottie --------------------
     implementation (libs.coil.compose)
     implementation (libs.lottie.compose)
-    implementation (libs.composewaveloading)
 
     // -------------------- Media --------------------
     implementation (libs.androidx.media3.common.ktx)

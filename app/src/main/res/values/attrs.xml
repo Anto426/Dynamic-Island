@@ -1,0 +1,9 @@
+<resources>
+    <attr name="motionDurationShort1" format="integer" />
+    <attr name="motionDurationShort2" format="integer" />
+    <attr name="motionDurationMedium1" format="integer" />
+    <attr name="motionDurationLong1" format="integer" />
+    <attr name="motionDurationLong2" format="integer" />
+    <attr name="colorSurface" format="reference|color" />
+    <attr name="colorOnError" format="reference|color" />
+</resources>
