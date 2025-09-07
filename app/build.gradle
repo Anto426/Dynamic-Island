@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.anto426.dynamicisland"
-        minSdk = 34
+        minSdk = 32
         targetSdk = 36
         versionCode = 15
         versionName = '2.1.8'
