@@ -36,7 +36,7 @@ jobs:
       run: ./gradlew build
 
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
+    # the publishing section of your build.gradle.kts
     - name: Publish to GitHub Packages
       run: ./gradlew publish
       env:
